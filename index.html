@@ -73,6 +73,20 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 .syncpill{font-size:10px;font-weight:800;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 8px;white-space:nowrap}
 .syncpill.syncing{color:var(--warn)}.syncpill.ok{color:var(--good)}.syncpill.error{color:var(--bad)}
 
+
+.smart-route-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}
+.smart-route-summary .mini{background:#f9fafb}
+.route-seq{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}
+.route-stop{font-size:10px;font-weight:800;background:#f2f4f7;border-radius:999px;padding:6px 8px}
+.route-arrow{font-size:10px;color:var(--muted)}
+.explain{font-size:11px;line-height:1.45;color:#475467;background:#f9fafb;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:9px}
+.receipt-preview{width:100%;max-width:520px;display:block;margin:0 auto;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow)}
+.route-progress{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;padding:13px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.spinner{width:16px;height:16px;border:2px solid #e4e7ec;border-top-color:#175cd3;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.priority-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#b42318;margin-right:5px}
+@media(max-width:520px){.smart-route-summary{grid-template-columns:1fr 1fr}}
+
 @media(min-width:760px){body{padding-bottom:20px}.bottomnav{left:50%;transform:translateX(-50%);max-width:760px;border:1px solid var(--line);border-radius:18px 18px 0 0}.hero{grid-template-columns:repeat(4,1fr)}.quick{grid-template-columns:repeat(4,1fr)}.moregrid{grid-template-columns:repeat(3,1fr)}.fab{right:calc(50% - 420px)}}
 @media(max-width:520px){.formgrid{grid-template-columns:1fr}.span2{grid-column:auto}.kpis3{grid-template-columns:1fr 1fr 1fr}.routekpis{grid-template-columns:1fr 1fr 1fr}.saleRow{grid-template-columns:1fr 70px}.lineTotal,.saleRow button{grid-column:auto}}
 </style>
@@ -126,9 +140,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 </section>
 
 <section id="routes" class="screen">
-  <div class="cardhead"><div><h1>Rotas</h1><div class="muted">Clientes no melhor momento de compra.</div></div><button class="btn secondary" onclick="openRouteSheet()">＋ Região</button></div>
-  <div class="notice" style="margin-bottom:12px">Custo da região é cadastrado uma única vez. Ticket, frequência, margem e próxima compra vêm do histórico de vendas.</div>
-  <div id="routesList"></div>
+  <div class="cardhead">
+    <div><h1>Rotas inteligentes</h1><div class="muted">Agrupa clientes críticos e compara bate-volta com hospedagem.</div></div>
+    <button class="btn" onclick="analyzeSmartRoutes()">Analisar rotas</button>
+  </div>
+  <div class="notice" style="margin-bottom:12px">A base é sempre a configurada em <b>Mais → Configurações</b>. O sistema usa endereço/cidade, distância rodoviária, tempo, pedágio quando disponível, faturamento potencial e lucro bruto.</div>
+  <div id="routeCandidates" class="card"></div>
+  <div id="smartRoutesList"></div>
 </section>
 
 <section id="collections" class="screen">
@@ -148,7 +166,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="go('products')"><span>🔋</span>Produtos e estoque<small>Modelos, custo e saldo</small></button>
     <button class="morecard" onclick="go('warranties')"><span>🛡️</span>Garantias / sucatas<small>Prazo, coleta e status</small></button>
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
-    <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Custos de rota e backup</small></button>
+    <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
 </section>
 
@@ -201,12 +219,23 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   <button class="back" onclick="go('more')">← Voltar</button>
   <h1>Configurações</h1>
   <div class="card">
+    <div class="cardhead"><div><h2>Operação e rotas</h2><div class="muted">Valores usados na decisão de viagem.</div></div></div>
     <div class="formgrid">
+      <div class="field span2"><label>Base de saída e retorno</label><input id="cfgBase" placeholder="Osasco, SP, Brasil"></div>
       <div class="field"><label>Custo estimado por km</label><input id="cfgKm" type="number" step=".01"></div>
+      <div class="field"><label>Hospedagem por noite</label><input id="cfgHotel" type="number" step=".01"></div>
       <div class="field"><label>Janela de visita (dias)</label><input id="cfgWindow" type="number" step="1"></div>
-      <div class="field span2"><label>Cidade/base</label><input id="cfgBase"></div>
+      <div class="field"><label>Tempo médio por cliente (min)</label><input id="cfgVisitMinutes" type="number" step="5"></div>
+      <div class="field"><label>Máximo de horas por dia</label><input id="cfgMaxHours" type="number" step=".5"></div>
+      <div class="field"><label>WhatsApp AX Baterias</label><input id="cfgCompanyPhone" placeholder="11999999999"></div>
     </div>
     <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar</button></div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><div><h2>Integração de rotas</h2><div class="muted">Configuração técnica para distâncias e pedágios reais.</div></div><span id="mapsStatus" class="badge warn">não configurado</span></div>
+    <div class="field"><label>Google Maps API Key</label><input id="cfgMapsKey" type="password" placeholder="Cole a API key do Google Maps"></div>
+    <div class="notice" style="margin-top:9px">Restrinja a chave no Google Cloud ao domínio <b>axbaterias.github.io</b>. O Alex não precisa mexer nisso depois de configurado.</div>
+    <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
     <div class="cardhead"><h2>Dados</h2></div>
@@ -244,7 +273,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="field"><label>CPF/CNPJ</label><input id="cDoc"></div>
 <div class="field span2"><label>Endereço</label><input id="cAddress"></div>
 <div class="field"><label>Cidade</label><input id="cCity" required></div>
-<div class="field"><label>Rota / região</label><select id="cRoute"></select></div>
+<input type="hidden" id="cRoute" value="">
 <div class="field"><label>Tabela padrão</label><select id="cPrice"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
 <div class="field"><label>Intervalo inicial</label><select id="cInterval"><option value="15">15 dias</option><option value="20">20 dias</option><option value="30">30 dias</option><option value="45">45 dias</option></select></div>
 <div class="field span2"><label>Observação</label><textarea id="cNote"></textarea></div>
@@ -285,11 +314,22 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="field"><label>1º vencimento</label><input id="sDue" type="date"></div>
 <div class="field"><label>Recebido no ato?</label><select id="sPaid"><option value="no">Não</option><option value="yes">Sim</option></select></div>
 <div class="field span2"><label>Itens</label><div id="saleItems"></div><button class="btn secondary" type="button" onclick="addSaleItem()">＋ Adicionar item</button></div>
-<div class="field"><label>Total</label><div class="metric" style="padding:10px"><div class="value" id="saleTotal" style="font-size:18px">R$ 0,00</div></div></div>
-<div class="field"><label>Margem estimada</label><div class="metric" style="padding:10px"><div class="value" id="saleMargin" style="font-size:18px">R$ 0,00</div></div></div>
+<div class="field"><label>Valor da venda</label><div class="metric" style="padding:10px"><div class="value" id="saleTotal" style="font-size:18px">R$ 0,00</div></div></div>
+<div class="field"><label>Custo dos produtos</label><div class="metric" style="padding:10px"><div class="value" id="saleCostPreview" style="font-size:18px">R$ 0,00</div></div></div>
+<div class="field"><label>Lucro bruto</label><div class="metric" style="padding:10px"><div class="value" id="saleProfitPreview" style="font-size:18px">R$ 0,00</div></div></div>
+<div class="field"><label>Rentabilidade da venda</label><div class="metric" style="padding:10px"><div class="value" id="saleRentabilityPreview" style="font-size:18px">0%</div></div></div>
 <div class="field span2"><label>Observação</label><input id="sNote"></div>
 <div class="field span2"><button class="btn" type="submit">Finalizar venda</button></div>
 </form></div></div>
+
+<!-- Receipt sheet -->
+<div class="sheet" id="receiptSheet"><div class="sheetpanel"><div class="sheetbar"></div>
+  <div class="cardhead"><div><h2>Comprovante da venda</h2><div class="muted">Gerado automaticamente ao finalizar.</div></div><button class="btn secondary" onclick="closeSheet('receiptSheet')">Fechar</button></div>
+  <img id="receiptPreview" class="receipt-preview" alt="Comprovante AX Baterias">
+  <canvas id="receiptCanvas" style="display:none"></canvas>
+  <div class="actions" style="margin-top:12px"><button class="btn blue" onclick="shareReceipt()">Enviar pelo WhatsApp</button><button class="btn secondary" onclick="downloadReceipt()">Salvar imagem</button></div>
+  <div class="notice" style="margin-top:10px">No iPhone, o botão de envio abre o compartilhamento do aparelho com a imagem pronta. O comprovante é identificado como <b>documento não fiscal</b>.</div>
+</div></div>
 
 <!-- Warranty sheet -->
 <div class="sheet" id="warrantySheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2 id="warrantySheetTitle">Garantia / sucata</h2><button class="btn secondary" onclick="closeSheet('warrantySheet')">Fechar</button></div>
@@ -309,13 +349,17 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <script src="./config.js"></script>
 <script>
 const KEY="ax_baterias_mobile_v4_cache";
-const defaults={clients:[],routes:[],products:[],sales:[],visits:[],warranties:[],config:{costKm:.85,window:5,base:""},collectionTemplate:"Oi, {cliente}! Tudo bem? Passando para lembrar do pagamento de {valor}, referente ao pedido de {data}, com vencimento em {vencimento}. Quando conseguir realizar, me avisa por favor. Obrigado!"};
+const defaults={clients:[],routes:[],products:[],sales:[],visits:[],warranties:[],config:{costKm:1.50,window:5,base:"Osasco, SP, Brasil",hotelCost:250,visitMinutes:35,maxDailyHours:9,companyPhone:"",googleMapsApiKey:""},collectionTemplate:"Oi, {cliente}! Tudo bem? Passando para lembrar do pagamento de {valor}, referente ao pedido de {data}, com vencimento em {vencimento}. Quando conseguir realizar, me avisa por favor. Obrigado!"};
 let state=loadCache();
 let currentPriceTable=0;
+let smartRoutePlan=null;
+let activeReceiptSaleId=null;
+let mapsLoaderPromise=null;
 let sb=null,currentUser=null,remoteTimer=null;
 
 function copy(o){return JSON.parse(JSON.stringify(o))}
-function loadCache(){try{return Object.assign(copy(defaults),JSON.parse(localStorage.getItem(KEY)||"{}"))}catch{return copy(defaults)}}
+function ensureConfig(){state.config=Object.assign(copy(defaults.config),state.config||{})}
+function loadCache(){try{const loaded=Object.assign(copy(defaults),JSON.parse(localStorage.getItem(KEY)||"{}"));loaded.config=Object.assign(copy(defaults.config),loaded.config||{});return loaded}catch{return copy(defaults)}}
 function setSync(text,kind=""){const el=document.getElementById("syncStatus");if(!el)return;el.textContent=text;el.className="syncpill "+kind}
 function save(){
   try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}
@@ -342,7 +386,7 @@ async function loadRemote(user){
   const {data,error}=await sb.from("ax_app_state").select("data").eq("user_id",user.id).maybeSingle();
   if(error){console.error(error);setSync("erro no banco","error");throw error}
   if(data?.data){
-    state=Object.assign(copy(defaults),data.data);
+    state=Object.assign(copy(defaults),data.data);ensureConfig();
     try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}
   }else{
     const {error:upErr}=await sb.from("ax_app_state").upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:"user_id"});
@@ -453,38 +497,76 @@ function clientStats(id){
  const open=sales.reduce((a,s)=>a+saleOpen(s),0);const visits=state.visits.filter(v=>v.clientId===id);const conv=visits.length?visits.filter(v=>v.result==="Venda").length/visits.length:1;
  return {ticket,avgMargin,avgInterval,interval,last,next,open,orders:sales.length,visits:visits.length,conv}
 }
-function routeMetrics(r){
- const cs=state.clients.filter(c=>c.routeId===r.id);let due=0,potential=0,margin=0;const people=[];
- cs.forEach(c=>{const st=clientStats(c.id);if(!st.orders)return;const delta=days(today(),st.next);if(delta<=Number(state.config.window||5)){const readiness=delta<=0?1:Math.max(.55,1-(delta/(Number(state.config.window||5)+1))*.35);const conv=Math.max(.25,st.conv);due++;potential+=st.ticket*readiness*conv;margin+=st.avgMargin*readiness*conv;people.push({c,st})}});
- const cost=Number(r.km||0)*Number(state.config.costKm||0)+Number(r.toll||0)+Number(r.hotel||0);const result=margin-cost;let label="Aguardar",cls="bad";if(due&&result>0){label="Recomendada";cls="good"}else if(due&&margin>=cost*.75){label="Avaliar";cls="warn"}
- return {due,potential,margin,cost,result,label,cls,people}
+function saleCostValue(s){return (s.items||[]).reduce((a,i)=>a+Number(i.cost||0),0)}
+function saleGrossProfit(s){return Number(s.marginValue!=null?s.marginValue:Number(s.total||0)-saleCostValue(s))}
+function saleRentability(s){return Number(s.total||0)>0?saleGrossProfit(s)/Number(s.total)*100:0}
+
+function criticalClients(){
+ const windowDays=Number(state.config.window||5);
+ return state.clients.map(c=>{
+   const st=clientStats(c.id),delta=st.next?days(today(),st.next):null,automatic=!!(st.orders&&st.next&&delta<=windowDays),manual=!!c.visitPriority;
+   const address=[c.address,c.city,"SP","Brasil"].filter(Boolean).join(", ");
+   const readiness=manual?1:(delta==null?0:delta<=0?1:Math.max(.55,1-(delta/(windowDays+1))*.35));
+   const conv=Math.max(.25,st.conv||1);
+   return {c,st,delta,automatic,manual,address,readiness,conv,revenue:st.orders?st.ticket*readiness*conv:0,grossProfit:st.orders?st.avgMargin*readiness*conv:0};
+ }).filter(x=>(x.manual||x.automatic)&&x.address)
 }
+function mapsKey(){return String(state.config.googleMapsApiKey||"").trim()}
+function mapsConfigured(){return mapsKey().length>15}
+async function loadGoogleMaps(){
+ if(window.google?.maps?.importLibrary)return;
+ if(mapsLoaderPromise)return mapsLoaderPromise;
+ if(!mapsConfigured())throw new Error("Google Maps API Key ainda não configurada.");
+ mapsLoaderPromise=new Promise((resolve,reject)=>{window.__axMapsReady=()=>resolve();const s=document.createElement("script");s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(mapsKey())}&v=weekly&loading=async&callback=__axMapsReady`;s.async=true;s.defer=true;s.onerror=()=>reject(new Error("Não foi possível carregar o Google Maps."));document.head.appendChild(s)});
+ return mapsLoaderPromise
+}
+function moneyValue(m){if(!m)return 0;return Number(m.units||0)+Number(m.nanos||0)/1e9}
+function matrixCell(matrix,i,j){const item=matrix?.rows?.[i]?.items?.[j];if(!item||item.condition==="ROUTE_NOT_FOUND")return {km:Infinity,minutes:Infinity,toll:0};const prices=item.travelAdvisory?.tollInfo?.estimatedPrices||[],br=prices.find(p=>p.currencyCode==="BRL")||prices[0];return {km:Number(item.distanceMeters||0)/1000,minutes:Number(item.durationMillis||0)/60000,toll:moneyValue(br)}}
+async function buildRouteMatrix(candidates){
+ await loadGoogleMaps();const {RouteMatrix}=await google.maps.importLibrary("routes");const base=state.config.base||"Osasco, SP, Brasil",points=[base,...candidates.map(x=>x.address)];let result,hasTolls=true;
+ try{const origins=points.map(a=>({waypoint:a,routeModifiers:{vehicleInfo:{emissionType:"GASOLINE"}}}));result=await RouteMatrix.computeRouteMatrix({origins,destinations:points,travelMode:"DRIVING",units:"METRIC",language:"pt-BR",region:"BR",extraComputations:["TOLLS"],fields:["distanceMeters","durationMillis","condition","travelAdvisory.tollInfo"]})}
+ catch(err){console.warn("Tolls unavailable; retrying without tolls",err);hasTolls=false;result=await RouteMatrix.computeRouteMatrix({origins:points,destinations:points,travelMode:"DRIVING",units:"METRIC",language:"pt-BR",region:"BR",fields:["distanceMeters","durationMillis","condition"]})}
+ return {matrix:result.matrix,points,hasTolls}
+}
+function orderCluster(indices,matrix){if(!indices.length)return [];const remaining=[...indices];remaining.sort((a,b)=>matrixCell(matrix,0,b).km-matrixCell(matrix,0,a).km);const order=[remaining.shift()];while(remaining.length){const cur=order.at(-1);let best=0,bestScore=Infinity;remaining.forEach((idx,k)=>{const score=matrixCell(matrix,cur,idx).km+.18*matrixCell(matrix,idx,0).km;if(score<bestScore){bestScore=score;best=k}});order.push(remaining.splice(best,1)[0])}return order}
+function pathTotals(path,matrix,visitCount=0){let km=0,minutes=0,toll=0;for(let i=1;i<path.length;i++){const x=matrixCell(matrix,path[i-1],path[i]);km+=x.km;minutes+=x.minutes;toll+=x.toll}minutes+=visitCount*Number(state.config.visitMinutes||35);return {km,minutes,toll}}
+function routeEconomics(order,candidates,matrix){const t=pathTotals([0,...order,0],matrix,order.length);let revenue=0,grossProfit=0;order.forEach(idx=>{const x=candidates[idx-1];revenue+=x?.revenue||0;grossProfit+=x?.grossProfit||0});const travelCost=t.km*Number(state.config.costKm||0)+t.toll;return {order,...t,revenue,grossProfit,travelCost,result:grossProfit-travelCost}}
+function makeDailyClusters(candidates,matrix){const maxMinutes=Number(state.config.maxDailyHours||9)*60;let unassigned=candidates.map((_,i)=>i+1);const clusters=[];while(unassigned.length){unassigned.sort((a,b)=>matrixCell(matrix,0,b).km-matrixCell(matrix,0,a).km);let cluster=[unassigned.shift()];const nearby=[...unassigned].sort((a,b)=>matrixCell(matrix,cluster[0],a).km-matrixCell(matrix,cluster[0],b).km);for(const idx of nearby){const trial=[...cluster,idx],eco=routeEconomics(orderCluster(trial,matrix),candidates,matrix);if(eco.minutes<=maxMinutes&&trial.length<=7){cluster=trial;unassigned=unassigned.filter(x=>x!==idx)}}clusters.push(routeEconomics(orderCluster(cluster,matrix),candidates,matrix))}return clusters.sort((a,b)=>b.result-a.result)}
+function overnightAlternative(routes,candidates,matrix){if(routes.length<2)return null;const maxMinutes=Number(state.config.maxDailyHours||9)*60;let best=null;for(let a=0;a<routes.length;a++)for(let b=a+1;b<routes.length;b++)for(const swap of [false,true]){const A=swap?routes[b]:routes[a],B=swap?routes[a]:routes[b];for(const revA of [false,true])for(const revB of [false,true]){const oa=revA?[...A.order].reverse():[...A.order],ob=revB?[...B.order].reverse():[...B.order],d1=pathTotals([0,...oa],matrix,oa.length),d2=pathTotals([oa.at(-1),...ob,0],matrix,ob.length);if(d1.minutes>maxMinutes||d2.minutes>maxMinutes)continue;const km=d1.km+d2.km,toll=d1.toll+d2.toll,travelCost=km*Number(state.config.costKm||0)+toll+Number(state.config.hotelCost||0),separateCost=A.travelCost+B.travelCost,revenue=A.revenue+B.revenue,grossProfit=A.grossProfit+B.grossProfit,alt={day1:oa,day2:ob,d1,d2,km,toll,travelCost,separateCost,savings:separateCost-travelCost,revenue,grossProfit,result:grossProfit-travelCost};if(!best||alt.travelCost<best.travelCost)best=alt}}return best}
+
+
 
 function fillSelects(){
- cRoute.innerHTML='<option value="">Sem rota</option>'+state.routes.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join("");
  const opts='<option value="">Selecione</option>'+state.clients.map(c=>`<option value="${c.id}">${esc(c.name)} — ${esc(c.city)}</option>`).join("");
  sClient.innerHTML=opts;wClient.innerHTML=opts
 }
+
 function renderHome(){
  const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart());hSales.textContent=brl(month.reduce((a,s)=>a+Number(s.total),0));hOpen.textContent=brl(state.sales.reduce((a,s)=>a+saleOpen(s),0));
  hOver.textContent=brl(state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0));
  const urgent=state.warranties.filter(w=>w.type==="Garantia"&&w.mfg&&!["Aprovada","Rejeitada","Substituída"].includes(w.status)&&days(today(),addMonths(w.mfg,9))<=30).length;hWar.textContent=urgent;
- const best=state.routes.map(r=>({r,m:routeMetrics(r)})).sort((a,b)=>b.m.result-a.m.result)[0];
- homeRoute.innerHTML=best?`<div class="routebox"><div class="routehead"><div><b>${esc(best.r.name)}</b><div class="muted">${best.m.due} cliente(s) na janela</div></div><span class="badge ${best.m.cls}">${best.m.label}</span></div><div class="routekpis"><div>Venda potencial<b>${brl(best.m.potential)}</b></div><div>Custo<b>${brl(best.m.cost)}</b></div><div>Resultado<b>${brl(best.m.result)}</b></div></div></div>`:'<div class="empty">Cadastre rotas e vendas para gerar recomendações.</div>';
- const over=state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0);const low=state.products.filter(p=>Number(p.qty)<=Number(p.min)).length;const list=[];
- if(over)list.push(`<div class="listitem"><div><div class="title">${brl(over)} vencidos</div><div class="meta">Prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);
- if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);
- if(urgent)list.push(`<div class="listitem"><div><div class="title">${urgent} garantia(s) próximas do limite</div><div class="meta">Verificar coleta/envio</div></div><span class="badge bad">Urgente</span></div>`);
- homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>'
+ const critical=criticalClients();
+ if(smartRoutePlan?.routes?.length){const best=smartRoutePlan.routes[0];homeRoute.innerHTML=`<div class="routebox"><div class="routehead"><div><b>Rota sugerida</b><div class="muted">${best.order.length} cliente(s) • ${best.km.toFixed(0)} km</div></div><span class="badge ${best.result>0?"good":"warn"}">${best.result>0?"Recomendada":"Avaliar"}</span></div><div class="routekpis"><div>Faturamento potencial<b>${brl(best.revenue)}</b></div><div>Lucro bruto potencial<b>${brl(best.grossProfit)}</b></div><div>Resultado da rota<b>${brl(best.result)}</b></div></div></div>`}
+ else homeRoute.innerHTML=critical.length?`<div class="listitem"><div><div class="title">${critical.length} cliente(s) precisam de análise de rota</div><div class="meta">Abra Rotas e toque em “Analisar rotas”.</div></div><button class="btn secondary" onclick="go('routes')">Analisar</button></div>`:'<div class="empty">Nenhum cliente está crítico para visita agora.</div>';
+ const over=state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0),low=state.products.filter(p=>Number(p.qty)<=Number(p.min)).length,list=[];
+ if(over)list.push(`<div class="listitem"><div><div class="title">${brl(over)} vencidos</div><div class="meta">Prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);if(urgent)list.push(`<div class="listitem"><div><div class="title">${urgent} garantia(s) próximas do limite</div><div class="meta">Verificar coleta/envio</div></div><span class="badge bad">Urgente</span></div>`);homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>'
 }
+
 function renderSales(){
  if(!state.sales.length){salesList.innerHTML='<div class="empty">Nenhuma venda registrada.</div>';return}
- salesList.innerHTML=[...state.sales].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>{const c=state.clients.find(c=>c.id===s.clientId);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Em aberto: ${brl(saleOpen(s))}</div><div class="actions" style="margin-top:11px"><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
+ salesList.innerHTML=[...state.sales].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>{const c=state.clients.find(c=>c.id===s.clientId),profit=saleGrossProfit(s),rent=saleRentability(s);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Lucro bruto: ${brl(profit)} • Rentabilidade: ${rent.toFixed(1)}% • Em aberto: ${brl(saleOpen(s))}</div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
 }
+
 function renderRoutes(){
- if(!state.routes.length){routesList.innerHTML='<div class="empty">Nenhuma região cadastrada.</div>';return}
- routesList.innerHTML=state.routes.map(r=>{const m=routeMetrics(r);return `<div class="routebox"><div class="routehead"><div><b>${esc(r.name)}</b><div class="muted">${r.km||0} km • pedágio ${brl(r.toll)} • outros ${brl(r.hotel)}</div></div><span class="badge ${m.cls}">${m.label}</span></div><div class="routekpis"><div>Venda potencial<b>${brl(m.potential)}</b></div><div>Custo<b>${brl(m.cost)}</b></div><div>Resultado<b>${brl(m.result)}</b></div></div>${m.people.length?`<div class="list" style="margin-top:10px">${m.people.map(x=>`<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">Próxima compra: ${fmt(x.st.next)} • ticket ${brl(x.st.ticket)}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">WhatsApp</button></div>`).join("")}</div>`:""}<div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="openRouteSheet('${r.id}')">Editar região</button><button class="btn danger" onclick="deleteRoute('${r.id}')">Excluir</button></div></div>`}).join("")
+ const crit=criticalClients();
+ routeCandidates.innerHTML=`<div class="cardhead"><div><h2>Clientes que precisam de visita</h2><div class="muted">${crit.length} cliente(s) dentro da janela ou marcados como prioridade.</div></div></div>`+(crit.length?`<div class="list">${crit.map(x=>`<div class="listitem"><div><div class="title">${x.manual?'<span class="priority-dot"></span>':""}${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ${x.st.orders?`próxima compra ${fmt(x.st.next)} • ticket ${brl(x.st.ticket)}`:"sem histórico"}</div></div><button class="btn secondary" onclick="toggleVisitPriority('${x.c.id}')">${x.manual?"Retirar prioridade":"Priorizar"}</button></div>`).join("")}</div>`:'<div class="empty">Nenhum cliente crítico. Na ficha do cliente você pode marcar “Priorizar visita”.</div>');
+ if(!smartRoutePlan){smartRoutesList.innerHTML='<div class="empty">Toque em <b>Analisar rotas</b> para o sistema montar os grupos e comparar os cenários.</div>';return}renderSmartRoutePlan()
 }
+function fmtHours(minutes){const h=Math.floor(minutes/60),m=Math.round(minutes%60);return `${h}h${String(m).padStart(2,"0")}`}
+function routeSequenceHtml(order,candidates){const base=(state.config.base||"Osasco").split(",")[0],names=[base,...order.map(i=>candidates[i-1]?.c?.city||candidates[i-1]?.c?.name||"Cliente"),base];return `<div class="route-seq">${names.map((n,i)=>`${i?'<span class="route-arrow">→</span>':""}<span class="route-stop">${esc(n)}</span>`).join("")}</div>`}
+function renderSmartRoutePlan(){const p=smartRoutePlan;if(p.error){smartRoutesList.innerHTML=`<div class="card"><span class="badge bad">Não foi possível calcular</span><div class="explain">${esc(p.error)}</div></div>`;return}let h=`<div class="card"><div class="cardhead"><div><h2>Plano recomendado</h2><div class="muted">Base: ${esc(state.config.base)} • ${p.hasTolls?"pedágios estimados incluídos":"pedágios indisponíveis nesta análise"}</div></div><span class="badge good">${p.routes.length} rota(s)</span></div><div class="explain">O sistema agrupou clientes próximos, respeitou o limite diário de ${state.config.maxDailyHours}h e priorizou começar pelos pontos mais distantes para ir voltando em direção à base.</div></div>`;p.routes.forEach((r,i)=>{const cls=r.result>0?"good":r.grossProfit>=r.travelCost*.75?"warn":"bad";h+=`<div class="card"><div class="cardhead"><div><h2>Rota ${i+1}</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${cls}">${r.result>0?"Recomendada":cls==="warn"?"Avaliar":"Baixo retorno"}</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${brl(r.revenue)}</b><span>Faturamento potencial</span></div><div class="mini"><b>${brl(r.grossProfit)}</b><span>Lucro bruto potencial</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado da viagem</span></div><div class="mini"><b>${brl(r.result)}</b><span>Resultado estimado da rota</span></div></div><div class="muted">Rodagem: ${brl(r.km*Number(state.config.costKm||0))}${r.toll?` • Pedágios: ${brl(r.toll)}`:""}</div><div class="list" style="margin-top:10px">${r.order.map(idx=>{const x=p.candidates[idx-1];return `<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ticket ${brl(x.st.ticket)} • lucro médio ${brl(x.st.avgMargin)}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">Confirmar visita</button></div>`}).join("")}</div></div>`});if(p.overnight){const o=p.overnight,good=o.savings>0;h+=`<div class="card"><div class="cardhead"><div><h2>Alternativa com 1 hospedagem</h2><div class="muted">Comparação com duas rotas separadas.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode compensar":"Não economiza"}</span></div><div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div><div class="explain">${good?`Dormir fora reduz o custo total estimado em ${brl(o.savings)}. O cálculo inclui uma noite de ${brl(state.config.hotelCost)}.`:`A economia de deslocamento não paga a hospedagem de ${brl(state.config.hotelCost)}. As rotas separadas ficam mais econômicas.`}</div></div>`}smartRoutesList.innerHTML=h}
+async function analyzeSmartRoutes(){const candidates=criticalClients();smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Calculando distâncias, tempos, pedágios e combinações...</div>';if(!candidates.length){smartRoutePlan=null;renderRoutes();return}if(candidates.length>24){smartRoutePlan={error:"Há mais de 24 clientes críticos. Reduza a janela ou priorize os clientes em blocos."};renderRoutes();return}if(!mapsConfigured()){smartRoutePlan={error:"A integração de rotas ainda não está configurada. Vá em Mais → Configurações → Integração de rotas e informe a Google Maps API Key."};renderRoutes();return}try{const {matrix,hasTolls}=await buildRouteMatrix(candidates),daily=makeDailyClusters(candidates,matrix);smartRoutePlan={candidates,matrix,routes:daily,hasTolls,overnight:overnightAlternative(daily,candidates,matrix)}}catch(e){console.error(e);smartRoutePlan={error:e?.message||"Erro ao calcular as rotas."}}renderRoutes();renderHome()}
+
 function renderCollections(){
  const rows=[];state.sales.forEach(s=>s.installments.forEach(p=>{if(!p.paid)rows.push({s,p})}));rows.sort((a,b)=>a.p.due.localeCompare(b.p.due));
  if(!rows.length){collectionsList.innerHTML='<div class="empty">Nenhuma cobrança pendente.</div>';return}
@@ -492,15 +574,16 @@ function renderCollections(){
  collectionTemplate.value=state.collectionTemplate
 }
 function renderClients(){
- const q=(clientSearch?.value||"").toLowerCase().trim();const list=state.clients.filter(c=>!q||c.name.toLowerCase().includes(q)||c.city.toLowerCase().includes(q));
+ const q=(clientSearch?.value||"").toLowerCase().trim(),list=state.clients.filter(c=>!q||c.name.toLowerCase().includes(q)||c.city.toLowerCase().includes(q));
  if(!list.length){clientsList.innerHTML='<div class="empty">Nenhum cliente encontrado.</div>';return}
- clientsList.innerHTML=list.map(c=>{const st=clientStats(c.id),r=state.routes.find(r=>r.id===c.routeId);return `<div class="listitem"><div onclick="showClient('${c.id}')" style="flex:1;min-width:0"><div class="title">${esc(c.name)}</div><div class="meta">${esc(c.city)} • ${esc(r?.name||"sem rota")} • tabela ${c.price}</div></div><div style="text-align:right"><b>${st.orders?brl(st.ticket):"Novo"}</b><div class="meta">${st.orders?`próx. ${fmt(st.next)}`:"sem histórico"}</div><div class="actions" style="justify-content:flex-end;margin-top:6px"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}')">Excluir</button></div></div></div>`}).join("")
+ clientsList.innerHTML=list.map(c=>{const st=clientStats(c.id);return `<div class="listitem"><div onclick="showClient('${c.id}')" style="flex:1;min-width:0"><div class="title">${c.visitPriority?'<span class="priority-dot"></span>':""}${esc(c.name)}</div><div class="meta">${esc(c.city)} • tabela ${c.price}</div></div><div style="text-align:right"><b>${st.orders?brl(st.ticket):"Novo"}</b><div class="meta">${st.orders?`próx. ${fmt(st.next)}`:"sem histórico"}</div><div class="actions" style="justify-content:flex-end;margin-top:6px"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}')">Excluir</button></div></div></div>`}).join("")
 }
+
 function showClient(id){
- const c=state.clients.find(c=>c.id===id);if(!c)return;const st=clientStats(id),r=state.routes.find(r=>r.id===c.routeId);
- clientDetailContent.innerHTML=`<div class="detailtop"><div><div class="detailname">${esc(c.name)}</div><div class="muted">${esc(c.city)} • ${esc(r?.name||"sem rota")}</div></div><div class="actions"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}',true)">Excluir</button></div></div><div class="kpis3"><div class="mini"><b>${st.orders?brl(st.ticket):"—"}</b><span>Ticket médio</span></div><div class="mini"><b>${st.orders?st.interval+" dias":"—"}</b><span>Entre compras</span></div><div class="mini"><b>${brl(st.open)}</b><span>Em aberto</span></div></div><div class="card" style="margin-top:12px"><div class="cardhead"><h2>Próxima compra provável</h2></div><div style="font-size:22px;font-weight:850">${fmt(st.next)}</div><div class="muted" style="margin-top:4px">Última compra: ${fmt(st.last)}</div></div><div class="card"><div class="cardhead"><h2>Contato</h2></div><div class="muted">${esc(c.phone||"sem WhatsApp")}<br>${esc(c.address||"")} ${esc(c.city||"")}</div><div class="actions" style="margin-top:10px"><button class="btn blue" onclick="openPreVisit('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="logNoSaleVisit('${c.id}')">Registrar visita sem venda</button></div></div>`;
- go("clientDetail")
+ const c=state.clients.find(c=>c.id===id);if(!c)return;const st=clientStats(id);
+ clientDetailContent.innerHTML=`<div class="detailtop"><div><div class="detailname">${esc(c.name)}</div><div class="muted">${esc(c.city)} • tabela ${c.price}</div></div><div class="actions"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}',true)">Excluir</button></div></div><div class="kpis3"><div class="mini"><b>${st.orders?brl(st.ticket):"—"}</b><span>Ticket médio</span></div><div class="mini"><b>${st.orders?brl(st.avgMargin):"—"}</b><span>Lucro médio/venda</span></div><div class="mini"><b>${brl(st.open)}</b><span>Em aberto</span></div></div><div class="card" style="margin-top:12px"><div class="cardhead"><h2>Momento de visita</h2><span class="badge ${c.visitPriority?"bad":"good"}">${c.visitPriority?"Prioridade manual":"Automático"}</span></div><div style="font-size:22px;font-weight:850">${fmt(st.next)}</div><div class="muted" style="margin-top:4px">Última compra: ${fmt(st.last)} • frequência: ${st.orders?st.interval+" dias":"sem histórico"}</div><div class="actions" style="margin-top:10px"><button class="btn ${c.visitPriority?"secondary":"danger"}" onclick="toggleVisitPriority('${c.id}')">${c.visitPriority?"Retirar prioridade":"Priorizar próxima visita"}</button></div></div><div class="card"><div class="cardhead"><h2>Contato e endereço</h2></div><div class="muted">${esc(c.phone||"sem WhatsApp")}<br>${esc(c.address||"")} ${esc(c.city||"")}</div><div class="actions" style="margin-top:10px"><button class="btn blue" onclick="openPreVisit('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="logNoSaleVisit('${c.id}')">Registrar visita sem venda</button></div></div>`;go("clientDetail")
 }
+
 function renderPriceTables(){
  priceTabs.innerHTML=[0,1,2,3,4,5].map(i=>`<button class="${i===currentPriceTable?"active":""}" onclick="selectPriceTable(${i})">Tabela ${i}</button>`).join("");
  priceTableTitle.textContent=`Tabela ${currentPriceTable}`;
@@ -521,30 +604,32 @@ function renderMonth(){
  const m=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),sold=m.reduce((a,s)=>a+Number(s.total),0),open=m.reduce((a,s)=>a+saleOpen(s),0);
  monthReport.innerHTML=`<div class="kpis3"><div class="mini"><b>${brl(sold)}</b><span>Vendas</span></div><div class="mini"><b>${brl(sold-open)}</b><span>Recebido</span></div><div class="mini"><b>${brl(open)}</b><span>A receber</span></div></div>`
 }
-function renderSettings(){cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||""}
-function renderAll(){fillSelects();renderHome();renderSales();renderRoutes();renderCollections();renderClients();renderPriceTables();renderProducts();renderWarranties();renderMonth();renderSettings()}
+function renderSettings(){ensureConfig();cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgMapsKey.value=state.config.googleMapsApiKey||"";mapsStatus.textContent=mapsConfigured()?"configurado":"não configurado";mapsStatus.className="badge "+(mapsConfigured()?"good":"warn")}
+
+function renderAll(){ensureConfig();fillSelects();renderHome();renderSales();renderRoutes();renderCollections();renderClients();renderPriceTables();renderProducts();renderWarranties();renderMonth();renderSettings()}
 
 function addSaleItem(productId="",qty=1){
  const row=document.createElement("div");row.className="saleRow";
  row.innerHTML=`<select class="sp"><option value="">Produto</option>${state.products.map(p=>`<option value="${p.id}" ${p.id===productId?"selected":""}>${esc(p.name)} • ${p.qty} un.</option>`).join("")}</select><input class="sq" type="number" min="1" value="${Number(qty)||1}"><div class="lineTotal">R$ 0,00</div><button class="btn secondary" type="button">×</button>`;
  row.querySelector(".sp").onchange=updateSale;row.querySelector(".sq").oninput=updateSale;row.querySelector("button").onclick=()=>{row.remove();updateSale()};saleItems.appendChild(row);updateSale()
 }
-function updateSale(){let total=0,cost=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);total+=line;cost+=p?Number(p.cost||0)*q:0});saleTotal.textContent=brl(total);saleMargin.textContent=brl(total-cost)}
+function updateSale(){let total=0,cost=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);total+=line;cost+=p?Number(p.cost||0)*q:0});const profit=total-cost,rent=total>0?profit/total*100:0;saleTotal.textContent=brl(total);saleCostPreview.textContent=brl(cost);saleProfitPreview.textContent=brl(profit);saleRentabilityPreview.textContent=rent.toFixed(1)+"%"}
+
 sClient.addEventListener("change",()=>{const c=state.clients.find(c=>c.id===sClient.value);if(c)sTable.value=c.price||"0";updateSale()});sTable.addEventListener("change",updateSale);
 
-clientForm.addEventListener("submit",e=>{e.preventDefault();let c=state.clients.find(c=>c.id===cId.value);const data={name:cName.value.trim(),phone:cPhone.value.trim(),doc:cDoc.value.trim(),address:cAddress.value.trim(),city:cCity.value.trim(),routeId:cRoute.value,price:cPrice.value,interval:Number(cInterval.value),note:cNote.value.trim()};if(c)Object.assign(c,data);else state.clients.push({id:uid(),...data});closeSheet("clientSheet");save()});
+clientForm.addEventListener("submit",e=>{e.preventDefault();let c=state.clients.find(c=>c.id===cId.value);const data={name:cName.value.trim(),phone:cPhone.value.trim(),doc:cDoc.value.trim(),address:cAddress.value.trim(),city:cCity.value.trim(),routeId:c?.routeId||"",price:cPrice.value,interval:Number(cInterval.value),note:cNote.value.trim(),visitPriority:!!c?.visitPriority};if(c)Object.assign(c,data);else state.clients.push({id:uid(),...data});smartRoutePlan=null;closeSheet("clientSheet");save()});
 productForm.addEventListener("submit",e=>{e.preventDefault();let p=state.products.find(p=>p.id===pId.value);const data={name:pName.value.trim(),qty:Number(pQty.value),min:Number(pMin.value),cost:Number(pCost.value)};if(p)Object.assign(p,data);else state.products.push({id:uid(),...data,prices:[0,0,0,0,0,0]});closeSheet("productSheet");save()});
 routeForm.addEventListener("submit",e=>{e.preventDefault();let r=state.routes.find(r=>r.id===rId.value);const data={name:rName.value.trim(),km:Number(rKm.value),toll:Number(rToll.value),hotel:Number(rHotel.value)};if(r)Object.assign(r,data);else state.routes.push({id:uid(),...data});closeSheet("routeSheet");save()});
 saleForm.addEventListener("submit",e=>{
  e.preventDefault();const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Selecione o cliente.");return}
- const original=state.sales.find(s=>s.id===sId.value);const restored={};if(original)original.items.forEach(i=>restored[i.productId]=(restored[i.productId]||0)+Number(i.qty));
+ const original=state.sales.find(s=>s.id===sId.value),restored={};if(original)original.items.forEach(i=>restored[i.productId]=(restored[i.productId]||0)+Number(i.qty));
  const items=[];let total=0,cost=0;for(const r of document.querySelectorAll(".saleRow")){const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(!p||q<=0)continue;const available=Number(p.qty)+(restored[p.id]||0);if(available<q){alert(`Estoque insuficiente de ${p.name}. Disponível para esta edição: ${available}.`);return}const unit=Number((p.prices||[])[Number(sTable.value)]||0);items.push({productId:p.id,name:p.name,qty:q,unit,line:unit*q,cost:Number(p.cost||0)*q});total+=unit*q;cost+=Number(p.cost||0)*q}if(!items.length){alert("Adicione pelo menos um item.");return}
  const n=Math.max(1,Number(sParts.value||1)),first=sDue.value||sDate.value,parts=[],base=Math.floor((total/n)*100)/100;let acc=0;for(let i=0;i<n;i++){const amount=i===n-1?Math.round((total-acc)*100)/100:base;acc+=amount;const oldPart=original?.installments?.[i];parts.push({id:oldPart?.id||uid(),number:i+1,due:addDays(first,i*30),amount,paid:sPaid.value==="yes"?true:!!oldPart?.paid,sent:!!oldPart?.sent})}
  if(original&&original.installments.some(p=>p.paid)&&Math.abs(Number(original.total)-total)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor mudou. Deseja continuar e recalcular as parcelas?"))return;
- if(original){original.items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)+Number(i.qty)});items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});Object.assign(original,{clientId:c.id,date:sDate.value,method:sMethod.value,priceTable:sTable.value,note:sNote.value.trim(),items,total,marginValue:total-cost,installments:parts});const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id})}
- else{const sale={id:uid(),clientId:c.id,date:sDate.value,method:sMethod.value,priceTable:sTable.value,note:sNote.value.trim(),items,total,marginValue:total-cost,installments:parts};state.sales.push(sale);items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id})}
- closeSheet("saleSheet");save()
+ let savedSale;if(original){original.items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)+Number(i.qty)});items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});Object.assign(original,{clientId:c.id,date:sDate.value,method:sMethod.value,priceTable:sTable.value,note:sNote.value.trim(),items,total,marginValue:total-cost,installments:parts});const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id});savedSale=original}else{const sale={id:uid(),clientId:c.id,date:sDate.value,method:sMethod.value,priceTable:sTable.value,note:sNote.value.trim(),items,total,marginValue:total-cost,installments:parts};state.sales.push(sale);items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale}
+ smartRoutePlan=null;closeSheet("saleSheet");save();setTimeout(()=>openReceipt(savedSale.id),60)
 });
+
 warrantyForm.addEventListener("submit",e=>{e.preventDefault();if(wType.value==="Garantia"&&!wMfg.value){alert("Informe a data de fabricação.");return}let w=state.warranties.find(w=>w.id===wId.value);const data={clientId:wClient.value,type:wType.value,model:wModel.value.trim(),code:wCode.value.trim(),mfg:wMfg.value,collect:wCollect.value,status:wStatus.value};if(w)Object.assign(w,data);else state.warranties.push({id:uid(),...data});closeSheet("warrantySheet");save()});
 
 function deleteClient(id,fromDetail=false){
@@ -566,6 +651,16 @@ function deleteWarranty(id){
  const w=state.warranties.find(w=>w.id===id);if(!w)return;if(confirm(`Excluir este registro de ${w.type.toLowerCase()} (${w.model})?`)){state.warranties=state.warranties.filter(x=>x.id!==id);save()}
 }
 
+function toggleVisitPriority(cid){const c=state.clients.find(c=>c.id===cid);if(!c)return;c.visitPriority=!c.visitPriority;smartRoutePlan=null;save();if(document.getElementById("clientDetail").classList.contains("active"))showClient(cid)}
+function saveSettings(){ensureConfig();Object.assign(state.config,{costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim()});smartRoutePlan=null;save();alert("Configurações salvas.")}
+function saveMapsKey(){ensureConfig();state.config.googleMapsApiKey=cfgMapsKey.value.trim();mapsLoaderPromise=null;smartRoutePlan=null;save();alert("Integração de rotas salva.")}
+function receiptFileName(s){return `AX-Baterias-${s.date}-${s.id.slice(-6)}.png`}
+function drawReceipt(s,c){const canvas=receiptCanvas,ctx=canvas.getContext("2d"),itemH=58,partH=42,h=420+(s.items||[]).length*itemH+(s.installments||[]).length*partH+180;canvas.width=1080;canvas.height=h;ctx.fillStyle="#fff";ctx.fillRect(0,0,1080,h);ctx.fillStyle="#101828";ctx.fillRect(0,0,1080,180);ctx.fillStyle="#fff";ctx.font="bold 54px Arial";ctx.fillText("AX Baterias",70,88);ctx.font="26px Arial";ctx.fillStyle="#d0d5dd";ctx.fillText("Comprovante de venda / pedido",70,135);let y=235;ctx.fillStyle="#182230";ctx.font="bold 30px Arial";ctx.fillText(c?.name||"Cliente",70,y);ctx.font="22px Arial";ctx.fillStyle="#667085";y+=38;ctx.fillText(`${c?.city||""}${c?.doc?"  •  "+c.doc:""}`,70,y);y+=48;ctx.strokeStyle="#e4e7ec";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(70,y);ctx.lineTo(1010,y);ctx.stroke();y+=45;ctx.fillStyle="#667085";ctx.font="bold 19px Arial";ctx.fillText("ITEM",70,y);ctx.fillText("QTD",650,y);ctx.fillText("UNIT.",760,y);ctx.fillText("TOTAL",900,y);y+=30;(s.items||[]).forEach(i=>{ctx.fillStyle="#182230";ctx.font="24px Arial";ctx.fillText(String(i.name).slice(0,38),70,y);ctx.fillText(String(i.qty),660,y);ctx.fillText(brl(i.unit),760,y);ctx.fillText(brl(i.line),900,y);y+=itemH});ctx.strokeStyle="#e4e7ec";ctx.beginPath();ctx.moveTo(70,y);ctx.lineTo(1010,y);ctx.stroke();y+=52;ctx.fillStyle="#667085";ctx.font="22px Arial";ctx.fillText("Forma de pagamento",70,y);ctx.fillStyle="#182230";ctx.font="bold 24px Arial";ctx.fillText(s.method,360,y);y+=46;if((s.installments||[]).length){ctx.fillStyle="#667085";ctx.font="bold 18px Arial";ctx.fillText("PARCELAS / VENCIMENTOS",70,y);y+=32;s.installments.forEach(p=>{ctx.fillStyle="#182230";ctx.font="22px Arial";ctx.fillText(`${p.number}/${s.installments.length}  •  ${fmt(p.due)}  •  ${brl(p.amount)}`,85,y);y+=partH})}y+=15;ctx.fillStyle="#101828";ctx.fillRect(70,y,940,96);ctx.fillStyle="#fff";ctx.font="bold 26px Arial";ctx.fillText("TOTAL DA VENDA",105,y+58);ctx.font="bold 38px Arial";ctx.fillText(brl(s.total),760,y+61);y+=142;ctx.fillStyle="#667085";ctx.font="20px Arial";ctx.fillText(`Data: ${fmt(s.date)}  •  Pedido: ${s.id.slice(-8).toUpperCase()}`,70,y);y+=34;if(state.config.companyPhone){ctx.fillText(`Contato AX Baterias: ${state.config.companyPhone}`,70,y);y+=34}ctx.fillStyle="#b42318";ctx.font="bold 20px Arial";ctx.fillText("COMPROVANTE DE VENDA / PEDIDO — DOCUMENTO NÃO FISCAL",70,y+18);return canvas.toDataURL("image/png")}
+function openReceipt(sid){const s=state.sales.find(s=>s.id===sid);if(!s)return;const c=state.clients.find(c=>c.id===s.clientId);activeReceiptSaleId=sid;receiptPreview.src=drawReceipt(s,c);openSheet("receiptSheet")}
+async function receiptBlob(){return await new Promise(resolve=>receiptCanvas.toBlob(resolve,"image/png",.95))}
+async function shareReceipt(){const s=state.sales.find(s=>s.id===activeReceiptSaleId),c=state.clients.find(c=>c.id===s?.clientId);if(!s)return;const blob=await receiptBlob(),file=new File([blob],receiptFileName(s),{type:"image/png"}),text=`Olá, ${c?.name||""}! Segue o comprovante do seu pedido com a AX Baterias. Total: ${brl(s.total)}.`;try{if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){await navigator.share({title:"Comprovante AX Baterias",text,files:[file]});return}}catch(e){if(e?.name==="AbortError")return}downloadReceipt();openWhats(c?.phone,text+" A imagem do comprovante foi salva para você anexar.")}
+async function downloadReceipt(){const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;const blob=await receiptBlob(),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=receiptFileName(s);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
 function collectionMsg(s,p,c){return state.collectionTemplate.replaceAll("{cliente}",c?.name||"").replaceAll("{valor}",brl(p.amount)).replaceAll("{data}",fmt(s.date)).replaceAll("{vencimento}",fmt(p.due))}
 function openWhats(phone,text){let d=String(phone||"").replace(/\D/g,"");if(!d){alert("Cliente sem WhatsApp.");return}if(!d.startsWith("55"))d="55"+d;window.open(`https://wa.me/${d}?text=${encodeURIComponent(text)}`,"_blank")}
 function openCollectionWhats(sid,pid){const s=state.sales.find(s=>s.id===sid),p=s.installments.find(p=>p.id===pid),c=state.clients.find(c=>c.id===s.clientId);openWhats(c?.phone,collectionMsg(s,p,c))}
@@ -574,7 +669,6 @@ function toggleSent(sid,pid){state.sales.find(s=>s.id===sid).installments.find(p
 function markPaid(sid,pid){state.sales.find(s=>s.id===sid).installments.find(p=>p.id===pid).paid=true;save()}
 function logNoSaleVisit(cid){state.visits.push({id:uid(),clientId:cid,date:today(),result:"Sem venda"});save();alert("Visita sem venda registrada.")}
 function saveCollectionTemplate(){state.collectionTemplate=collectionTemplate.value;save();alert("Mensagem salva.")}
-function saveSettings(){state.config={costKm:Number(cfgKm.value),window:Number(cfgWindow.value),base:cfgBase.value.trim()};save();alert("Configurações salvas.")}
 
 function download(name,text,type="text/csv;charset=utf-8;"){const b=new Blob(["\ufeff"+text],{type}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();URL.revokeObjectURL(a.href)}
 function csv(rows){return rows.map(r=>r.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(";")).join("\n")}
@@ -582,8 +676,8 @@ function exportSales(){download("ax-vendas.csv",csv([["Data","Cliente","Document
 function exportReceivables(){const rows=[["Cliente","Data","Parcela","Valor","Vencimento","Status"]];state.sales.forEach(s=>{const c=state.clients.find(c=>c.id===s.clientId);s.installments.forEach(p=>rows.push([c?.name,s.date,`${p.number}/${s.installments.length}`,p.amount,p.due,p.paid?"Pago":"Aberto"]))});download("ax-recebimentos.csv",csv(rows))}
 function exportClients(){download("ax-clientes.csv",csv([["Cliente","Documento","Cidade","Tabela","Ticket médio","Próxima compra","Em aberto"],...state.clients.map(c=>{const st=clientStats(c.id);return[c.name,c.doc,c.city,c.price,st.ticket,st.next,st.open]})]))}
 function backup(){download("ax-baterias-backup.json",JSON.stringify(state,null,2),"application/json")}
-restoreFile.addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{state=Object.assign(copy(defaults),JSON.parse(await f.text()));save();alert("Backup importado.")}catch{alert("Backup inválido.")}})
-function resetAll(){if(confirm("Apagar todos os dados?")){state=copy(defaults);save()}}
+restoreFile.addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{state=Object.assign(copy(defaults),JSON.parse(await f.text()));ensureConfig();save();alert("Backup importado.")}catch{alert("Backup inválido.")}})
+function resetAll(){if(confirm("Apagar todos os dados?")){state=copy(defaults);smartRoutePlan=null;save()}}
 function seedDemo(){
  if(state.clients.length||state.products.length||state.routes.length||state.sales.length){if(!confirm("Já existem dados. Adicionar demonstração mesmo assim?"))return}
  const r={id:uid(),name:"Sorocaba",km:210,toll:70,hotel:0};state.routes.push(r);
