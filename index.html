@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.3">
+<meta name="ax-version" content="5.4">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -254,6 +254,11 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 .sensitive-card-result{margin-top:9px;border-top:1px solid var(--line);padding-top:9px}
 @media(min-width:760px){.sale-fixed-summary{max-width:760px;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:16px 16px 0 0}}
 @media(max-width:520px){.sale-fixed-summary{gap:5px;padding-left:8px;padding-right:8px}.sale-fixed-summary .mini{padding:8px 6px}.sale-fixed-summary .mini b{font-size:12px}.sale-fixed-summary .mini span{font-size:7px}.sale-admin-grid{grid-template-columns:1fr 1fr}.chart-bar-label{font-size:7px}}
+
+
+/* v5.4 - segurança extra do recibo */
+.receipt-fix-btn{white-space:nowrap}
+.receipt-fix-btn:disabled{opacity:.55}
 
 </style>
 </head>
@@ -647,9 +652,10 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   <div class="receipt-actions">
     <button id="receiptShareBtn" class="btn blue" onclick="sendReceiptWhatsApp()" disabled>Enviar por WhatsApp</button>
     <button id="receiptSaveBtn" class="btn secondary" onclick="downloadReceipt()" disabled>Salvar imagem</button>
+    <button id="receiptFixBtn" class="btn secondary receipt-fix-btn" onclick="regenerateReceiptImage()">↻ Corrigir recibo</button>
   </div>
   <div id="receiptShareStatus" class="receipt-share-status">Aguarde a imagem ficar pronta.</div>
-  <div class="notice" style="margin-top:10px"><b>Envio rápido:</b> no celular, o sistema tenta compartilhar o PNG já com a mensagem. Se o navegador não permitir enviar o arquivo diretamente, ele abre a conversa do cliente com a mensagem pronta e deixa a imagem disponível para colar/anexar.</div>
+  <div class="notice" style="margin-top:10px"><b>Envio rápido:</b> no celular, o sistema tenta compartilhar o PNG já com a mensagem. Se a imagem parecer incorreta, toque em <b>↻ Corrigir recibo</b>: o sistema descarta a imagem atual e gera outra usando somente os dados deste pedido, sem recarregar o site.</div>
 </div></div>
 
 <!-- Warranty sheet -->
@@ -710,10 +716,12 @@ let smartRoutePlan=null;
 let homeFinanceVisible=false;
 let saleAdminResultVisible=false;
 let activeReceiptSaleId=null;
+let activeReceiptImageSaleId=null;
 let activeReceiptBlob=null;
 let activeReceiptFile=null;
 let activeReceiptObjectUrl=null;
 let receiptGenerationPromise=null;
+let receiptGenerationSaleId=null;
 let receiptGenerationToken=0;
 let mapsLoaderPromise=null;
 let sb=null,currentUser=null,remoteTimer=null;
@@ -1389,90 +1397,227 @@ function renderReceiptHtml(s,c){
  rcSubtotal.textContent=brl(subtotal);rcSubtotalLine.classList.toggle("hidden",disc<=0);rcScrapLine.classList.toggle("hidden",disc<=0);rcScrapDiscount.textContent=`- ${brl(disc)}`;rcTotal.textContent=brl(s.total);
  rcSeller.textContent=`Pedido feito por: ${s.sellerName||"Alex"}`;rcPhone.textContent=state.config.companyPhone?`WhatsApp: ${formatPhone(state.config.companyPhone)}`:"";
 }
-function clearPreparedReceipt(){
- activeReceiptBlob=null;activeReceiptFile=null;receiptGenerationPromise=null;
- if(activeReceiptObjectUrl){try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}activeReceiptObjectUrl=null}
- if(window.receiptImagePreview){receiptImagePreview.removeAttribute("src");receiptImagePreview.classList.add("hidden")}
- if(window.receiptPreparing)receiptPreparing.classList.remove("hidden");
+function resetReceiptPreparingUi(){
+ if(window.receiptPreparing){
+   receiptPreparing.innerHTML='<span class="spinner"></span><b>Preparando imagem do pedido…</b><span>Isso acontece automaticamente.</span>';
+   receiptPreparing.classList.remove("hidden");
+ }
+ if(window.receiptImagePreview){
+   receiptImagePreview.removeAttribute("src");
+   receiptImagePreview.classList.add("hidden");
+ }
  if(window.receiptReadyLine)receiptReadyLine.classList.add("hidden");
  if(window.receiptShareBtn)receiptShareBtn.disabled=true;
  if(window.receiptSaveBtn)receiptSaveBtn.disabled=true;
  if(window.receiptShareStatus)receiptShareStatus.textContent="Aguarde a imagem ficar pronta.";
 }
-function setReceiptReady(blob,file){
- activeReceiptBlob=blob;activeReceiptFile=file;
+function clearPreparedReceipt(invalidateGeneration=true){
+ if(invalidateGeneration)receiptGenerationToken++;
+ activeReceiptImageSaleId=null;
+ activeReceiptBlob=null;
+ activeReceiptFile=null;
+ receiptGenerationPromise=null;
+ receiptGenerationSaleId=null;
+ if(activeReceiptObjectUrl){
+   try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}
+   activeReceiptObjectUrl=null
+ }
+ resetReceiptPreparingUi()
+}
+function setReceiptReady(blob,file,sid,token){
+ // Segurança: uma geração antiga nunca pode substituir o recibo atualmente aberto.
+ if(token!==receiptGenerationToken||sid!==activeReceiptSaleId)return false;
+ activeReceiptImageSaleId=sid;
+ activeReceiptBlob=blob;
+ activeReceiptFile=file;
  if(activeReceiptObjectUrl){try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}}
  activeReceiptObjectUrl=URL.createObjectURL(blob);
  receiptImagePreview.src=activeReceiptObjectUrl;
  receiptImagePreview.classList.remove("hidden");
  receiptPreparing.classList.add("hidden");
  receiptReadyLine.classList.remove("hidden");
- receiptShareBtn.disabled=false;receiptSaveBtn.disabled=false;
+ receiptShareBtn.disabled=false;
+ receiptSaveBtn.disabled=false;
  receiptShareStatus.textContent="Imagem pronta. Toque em Enviar por WhatsApp.";
+ return true
 }
 async function waitReceiptRender(){
  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
  try{if(document.fonts?.ready)await document.fonts.ready}catch{}
  const imgs=[...receiptCard.querySelectorAll("img")].filter(i=>!i.complete);
- if(imgs.length)await Promise.all(imgs.map(i=>new Promise(r=>{i.addEventListener("load",r,{once:true});i.addEventListener("error",r,{once:true})})));
+ if(imgs.length)await Promise.all(imgs.map(i=>new Promise(r=>{
+   i.addEventListener("load",r,{once:true});
+   i.addEventListener("error",r,{once:true})
+ })));
+ // Safari às vezes precisa de um quadro extra depois das imagens/fontes.
+ await new Promise(resolve=>requestAnimationFrame(resolve))
 }
-async function prepareReceiptImage(sid=activeReceiptSaleId){
- const s=state.sales.find(s=>s.id===sid);if(!s)throw new Error("Pedido não encontrado.");
- if(activeReceiptSaleId===sid&&activeReceiptFile&&activeReceiptBlob)return activeReceiptFile;
- if(activeReceiptSaleId===sid&&receiptGenerationPromise)return receiptGenerationPromise;
+async function prepareReceiptImage(sid=activeReceiptSaleId,{force=false}={}){
+ const s=state.sales.find(s=>s.id===sid);
+ if(!s)throw new Error("Pedido não encontrado.");
+
+ // Só reutiliza uma imagem quando ela foi explicitamente gerada para ESTE pedido.
+ if(!force&&activeReceiptImageSaleId===sid&&activeReceiptFile&&activeReceiptBlob)return activeReceiptFile;
+ if(!force&&receiptGenerationPromise&&receiptGenerationSaleId===sid)return receiptGenerationPromise;
+
+ // Cancela logicamente qualquer geração anterior.
  const token=++receiptGenerationToken;
- clearPreparedReceipt();
+ activeReceiptImageSaleId=null;
+ activeReceiptBlob=null;
+ activeReceiptFile=null;
+ receiptGenerationSaleId=sid;
+ if(activeReceiptObjectUrl){
+   try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}
+   activeReceiptObjectUrl=null
+ }
+ resetReceiptPreparingUi();
+
+ // Reconstroi o HTML-fonte a partir do próprio pedido antes da captura.
+ const c=state.clients.find(c=>c.id===s.clientId);
+ renderReceiptHtml(s,c);
+
  receiptGenerationPromise=(async()=>{
    await waitReceiptRender();
+
+   if(token!==receiptGenerationToken||sid!==activeReceiptSaleId){
+     throw new Error("Geração substituída por outro pedido.")
+   }
+
    const blob=await receiptBlob();
-   if(token!==receiptGenerationToken)throw new Error("Geração substituída por outro pedido.");
-   const file=new File([blob],receiptFileName(s),{type:"image/png",lastModified:Date.now()});
-   setReceiptReady(blob,file);
+
+   if(token!==receiptGenerationToken||sid!==activeReceiptSaleId){
+     throw new Error("Geração substituída por outro pedido.")
+   }
+
+   const file=new File([blob],receiptFileName(s),{
+     type:"image/png",
+     lastModified:Date.now()
+   });
+
+   if(!setReceiptReady(blob,file,sid,token)){
+     throw new Error("Imagem descartada porque outro pedido foi aberto.")
+   }
    return file
  })().catch(e=>{
+   if(e?.message?.includes("substituída")||e?.message?.includes("descartada")){
+     console.warn(e.message);
+     throw e
+   }
    console.error(e);
-   if(token===receiptGenerationToken){
-     receiptPreparing.innerHTML='<b>Não foi possível preparar a imagem.</b><span>Feche e abra o recibo novamente.</span>';
+   if(token===receiptGenerationToken&&sid===activeReceiptSaleId){
+     receiptPreparing.innerHTML='<b>Não foi possível preparar a imagem.</b><span>Toque em “Corrigir recibo” para tentar novamente.</span>';
      receiptShareStatus.textContent="Falha ao gerar a imagem.";
    }
    throw e
- }).finally(()=>{if(token===receiptGenerationToken)receiptGenerationPromise=null});
+ }).finally(()=>{
+   if(token===receiptGenerationToken){
+     receiptGenerationPromise=null;
+     receiptGenerationSaleId=null
+   }
+ });
+
  return receiptGenerationPromise
 }
 function openReceipt(sid){
  const s=state.sales.find(s=>s.id===sid);if(!s)return;
- const c=state.clients.find(c=>c.id===s.clientId);
+
+ // Primeiro invalida completamente qualquer imagem/promessa do pedido anterior.
+ clearPreparedReceipt(true);
+
  activeReceiptSaleId=sid;
+ const c=state.clients.find(c=>c.id===s.clientId);
  renderReceiptHtml(s,c);
  openSheet("receiptSheet");
- prepareReceiptImage(sid).catch(()=>{})
+
+ // Sempre gera um PNG novo ao abrir um recibo.
+ prepareReceiptImage(sid,{force:true}).catch(()=>{})
+}
+async function regenerateReceiptImage(){
+ const sid=activeReceiptSaleId;
+ const s=state.sales.find(s=>s.id===sid);
+ if(!s)return;
+
+ const oldText=receiptFixBtn.textContent;
+ receiptFixBtn.disabled=true;
+ receiptFixBtn.textContent="↻ Corrigindo…";
+ receiptShareStatus.textContent="Descartando a imagem anterior e gerando novamente…";
+
+ try{
+   // Invalida o PNG e qualquer html2canvas que ainda esteja terminando em paralelo.
+   clearPreparedReceipt(true);
+
+   // Mantém o mesmo pedido aberto e reconstroi o conteúdo dele do zero.
+   activeReceiptSaleId=sid;
+   const c=state.clients.find(c=>c.id===s.clientId);
+   renderReceiptHtml(s,c);
+
+   await prepareReceiptImage(sid,{force:true});
+
+   if(activeReceiptImageSaleId===sid){
+     receiptShareStatus.textContent=`Recibo do pedido ${s.orderNumber||""} corrigido e gerado novamente.`;
+   }
+ }catch(e){
+   if(!String(e?.message||"").includes("substituída")&&!String(e?.message||"").includes("descartada")){
+     console.error(e);
+     alert("Não foi possível corrigir o recibo. Tente novamente.")
+   }
+ }finally{
+   receiptFixBtn.disabled=false;
+   receiptFixBtn.textContent=oldText
+ }
 }
 async function receiptBlob(){
  if(!window.html2canvas)throw new Error("Gerador de imagem não carregado.");
  const canvas=await html2canvas(receiptCard,{
-   scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false,
-   windowWidth:680,windowHeight:receiptCard.scrollHeight,
-   scrollX:0,scrollY:0
+   scale:2,
+   backgroundColor:"#ffffff",
+   useCORS:true,
+   logging:false,
+   windowWidth:680,
+   windowHeight:receiptCard.scrollHeight,
+   scrollX:0,
+   scrollY:0
  });
- return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Falha ao criar PNG.")),"image/png",.96))
+ return await new Promise((resolve,reject)=>
+   canvas.toBlob(
+     b=>b?resolve(b):reject(new Error("Falha ao criar PNG.")),
+     "image/png",
+     .96
+   )
+ )
 }
 function triggerBlobDownload(blob,name){
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;
- document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download=name;
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1500)
 }
 async function downloadReceipt(){
  const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;
  receiptSaveBtn.disabled=true;
  try{
    const file=await prepareReceiptImage(s.id);
+
+   // Confere de novo antes de salvar.
+   if(activeReceiptImageSaleId!==s.id)throw new Error("Imagem não pertence ao pedido aberto.");
+
    triggerBlobDownload(file,receiptFileName(s));
    receiptShareStatus.textContent="Imagem salva."
- }catch(e){console.error(e);alert("Não foi possível salvar a imagem do pedido.")}
- finally{if(activeReceiptFile)receiptSaveBtn.disabled=false}
+ }catch(e){
+   console.error(e);
+   alert("Não foi possível salvar a imagem do pedido.")
+ }finally{
+   if(activeReceiptFile&&activeReceiptImageSaleId===activeReceiptSaleId)receiptSaveBtn.disabled=false
+ }
 }
 function normalizedWhats(phone){
  let d=String(phone||"").replace(/\D/g,"").replace(/^0+/,"");
- if(!d)return"";if(!d.startsWith("55"))d="55"+d;return d
+ if(!d)return"";
+ if(!d.startsWith("55"))d="55"+d;
+ return d
 }
 async function copyReceiptImageToClipboard(blob){
  try{
@@ -1486,15 +1631,29 @@ async function copyReceiptImageToClipboard(blob){
 async function sendReceiptWhatsApp(){
  const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;
  const c=state.clients.find(c=>c.id===s.clientId),phone=normalizedWhats(c?.phone);
- if(!phone){alert("Este cliente não tem WhatsApp cadastrado. Atualize o cadastro antes de enviar.");return}
+ if(!phone){
+   alert("Este cliente não tem WhatsApp cadastrado. Atualize o cadastro antes de enviar.");
+   return
+ }
  const hello=c?.contact?`Olá, ${c.contact}!`:"Olá!";
  const text=`${hello} Segue o resumo do seu pedido nº ${s.orderNumber}.`;
- receiptShareBtn.disabled=true;receiptShareStatus.textContent="Preparando envio…";
+ receiptShareBtn.disabled=true;
+ receiptShareStatus.textContent="Preparando envio…";
+
  try{
    const file=await prepareReceiptImage(s.id);
-   // Melhor caminho disponível em celular: compartilha o PNG real + mensagem.
+
+   // Trava final: nunca compartilha um PNG produzido para outro pedido.
+   if(activeReceiptSaleId!==s.id||activeReceiptImageSaleId!==s.id){
+     throw new Error("A imagem pronta não corresponde ao pedido aberto.")
+   }
+
    if(navigator.share){
-     const payload={title:`Pedido ${s.orderNumber} • AX Baterias`,text,files:[file]};
+     const payload={
+       title:`Pedido ${s.orderNumber} • AX Baterias`,
+       text,
+       files:[file]
+     };
      const canShareFiles=!navigator.canShare||navigator.canShare({files:[file]});
      if(canShareFiles){
        try{
@@ -1502,25 +1661,31 @@ async function sendReceiptWhatsApp(){
          receiptShareStatus.textContent="Compartilhamento concluído.";
          return
        }catch(e){
-         if(e?.name==="AbortError"){receiptShareStatus.textContent="Envio cancelado.";return}
+         if(e?.name==="AbortError"){
+           receiptShareStatus.textContent="Envio cancelado.";
+           return
+         }
          console.warn("Compartilhamento nativo falhou; usando conversa direta.",e)
        }
      }
    }
-   // Fallback: preserva a exigência de abrir exatamente o cliente.
+
    const copied=await copyReceiptImageToClipboard(activeReceiptBlob);
    if(!copied)triggerBlobDownload(activeReceiptBlob,receiptFileName(s));
+
    receiptShareStatus.textContent=copied
      ?"Imagem copiada. Abrindo a conversa do cliente — se necessário, cole a imagem no WhatsApp."
      :"Imagem salva. Abrindo a conversa do cliente para anexar o arquivo.";
+
    const url=`https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
    const popup=window.open(url,"_blank");
    if(!popup)window.location.href=url
  }catch(e){
-   console.error(e);receiptShareStatus.textContent="Não foi possível preparar o envio.";
-   alert("Não foi possível gerar a imagem do pedido.")
+   console.error(e);
+   receiptShareStatus.textContent="Não foi possível preparar o envio.";
+   alert("Não foi possível gerar a imagem correta deste pedido. Toque em “Corrigir recibo” e tente novamente.")
  }finally{
-   if(activeReceiptFile)receiptShareBtn.disabled=false
+   if(activeReceiptFile&&activeReceiptImageSaleId===activeReceiptSaleId)receiptShareBtn.disabled=false
  }
 }
 function contactClientLabel(c){return c?.contact?`${c.contact} - ${c.name}`:(c?.name||"")}
