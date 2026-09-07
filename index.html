@@ -252,8 +252,9 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 </form></div></div>
 
 <!-- Product sheet -->
-<div class="sheet" id="productSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Novo produto</h2><button class="btn secondary" onclick="closeSheet('productSheet')">Fechar</button></div>
+<div class="sheet" id="productSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2 id="productSheetTitle">Novo produto</h2><button class="btn secondary" onclick="closeSheet('productSheet')">Fechar</button></div>
 <form id="productForm" class="formgrid">
+<input type="hidden" id="pId">
 <div class="field span2"><label>Produto</label><input id="pName" required placeholder="Bateria 5A"></div>
 <div class="field"><label>Estoque atual</label><input id="pQty" type="number" step="1" required></div>
 <div class="field"><label>Estoque mínimo</label><input id="pMin" type="number" step="1" value="5"></div>
@@ -262,8 +263,9 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 </form></div></div>
 
 <!-- Route sheet -->
-<div class="sheet" id="routeSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Nova região</h2><button class="btn secondary" onclick="closeSheet('routeSheet')">Fechar</button></div>
+<div class="sheet" id="routeSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2 id="routeSheetTitle">Nova região</h2><button class="btn secondary" onclick="closeSheet('routeSheet')">Fechar</button></div>
 <form id="routeForm" class="formgrid">
+<input type="hidden" id="rId">
 <div class="field span2"><label>Nome da rota / região</label><input id="rName" required placeholder="Ex.: Sorocaba"></div>
 <div class="field"><label>Km total estimado</label><input id="rKm" type="number" value="0"></div>
 <div class="field"><label>Pedágios</label><input id="rToll" type="number" step=".01" value="0"></div>
@@ -272,8 +274,9 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 </form></div></div>
 
 <!-- Sale sheet -->
-<div class="sheet" id="saleSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Nova venda</h2><button class="btn secondary" onclick="closeSheet('saleSheet')">Fechar</button></div>
+<div class="sheet" id="saleSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2 id="saleSheetTitle">Nova venda</h2><button class="btn secondary" onclick="closeSheet('saleSheet')">Fechar</button></div>
 <form id="saleForm" class="formgrid">
+<input type="hidden" id="sId">
 <div class="field span2"><label>Cliente</label><select id="sClient" required></select></div>
 <div class="field"><label>Data</label><input id="sDate" type="date" required></div>
 <div class="field"><label>Tabela aplicada</label><select id="sTable"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
@@ -289,8 +292,9 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 </form></div></div>
 
 <!-- Warranty sheet -->
-<div class="sheet" id="warrantySheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Garantia / sucata</h2><button class="btn secondary" onclick="closeSheet('warrantySheet')">Fechar</button></div>
+<div class="sheet" id="warrantySheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2 id="warrantySheetTitle">Garantia / sucata</h2><button class="btn secondary" onclick="closeSheet('warrantySheet')">Fechar</button></div>
 <form id="warrantyForm" class="formgrid">
+<input type="hidden" id="wId">
 <div class="field span2"><label>Cliente</label><select id="wClient" required></select></div>
 <div class="field"><label>Tipo</label><select id="wType"><option>Garantia</option><option>Sucata</option></select></div>
 <div class="field"><label>Modelo</label><input id="wModel" required></div>
@@ -412,10 +416,29 @@ function openClientSheet(clientId=""){
  cName.value=c?.name||"";cPhone.value=c?.phone||"";cDoc.value=c?.doc||"";cAddress.value=c?.address||"";cCity.value=c?.city||"";cRoute.value=c?.routeId||"";cPrice.value=c?.price||"0";cInterval.value=String(c?.interval||15);cNote.value=c?.note||"";
  openSheet("clientSheet")
 }
-function openProductSheet(){productForm.reset();pMin.value=5;pCost.value=0;openSheet("productSheet")}
-function openRouteSheet(){routeForm.reset();rKm.value=0;rToll.value=0;rHotel.value=0;openSheet("routeSheet")}
-function openSaleSheet(){saleForm.reset();sDate.value=today();sDue.value=today();sParts.value=1;sPaid.value="no";saleItems.innerHTML="";addSaleItem();openSheet("saleSheet")}
-function openWarrantySheet(){warrantyForm.reset();wCollect.value=today();openSheet("warrantySheet")}
+function openProductSheet(productId=""){
+ productForm.reset();pId.value=productId;const p=state.products.find(p=>p.id===productId);
+ productSheetTitle.textContent=p?"Editar produto":"Novo produto";
+ pName.value=p?.name||"";pQty.value=p?.qty??"";pMin.value=p?.min??5;pCost.value=p?.cost??0;openSheet("productSheet")
+}
+function openRouteSheet(routeId=""){
+ routeForm.reset();rId.value=routeId;const r=state.routes.find(r=>r.id===routeId);
+ routeSheetTitle.textContent=r?"Editar região":"Nova região";
+ rName.value=r?.name||"";rKm.value=r?.km??0;rToll.value=r?.toll??0;rHotel.value=r?.hotel??0;openSheet("routeSheet")
+}
+function openSaleSheet(saleId=""){
+ saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);
+ saleSheetTitle.textContent=s?"Editar venda":"Nova venda";
+ sDate.value=s?.date||today();sDue.value=s?.installments?.[0]?.due||today();sParts.value=s?.installments?.length||1;sPaid.value=s&&salePaid(s)?"yes":"no";sClient.value=s?.clientId||"";sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sMethod.value=s?.method||"PIX";sNote.value=s?.note||"";
+ saleItems.innerHTML="";
+ if(s?.items?.length){s.items.forEach(i=>addSaleItem(i.productId,i.qty))}else addSaleItem();
+ updateSale();openSheet("saleSheet")
+}
+function openWarrantySheet(warrantyId=""){
+ warrantyForm.reset();wId.value=warrantyId;const w=state.warranties.find(w=>w.id===warrantyId);
+ warrantySheetTitle.textContent=w?"Editar garantia / sucata":"Garantia / sucata";
+ wClient.value=w?.clientId||"";wType.value=w?.type||"Garantia";wModel.value=w?.model||"";wCode.value=w?.code||"";wMfg.value=w?.mfg||"";wCollect.value=w?.collect||today();wStatus.value=w?.status||"Coletada";openSheet("warrantySheet")
+}
 
 function saleOpen(s){return s.installments.reduce((a,p)=>a+(!p.paid?Number(p.amount):0),0)}
 function salePaid(s){return s.installments.every(p=>p.paid)}
@@ -456,26 +479,26 @@ function renderHome(){
 }
 function renderSales(){
  if(!state.sales.length){salesList.innerHTML='<div class="empty">Nenhuma venda registrada.</div>';return}
- salesList.innerHTML=[...state.sales].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>{const c=state.clients.find(c=>c.id===s.clientId);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Em aberto: ${brl(saleOpen(s))}</div></div>`}).join("")
+ salesList.innerHTML=[...state.sales].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>{const c=state.clients.find(c=>c.id===s.clientId);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Em aberto: ${brl(saleOpen(s))}</div><div class="actions" style="margin-top:11px"><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
 }
 function renderRoutes(){
  if(!state.routes.length){routesList.innerHTML='<div class="empty">Nenhuma região cadastrada.</div>';return}
- routesList.innerHTML=state.routes.map(r=>{const m=routeMetrics(r);return `<div class="routebox"><div class="routehead"><div><b>${esc(r.name)}</b><div class="muted">${r.km||0} km • pedágio ${brl(r.toll)} • outros ${brl(r.hotel)}</div></div><span class="badge ${m.cls}">${m.label}</span></div><div class="routekpis"><div>Venda potencial<b>${brl(m.potential)}</b></div><div>Custo<b>${brl(m.cost)}</b></div><div>Resultado<b>${brl(m.result)}</b></div></div>${m.people.length?`<div class="list" style="margin-top:10px">${m.people.map(x=>`<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">Próxima compra: ${fmt(x.st.next)} • ticket ${brl(x.st.ticket)}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">WhatsApp</button></div>`).join("")}</div>`:""}</div>`}).join("")
+ routesList.innerHTML=state.routes.map(r=>{const m=routeMetrics(r);return `<div class="routebox"><div class="routehead"><div><b>${esc(r.name)}</b><div class="muted">${r.km||0} km • pedágio ${brl(r.toll)} • outros ${brl(r.hotel)}</div></div><span class="badge ${m.cls}">${m.label}</span></div><div class="routekpis"><div>Venda potencial<b>${brl(m.potential)}</b></div><div>Custo<b>${brl(m.cost)}</b></div><div>Resultado<b>${brl(m.result)}</b></div></div>${m.people.length?`<div class="list" style="margin-top:10px">${m.people.map(x=>`<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">Próxima compra: ${fmt(x.st.next)} • ticket ${brl(x.st.ticket)}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">WhatsApp</button></div>`).join("")}</div>`:""}<div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="openRouteSheet('${r.id}')">Editar região</button><button class="btn danger" onclick="deleteRoute('${r.id}')">Excluir</button></div></div>`}).join("")
 }
 function renderCollections(){
  const rows=[];state.sales.forEach(s=>s.installments.forEach(p=>{if(!p.paid)rows.push({s,p})}));rows.sort((a,b)=>a.p.due.localeCompare(b.p.due));
  if(!rows.length){collectionsList.innerHTML='<div class="empty">Nenhuma cobrança pendente.</div>';return}
- collectionsList.innerHTML=rows.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">Parcela ${p.number}/${s.installments.length} • ${fmt(p.due)}</div></div><span class="badge ${p.sent?"good":"warn"}">${p.sent?"Enviado":"Não enviado"}</span></div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div><div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button></div></div>`}).join("")
+ collectionsList.innerHTML=rows.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">Parcela ${p.number}/${s.installments.length} • ${fmt(p.due)}</div></div><span class="badge ${p.sent?"good":"warn"}">${p.sent?"Enviado":"Não enviado"}</span></div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div><div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar venda</button></div></div>`}).join("")
  collectionTemplate.value=state.collectionTemplate
 }
 function renderClients(){
  const q=(clientSearch?.value||"").toLowerCase().trim();const list=state.clients.filter(c=>!q||c.name.toLowerCase().includes(q)||c.city.toLowerCase().includes(q));
  if(!list.length){clientsList.innerHTML='<div class="empty">Nenhum cliente encontrado.</div>';return}
- clientsList.innerHTML=list.map(c=>{const st=clientStats(c.id),r=state.routes.find(r=>r.id===c.routeId);return `<div class="listitem" onclick="showClient('${c.id}')"><div><div class="title">${esc(c.name)}</div><div class="meta">${esc(c.city)} • ${esc(r?.name||"sem rota")} • tabela ${c.price}</div></div><div style="text-align:right"><b>${st.orders?brl(st.ticket):"Novo"}</b><div class="meta">${st.orders?`próx. ${fmt(st.next)}`:"sem histórico"}</div></div></div>`}).join("")
+ clientsList.innerHTML=list.map(c=>{const st=clientStats(c.id),r=state.routes.find(r=>r.id===c.routeId);return `<div class="listitem"><div onclick="showClient('${c.id}')" style="flex:1;min-width:0"><div class="title">${esc(c.name)}</div><div class="meta">${esc(c.city)} • ${esc(r?.name||"sem rota")} • tabela ${c.price}</div></div><div style="text-align:right"><b>${st.orders?brl(st.ticket):"Novo"}</b><div class="meta">${st.orders?`próx. ${fmt(st.next)}`:"sem histórico"}</div><div class="actions" style="justify-content:flex-end;margin-top:6px"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}')">Excluir</button></div></div></div>`}).join("")
 }
 function showClient(id){
  const c=state.clients.find(c=>c.id===id);if(!c)return;const st=clientStats(id),r=state.routes.find(r=>r.id===c.routeId);
- clientDetailContent.innerHTML=`<div class="detailtop"><div><div class="detailname">${esc(c.name)}</div><div class="muted">${esc(c.city)} • ${esc(r?.name||"sem rota")}</div></div><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button></div><div class="kpis3"><div class="mini"><b>${st.orders?brl(st.ticket):"—"}</b><span>Ticket médio</span></div><div class="mini"><b>${st.orders?st.interval+" dias":"—"}</b><span>Entre compras</span></div><div class="mini"><b>${brl(st.open)}</b><span>Em aberto</span></div></div><div class="card" style="margin-top:12px"><div class="cardhead"><h2>Próxima compra provável</h2></div><div style="font-size:22px;font-weight:850">${fmt(st.next)}</div><div class="muted" style="margin-top:4px">Última compra: ${fmt(st.last)}</div></div><div class="card"><div class="cardhead"><h2>Contato</h2></div><div class="muted">${esc(c.phone||"sem WhatsApp")}<br>${esc(c.address||"")} ${esc(c.city||"")}</div><div class="actions" style="margin-top:10px"><button class="btn blue" onclick="openPreVisit('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="logNoSaleVisit('${c.id}')">Registrar visita sem venda</button></div></div>`;
+ clientDetailContent.innerHTML=`<div class="detailtop"><div><div class="detailname">${esc(c.name)}</div><div class="muted">${esc(c.city)} • ${esc(r?.name||"sem rota")}</div></div><div class="actions"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}',true)">Excluir</button></div></div><div class="kpis3"><div class="mini"><b>${st.orders?brl(st.ticket):"—"}</b><span>Ticket médio</span></div><div class="mini"><b>${st.orders?st.interval+" dias":"—"}</b><span>Entre compras</span></div><div class="mini"><b>${brl(st.open)}</b><span>Em aberto</span></div></div><div class="card" style="margin-top:12px"><div class="cardhead"><h2>Próxima compra provável</h2></div><div style="font-size:22px;font-weight:850">${fmt(st.next)}</div><div class="muted" style="margin-top:4px">Última compra: ${fmt(st.last)}</div></div><div class="card"><div class="cardhead"><h2>Contato</h2></div><div class="muted">${esc(c.phone||"sem WhatsApp")}<br>${esc(c.address||"")} ${esc(c.city||"")}</div><div class="actions" style="margin-top:10px"><button class="btn blue" onclick="openPreVisit('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="logNoSaleVisit('${c.id}')">Registrar visita sem venda</button></div></div>`;
  go("clientDetail")
 }
 function renderPriceTables(){
@@ -488,11 +511,11 @@ function selectPriceTable(i){currentPriceTable=i;renderPriceTables()}
 function savePriceTable(){document.querySelectorAll("[data-price-product]").forEach(inp=>{const p=state.products.find(p=>p.id===inp.dataset.priceProduct);if(p){p.prices||=[0,0,0,0,0,0];p.prices[currentPriceTable]=Number(inp.value||0)}});save();alert("Preços salvos.")}
 function renderProducts(){
  if(!state.products.length){productsList.innerHTML='<div class="empty">Nenhum produto cadastrado.</div>';return}
- productsList.innerHTML=state.products.map(p=>`<div class="listitem"><div><div class="title">${esc(p.name)}</div><div class="meta">Custo ${brl(p.cost)} • mínimo ${p.min}</div></div><div style="text-align:right"><b>${p.qty} un.</b><div class="meta"><span class="badge ${Number(p.qty)<=Number(p.min)?"bad":"good"}">${Number(p.qty)<=Number(p.min)?"Repor":"OK"}</span></div></div></div>`).join("")
+ productsList.innerHTML=state.products.map(p=>`<div class="listitem"><div><div class="title">${esc(p.name)}</div><div class="meta">Custo ${brl(p.cost)} • mínimo ${p.min}</div></div><div style="text-align:right"><b>${p.qty} un.</b><div class="meta"><span class="badge ${Number(p.qty)<=Number(p.min)?"bad":"good"}">${Number(p.qty)<=Number(p.min)?"Repor":"OK"}</span></div><div class="actions" style="justify-content:flex-end;margin-top:6px"><button class="btn secondary" onclick="openProductSheet('${p.id}')">Editar</button><button class="btn danger" onclick="deleteProduct('${p.id}')">Excluir</button></div></div></div>`).join("")
 }
 function renderWarranties(){
  if(!state.warranties.length){warrantyList.innerHTML='<div class="empty">Nenhuma garantia ou sucata registrada.</div>';return}
- warrantyList.innerHTML=state.warranties.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),limit=w.type==="Garantia"&&w.mfg?addMonths(w.mfg,9):null,left=limit?days(today(),limit):null;return `<div class="listitem"><div><div class="title">${esc(c?.name||"Cliente")} • ${esc(w.model)}</div><div class="meta">${esc(w.type)} • coleta ${fmt(w.collect)} ${limit?`• limite ${fmt(limit)}`:""}</div></div><span class="badge ${left!=null&&left<=30?"warn":"good"}">${esc(w.status)}</span></div>`}).join("")
+ warrantyList.innerHTML=state.warranties.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),limit=w.type==="Garantia"&&w.mfg?addMonths(w.mfg,9):null,left=limit?days(today(),limit):null;return `<div class="listitem"><div><div class="title">${esc(c?.name||"Cliente")} • ${esc(w.model)}</div><div class="meta">${esc(w.type)} • coleta ${fmt(w.collect)} ${limit?`• limite ${fmt(limit)}`:""}</div></div><div style="text-align:right"><span class="badge ${left!=null&&left<=30?"warn":"good"}">${esc(w.status)}</span><div class="actions" style="justify-content:flex-end;margin-top:6px"><button class="btn secondary" onclick="openWarrantySheet('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWarranty('${w.id}')">Excluir</button></div></div></div>`}).join("")
 }
 function renderMonth(){
  const m=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),sold=m.reduce((a,s)=>a+Number(s.total),0),open=m.reduce((a,s)=>a+saleOpen(s),0);
@@ -501,19 +524,47 @@ function renderMonth(){
 function renderSettings(){cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||""}
 function renderAll(){fillSelects();renderHome();renderSales();renderRoutes();renderCollections();renderClients();renderPriceTables();renderProducts();renderWarranties();renderMonth();renderSettings()}
 
-function addSaleItem(){
+function addSaleItem(productId="",qty=1){
  const row=document.createElement("div");row.className="saleRow";
- row.innerHTML=`<select class="sp"><option value="">Produto</option>${state.products.map(p=>`<option value="${p.id}">${esc(p.name)} • ${p.qty} un.</option>`).join("")}</select><input class="sq" type="number" min="1" value="1"><div class="lineTotal">R$ 0,00</div><button class="btn secondary" type="button">×</button>`;
+ row.innerHTML=`<select class="sp"><option value="">Produto</option>${state.products.map(p=>`<option value="${p.id}" ${p.id===productId?"selected":""}>${esc(p.name)} • ${p.qty} un.</option>`).join("")}</select><input class="sq" type="number" min="1" value="${Number(qty)||1}"><div class="lineTotal">R$ 0,00</div><button class="btn secondary" type="button">×</button>`;
  row.querySelector(".sp").onchange=updateSale;row.querySelector(".sq").oninput=updateSale;row.querySelector("button").onclick=()=>{row.remove();updateSale()};saleItems.appendChild(row);updateSale()
 }
 function updateSale(){let total=0,cost=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);total+=line;cost+=p?Number(p.cost||0)*q:0});saleTotal.textContent=brl(total);saleMargin.textContent=brl(total-cost)}
 sClient.addEventListener("change",()=>{const c=state.clients.find(c=>c.id===sClient.value);if(c)sTable.value=c.price||"0";updateSale()});sTable.addEventListener("change",updateSale);
 
 clientForm.addEventListener("submit",e=>{e.preventDefault();let c=state.clients.find(c=>c.id===cId.value);const data={name:cName.value.trim(),phone:cPhone.value.trim(),doc:cDoc.value.trim(),address:cAddress.value.trim(),city:cCity.value.trim(),routeId:cRoute.value,price:cPrice.value,interval:Number(cInterval.value),note:cNote.value.trim()};if(c)Object.assign(c,data);else state.clients.push({id:uid(),...data});closeSheet("clientSheet");save()});
-productForm.addEventListener("submit",e=>{e.preventDefault();state.products.push({id:uid(),name:pName.value.trim(),qty:Number(pQty.value),min:Number(pMin.value),cost:Number(pCost.value),prices:[0,0,0,0,0,0]});closeSheet("productSheet");save()});
-routeForm.addEventListener("submit",e=>{e.preventDefault();state.routes.push({id:uid(),name:rName.value.trim(),km:Number(rKm.value),toll:Number(rToll.value),hotel:Number(rHotel.value)});closeSheet("routeSheet");save()});
-saleForm.addEventListener("submit",e=>{e.preventDefault();const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Selecione o cliente.");return}const items=[];let total=0,cost=0;for(const r of document.querySelectorAll(".saleRow")){const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(!p||q<=0)continue;if(p.qty<q){alert(`Estoque insuficiente de ${p.name}.`);return}const unit=Number((p.prices||[])[Number(sTable.value)]||0);items.push({productId:p.id,name:p.name,qty:q,unit,line:unit*q,cost:Number(p.cost||0)*q});total+=unit*q;cost+=Number(p.cost||0)*q}if(!items.length){alert("Adicione pelo menos um item.");return}const n=Math.max(1,Number(sParts.value||1)),first=sDue.value||sDate.value,parts=[],base=Math.floor((total/n)*100)/100;let acc=0;for(let i=0;i<n;i++){const amount=i===n-1?Math.round((total-acc)*100)/100:base;acc+=amount;parts.push({id:uid(),number:i+1,due:addDays(first,i*30),amount,paid:sPaid.value==="yes",sent:false})}const sale={id:uid(),clientId:c.id,date:sDate.value,method:sMethod.value,priceTable:sTable.value,note:sNote.value.trim(),items,total,marginValue:total-cost,installments:parts};state.sales.push(sale);items.forEach(i=>state.products.find(p=>p.id===i.productId).qty-=i.qty);state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});closeSheet("saleSheet");save()});
-warrantyForm.addEventListener("submit",e=>{e.preventDefault();if(wType.value==="Garantia"&&!wMfg.value){alert("Informe a data de fabricação.");return}state.warranties.push({id:uid(),clientId:wClient.value,type:wType.value,model:wModel.value.trim(),code:wCode.value.trim(),mfg:wMfg.value,collect:wCollect.value,status:wStatus.value});closeSheet("warrantySheet");save()});
+productForm.addEventListener("submit",e=>{e.preventDefault();let p=state.products.find(p=>p.id===pId.value);const data={name:pName.value.trim(),qty:Number(pQty.value),min:Number(pMin.value),cost:Number(pCost.value)};if(p)Object.assign(p,data);else state.products.push({id:uid(),...data,prices:[0,0,0,0,0,0]});closeSheet("productSheet");save()});
+routeForm.addEventListener("submit",e=>{e.preventDefault();let r=state.routes.find(r=>r.id===rId.value);const data={name:rName.value.trim(),km:Number(rKm.value),toll:Number(rToll.value),hotel:Number(rHotel.value)};if(r)Object.assign(r,data);else state.routes.push({id:uid(),...data});closeSheet("routeSheet");save()});
+saleForm.addEventListener("submit",e=>{
+ e.preventDefault();const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Selecione o cliente.");return}
+ const original=state.sales.find(s=>s.id===sId.value);const restored={};if(original)original.items.forEach(i=>restored[i.productId]=(restored[i.productId]||0)+Number(i.qty));
+ const items=[];let total=0,cost=0;for(const r of document.querySelectorAll(".saleRow")){const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(!p||q<=0)continue;const available=Number(p.qty)+(restored[p.id]||0);if(available<q){alert(`Estoque insuficiente de ${p.name}. Disponível para esta edição: ${available}.`);return}const unit=Number((p.prices||[])[Number(sTable.value)]||0);items.push({productId:p.id,name:p.name,qty:q,unit,line:unit*q,cost:Number(p.cost||0)*q});total+=unit*q;cost+=Number(p.cost||0)*q}if(!items.length){alert("Adicione pelo menos um item.");return}
+ const n=Math.max(1,Number(sParts.value||1)),first=sDue.value||sDate.value,parts=[],base=Math.floor((total/n)*100)/100;let acc=0;for(let i=0;i<n;i++){const amount=i===n-1?Math.round((total-acc)*100)/100:base;acc+=amount;const oldPart=original?.installments?.[i];parts.push({id:oldPart?.id||uid(),number:i+1,due:addDays(first,i*30),amount,paid:sPaid.value==="yes"?true:!!oldPart?.paid,sent:!!oldPart?.sent})}
+ if(original&&original.installments.some(p=>p.paid)&&Math.abs(Number(original.total)-total)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor mudou. Deseja continuar e recalcular as parcelas?"))return;
+ if(original){original.items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)+Number(i.qty)});items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});Object.assign(original,{clientId:c.id,date:sDate.value,method:sMethod.value,priceTable:sTable.value,note:sNote.value.trim(),items,total,marginValue:total-cost,installments:parts});const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id})}
+ else{const sale={id:uid(),clientId:c.id,date:sDate.value,method:sMethod.value,priceTable:sTable.value,note:sNote.value.trim(),items,total,marginValue:total-cost,installments:parts};state.sales.push(sale);items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id})}
+ closeSheet("saleSheet");save()
+});
+warrantyForm.addEventListener("submit",e=>{e.preventDefault();if(wType.value==="Garantia"&&!wMfg.value){alert("Informe a data de fabricação.");return}let w=state.warranties.find(w=>w.id===wId.value);const data={clientId:wClient.value,type:wType.value,model:wModel.value.trim(),code:wCode.value.trim(),mfg:wMfg.value,collect:wCollect.value,status:wStatus.value};if(w)Object.assign(w,data);else state.warranties.push({id:uid(),...data});closeSheet("warrantySheet");save()});
+
+function deleteClient(id,fromDetail=false){
+ const c=state.clients.find(c=>c.id===id);if(!c)return;const hasSales=state.sales.some(s=>s.clientId===id),hasWarranty=state.warranties.some(w=>w.clientId===id);
+ if(hasSales||hasWarranty){alert("Este cliente já possui vendas ou garantias no histórico. Para não perder a identificação desses registros, edite o cadastro em vez de apagá-lo.");return}
+ if(confirm(`Excluir o cliente ${c.name}?`)){state.clients=state.clients.filter(c=>c.id!==id);state.visits=state.visits.filter(v=>v.clientId!==id);save();if(fromDetail)go("clients")}
+}
+function deleteProduct(id){
+ const p=state.products.find(p=>p.id===id);if(!p)return;if(confirm(`Excluir o produto ${p.name}? As vendas antigas continuarão preservadas no histórico.`)){state.products=state.products.filter(p=>p.id!==id);save()}
+}
+function deleteRoute(id){
+ const r=state.routes.find(r=>r.id===id);if(!r)return;if(confirm(`Excluir a região ${r.name}? Os clientes vinculados ficarão sem rota até você escolher outra.`)){state.routes=state.routes.filter(r=>r.id!==id);state.clients.forEach(c=>{if(c.routeId===id)c.routeId=""});save()}
+}
+function deleteSale(id){
+ const s=state.sales.find(s=>s.id===id);if(!s)return;const c=state.clients.find(c=>c.id===s.clientId);const paid=s.installments.some(p=>p.paid);const warning=paid?" Esta venda possui recebimento registrado.":"";
+ if(confirm(`Excluir a venda de ${c?.name||"cliente"} no valor de ${brl(s.total)}? O estoque será devolvido e as cobranças desta venda serão removidas.${warning}`)){s.items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)+Number(i.qty)});state.sales=state.sales.filter(x=>x.id!==id);state.visits=state.visits.filter(v=>v.saleId!==id);save()}
+}
+function deleteWarranty(id){
+ const w=state.warranties.find(w=>w.id===id);if(!w)return;if(confirm(`Excluir este registro de ${w.type.toLowerCase()} (${w.model})?`)){state.warranties=state.warranties.filter(x=>x.id!==id);save()}
+}
 
 function collectionMsg(s,p,c){return state.collectionTemplate.replaceAll("{cliente}",c?.name||"").replaceAll("{valor}",brl(p.amount)).replaceAll("{data}",fmt(s.date)).replaceAll("{vencimento}",fmt(p.due))}
 function openWhats(phone,text){let d=String(phone||"").replace(/\D/g,"");if(!d){alert("Cliente sem WhatsApp.");return}if(!d.startsWith("55"))d="55"+d;window.open(`https://wa.me/${d}?text=${encodeURIComponent(text)}`,"_blank")}
