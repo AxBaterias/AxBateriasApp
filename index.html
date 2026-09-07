@@ -12,6 +12,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
+<meta name="ax-version" content="5.3">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -179,6 +180,81 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   .brand{font-size:19px}
 }
 
+
+/* v5.2 - recibo automático em imagem */
+.receipt-image-stage{
+  background:#eef1f6;border:1px solid var(--line);border-radius:16px;
+  padding:12px;min-height:230px;display:flex;align-items:center;justify-content:center
+}
+.receipt-image-stage .receipt-preview{
+  width:100%;max-width:680px;height:auto;display:block;margin:0 auto;
+  border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow)
+}
+.receipt-preparing{
+  min-height:190px;width:100%;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:10px;text-align:center;color:var(--muted);font-size:12px
+}
+.receipt-preparing .spinner{width:22px;height:22px}
+.receipt-ready{
+  display:flex;align-items:center;gap:7px;font-size:11px;color:#067647;
+  font-weight:800;margin-top:9px
+}
+.receipt-share-status{font-size:11px;line-height:1.4;color:var(--muted);margin-top:9px}
+.receipt-capture-host{
+  position:fixed;left:-10000px;top:0;width:680px;pointer-events:none;
+  z-index:-9999;background:#eef1f6;padding:0
+}
+/* Mantém o layout da imagem estável, independentemente da largura do celular. */
+.receipt-capture-host .receipt-card{
+  width:680px!important;max-width:680px!important;padding:34px 30px 26px!important;
+  border-radius:18px!important;box-shadow:none!important
+}
+.receipt-capture-host .receipt-header{
+  grid-template-columns:minmax(0,1.15fr) minmax(145px,.85fr)!important;
+  gap:24px!important;padding-bottom:24px!important
+}
+.receipt-capture-host .receipt-order{font-size:27px!important;margin-bottom:26px!important}
+.receipt-capture-host .receipt-client{font-size:17px!important}
+.receipt-capture-host .receipt-logo-wrap{padding-left:24px!important;min-height:175px!important}
+.receipt-capture-host .receipt-logo{max-width:185px!important}
+.receipt-capture-host .receipt-items th{font-size:11px!important}
+.receipt-capture-host .receipt-items td{font-size:14px!important;padding:13px 5px!important}
+.receipt-capture-host .receipt-installment{
+  grid-template-columns:60px 1fr 110px!important;font-size:14px!important
+}
+.receipt-capture-host .receipt-totalbox{font-size:18px!important;padding:17px 18px!important}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+
+
+/* v5.3 - privacidade financeira e desempenho */
+.home-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.visibility-btn{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:999px;padding:8px 11px;font-size:11px;font-weight:850;white-space:nowrap;box-shadow:var(--shadow)}
+.money-mask{letter-spacing:.06em}
+.finance-lock{min-height:150px;border:1px dashed var(--line);border-radius:14px;background:#fcfcfd;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--muted);text-align:center;padding:22px}
+.finance-lock b{font-size:13px;color:var(--text)}
+.finance-chart{margin-top:4px}
+.chart-legend{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-bottom:12px}
+.legend-item{display:flex;align-items:center;gap:6px}.legend-swatch{width:10px;height:10px;border-radius:3px;background:#101828}.legend-swatch.cost{background:#98a2b3}
+.grouped-chart{height:205px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end;border-bottom:1px solid var(--line);padding:14px 4px 0}
+.chart-month{height:100%;display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.chart-bars{height:145px;display:flex;align-items:flex-end;justify-content:center;gap:7px}
+.chart-bar{width:min(30px,35%);min-height:2px;border-radius:7px 7px 2px 2px;background:#101828;position:relative}.chart-bar.cost{background:#98a2b3}
+.chart-bar-label{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 4px);font-size:8px;font-weight:800;color:#475467;white-space:nowrap}
+.chart-month-name{text-align:center;font-size:10px;font-weight:850;margin-top:7px}.chart-month-name small{display:block;font-size:8px;font-weight:700;color:var(--muted);margin-top:2px}
+.chart-rent{text-align:center;margin-top:6px}
+.rent-value{font-weight:900}.rent-good{color:var(--good)}.rent-warn{color:var(--warn)}.rent-bad{color:var(--bad)}
+.rent-panel-good{border-color:#abefc6;background:#f6fef9}.rent-panel-warn{border-color:#fedf89;background:#fffaeb}.rent-panel-bad{border-color:#fecdca;background:#fffbfa}
+.sale-sheet-summary-space{height:110px}
+.sale-fixed-summary{position:fixed;z-index:60;left:0;right:0;bottom:0;margin:auto;background:rgba(255,255,255,.98);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,1fr);gap:7px;box-shadow:0 -8px 24px rgba(16,24,40,.08)}
+.sale-fixed-summary .mini{padding:9px 10px;background:#fff}.sale-fixed-summary .mini b{font-size:14px}.sale-fixed-summary .mini span{font-size:8px}
+.sale-admin-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sale-admin-panel{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fcfcfd}
+.sale-admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.sale-admin-grid .mini{background:#fff}
+.sale-admin-title{font-size:12px;font-weight:900}.sale-admin-note{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+.sensitive-card-result{margin-top:9px;border-top:1px solid var(--line);padding-top:9px}
+@media(min-width:760px){.sale-fixed-summary{max-width:760px;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:16px 16px 0 0}}
+@media(max-width:520px){.sale-fixed-summary{gap:5px;padding-left:8px;padding-right:8px}.sale-fixed-summary .mini{padding:8px 6px}.sale-fixed-summary .mini b{font-size:12px}.sale-fixed-summary .mini span{font-size:7px}.sale-admin-grid{grid-template-columns:1fr 1fr}.chart-bar-label{font-size:7px}}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -211,7 +287,10 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="wrap">
 
 <section id="home" class="screen active">
-  <h1>Olá, Alex</h1><div class="muted">O que precisa da sua atenção hoje.</div>
+  <div class="home-title-row">
+    <div><h1>Olá, Alex</h1><div class="muted">O que precisa da sua atenção hoje.</div></div>
+    <button id="homeFinanceToggle" class="visibility-btn" onclick="toggleHomeFinance()">👁 Ver valores</button>
+  </div>
   <div class="hero">
     <div class="metric"><div class="label">Vendas no mês</div><div class="value" id="hSales">R$ 0</div><div class="sub">faturamento</div></div>
     <div class="metric"><div class="label">A receber</div><div class="value" id="hOpen">R$ 0</div><div class="sub">parcelas abertas</div></div>
@@ -229,6 +308,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   <div class="card">
     <div class="cardhead"><h2>Melhor rota agora</h2><button class="btn secondary" onclick="go('routes')">Ver todas</button></div>
     <div id="homeRoute"></div>
+  </div>
+  <div class="card">
+    <div class="cardhead">
+      <div><h2>Desempenho financeiro</h2><div class="muted">Faturamento x custos totais • últimos 3 meses</div></div>
+      <span id="homeChartPrivacyBadge" class="badge">oculto</span>
+    </div>
+    <div id="homeFinanceChart"></div>
   </div>
   <div class="card">
     <div class="cardhead"><h2>Atenção</h2></div>
@@ -359,6 +445,21 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar</button></div>
   </div>
   <div class="card">
+    <div class="cardhead"><div><h2>Resultado financeiro</h2><div class="muted">Parâmetros administrativos usados na rentabilidade e no gráfico.</div></div></div>
+    <div class="notice" style="margin-bottom:11px"><b>Custos totais</b> = produtos + taxa de pagamento + imposto estimado + rota atribuída + outros custos. O custo por km já deve contemplar combustível/manutenção para evitar dupla contagem.</div>
+    <div class="formgrid">
+      <div class="field"><label>Imposto estimado sobre vendas (%)</label><input id="cfgTaxRate" type="number" min="0" step=".01"></div>
+      <div class="field"><label>Alerta vermelho abaixo de (%)</label><input id="cfgMinRentability" type="number" min="0" step=".1"></div>
+      <div class="field"><label>Taxa PIX (%)</label><input id="cfgFeePix" type="number" min="0" step=".01"></div>
+      <div class="field"><label>Taxa Dinheiro (%)</label><input id="cfgFeeCash" type="number" min="0" step=".01"></div>
+      <div class="field"><label>Taxa Cheque (%)</label><input id="cfgFeeCheque" type="number" min="0" step=".01"></div>
+      <div class="field"><label>Taxa Boleto (%)</label><input id="cfgFeeBoleto" type="number" min="0" step=".01"></div>
+      <div class="field"><label>Taxa Cartão (%)</label><input id="cfgFeeCard" type="number" min="0" step=".01"></div>
+    </div>
+    <div class="muted" style="margin-top:9px">Régua: abaixo do limite = vermelho; entre o limite e 19,9% = atenção; 20% ou mais = saudável.</div>
+    <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar parâmetros</button></div>
+  </div>
+  <div class="card">
     <div class="cardhead"><div><h2>Integração de rotas</h2><div class="muted">Configuração técnica para distâncias e pedágios reais.</div></div><span id="mapsStatus" class="badge warn">não configurado</span></div>
     <div class="field"><label>Google Maps API Key — NÃO MEXER</label><input id="cfgMapsKey" type="password" placeholder="Configuração técnica"></div>
     <div class="notice tech-lock" style="margin-top:9px"><b>Configuração técnica — NÃO MEXER no uso diário.</b> Essa chave é usada somente pelas Rotas Inteligentes.</div>
@@ -463,23 +564,49 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 </div>
 
 <div class="field span2">
-  <div class="sale-summary">
-    <div class="mini"><b id="saleSubtotalPreview">R$ 0,00</b><span>Subtotal dos itens</span></div>
-    <div class="mini"><b id="saleScrapDiscountPreview">R$ 0,00</b><span>Desconto em sucata</span></div>
-    <div class="mini"><b id="saleTotal">R$ 0,00</b><span>Total a pagar</span></div>
-    <div class="mini"><b id="saleCostPreview">R$ 0,00</b><span>Custo dos produtos</span></div>
-    <div class="mini"><b id="saleProfitPreview">R$ 0,00</b><span>Lucro bruto</span></div>
-    <div class="mini"><b id="saleRentabilityPreview">0%</b><span>Rentabilidade</span></div>
+  <button id="saleAdminToggle" class="btn secondary sale-admin-toggle" type="button" onclick="toggleSaleAdminResult()"><span>👁 Ver resultado da venda</span><span>Privado</span></button>
+  <div id="saleAdminPanel" class="sale-admin-panel hidden">
+    <div class="sale-admin-title">Resultado administrativo</div>
+    <div class="sale-admin-note">Informações privadas. Taxas e impostos vêm das Configurações. Informe abaixo apenas custos adicionais específicos deste pedido.</div>
+    <div class="formgrid" style="margin-top:10px">
+      <div class="field"><label>Custo de rota atribuído a este pedido (R$)</label><input id="sRouteCost" type="number" min="0" step=".01" value="0"></div>
+      <div class="field"><label>Outros custos desta venda (R$)</label><input id="sOtherCost" type="number" min="0" step=".01" value="0"></div>
+    </div>
+    <div class="sale-admin-grid">
+      <div class="mini"><b id="saleCostPreview">R$ 0,00</b><span>Custo dos produtos</span></div>
+      <div class="mini"><b id="salePaymentFeePreview">R$ 0,00</b><span>Taxa de pagamento</span></div>
+      <div class="mini"><b id="saleTaxPreview">R$ 0,00</b><span>Impostos estimados</span></div>
+      <div class="mini"><b id="saleExtraCostsPreview">R$ 0,00</b><span>Rota + outros</span></div>
+      <div class="mini"><b id="saleGrossProfitPreview">R$ 0,00</b><span>Lucro bruto</span></div>
+      <div class="mini"><b id="saleTotalCostsPreview">R$ 0,00</b><span>Custos totais</span></div>
+      <div id="saleOperationalResultBox" class="mini"><b id="saleProfitPreview">R$ 0,00</b><span>Resultado operacional</span></div>
+      <div id="saleRentabilityBox" class="mini"><b id="saleRentabilityPreview">0%</b><span>Rentabilidade operacional</span></div>
+    </div>
+    <div id="saleRentabilityAlert" class="notice" style="margin-top:9px"></div>
   </div>
 </div>
 <div class="field span2"><label>Observação</label><input id="sNote"></div>
 <div class="field span2"><button class="btn" type="submit">Finalizar venda</button></div>
+<div class="sale-sheet-summary-space span2"></div>
+<div id="saleFixedSummary" class="sale-fixed-summary">
+  <div class="mini"><b id="saleSubtotalPreview">R$ 0,00</b><span>Subtotal dos itens</span></div>
+  <div class="mini"><b id="saleScrapDiscountPreview">- R$ 0,00</b><span>Desconto em sucata</span></div>
+  <div class="mini"><b id="saleTotal">R$ 0,00</b><span>Total a pagar</span></div>
+</div>
 </form></div></div>
 
 <!-- Receipt sheet -->
 <div class="sheet" id="receiptSheet"><div class="sheetpanel"><div class="sheetbar"></div>
-  <div class="cardhead"><div><h2>Comprovante do pedido</h2><div class="muted">Visualização em HTML. A imagem é gerada apenas ao compartilhar/salvar.</div></div><button class="btn secondary" onclick="closeSheet('receiptSheet')">Fechar</button></div>
-  <div class="receipt-stage">
+  <div class="cardhead"><div><h2>Comprovante do pedido</h2><div class="muted">A imagem do pedido é preparada automaticamente.</div></div><button class="btn secondary" onclick="closeSheet('receiptSheet')">Fechar</button></div>
+  <div class="receipt-image-stage">
+    <div id="receiptPreparing" class="receipt-preparing">
+      <span class="spinner"></span>
+      <b>Preparando imagem do pedido…</b>
+      <span>Isso acontece automaticamente.</span>
+    </div>
+    <img id="receiptImagePreview" class="receipt-preview hidden" alt="Imagem do comprovante do pedido">
+  </div>
+  <div class="receipt-capture-host" aria-hidden="true">
     <div id="receiptCard" class="receipt-card">
       <div class="receipt-header">
         <div class="receipt-head-left">
@@ -516,11 +643,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
       </div>
     </div>
   </div>
+  <div id="receiptReadyLine" class="receipt-ready hidden">✓ Imagem pronta para compartilhar</div>
   <div class="receipt-actions">
-    <button class="btn secondary" onclick="downloadReceipt()">Gerar imagem do pedido</button>
-    <button class="btn blue" onclick="sendReceiptWhatsApp()">Enviar por WhatsApp</button>
+    <button id="receiptShareBtn" class="btn blue" onclick="sendReceiptWhatsApp()" disabled>Enviar por WhatsApp</button>
+    <button id="receiptSaveBtn" class="btn secondary" onclick="downloadReceipt()" disabled>Salvar imagem</button>
   </div>
-  <div class="notice" style="margin-top:10px">O navegador não consegue anexar silenciosamente uma imagem a uma conversa específica. O sistema gera a imagem e abre diretamente o WhatsApp do cliente com a mensagem pronta.</div>
+  <div id="receiptShareStatus" class="receipt-share-status">Aguarde a imagem ficar pronta.</div>
+  <div class="notice" style="margin-top:10px"><b>Envio rápido:</b> no celular, o sistema tenta compartilhar o PNG já com a mensagem. Se o navegador não permitir enviar o arquivo diretamente, ele abre a conversa do cliente com a mensagem pronta e deixa a imagem disponível para colar/anexar.</div>
 </div></div>
 
 <!-- Warranty sheet -->
@@ -568,7 +697,7 @@ const KEY="ax_baterias_mobile_v5_cache";
 const defaults={
  clients:[],routes:[],products:[],sales:[],visits:[],warranties:[],
  scrapTypes:[],scrapTransactions:[],
- config:{costKm:1.50,window:5,base:"Osasco, SP, Brasil",hotelCost:250,visitMinutes:35,maxDailyHours:9,companyPhone:"",sellerName:"Alex",googleMapsApiKey:""},
+ config:{costKm:1.50,window:5,base:"Osasco, SP, Brasil",hotelCost:250,visitMinutes:35,maxDailyHours:9,companyPhone:"",sellerName:"Alex",googleMapsApiKey:"",taxRate:0,minRentability:10,paymentFees:{PIX:0,Dinheiro:0,Cheque:0,Boleto:0,"Cartão":0}},
  collectionTemplates:{
    upcoming:"Oi, {contato_cliente}! Tudo bem? Passando só para lembrar que o pagamento de {valor}, do pedido {pedido}, vence em {vencimento}. Se precisar de alguma informação, me chama 👍",
    late:"Oi, {contato_cliente}! Tudo certo? Dei uma conferida aqui e ainda consta em aberto aquele {valor}, do pedido {pedido}. Consegue verificar para mim? Obrigado!"
@@ -578,12 +707,22 @@ let state=loadCache();
 let currentPriceTable=0;
 let salesMonthFilter="all",salesStatusFilter="all",collectionStatusFilter="all";
 let smartRoutePlan=null;
+let homeFinanceVisible=false;
+let saleAdminResultVisible=false;
 let activeReceiptSaleId=null;
+let activeReceiptBlob=null;
+let activeReceiptFile=null;
+let activeReceiptObjectUrl=null;
+let receiptGenerationPromise=null;
+let receiptGenerationToken=0;
 let mapsLoaderPromise=null;
 let sb=null,currentUser=null,remoteTimer=null;
 
 function copy(o){return JSON.parse(JSON.stringify(o))}
-function ensureConfig(){state.config=Object.assign(copy(defaults.config),state.config||{})}
+function ensureConfig(){
+ state.config=Object.assign(copy(defaults.config),state.config||{});
+ state.config.paymentFees=Object.assign(copy(defaults.config.paymentFees),state.config.paymentFees||{});
+}
 function ensureState(){
  ensureConfig();
  state.clients=state.clients||[];state.routes=state.routes||[];state.products=state.products||[];state.sales=state.sales||[];state.visits=state.visits||[];state.warranties=state.warranties||[];
@@ -593,7 +732,14 @@ function ensureState(){
  state.clients.forEach(c=>{if(c.contact==null)c.contact=""});
  migrateOrderNumbers();
 }
-function loadCache(){try{const loaded=Object.assign(copy(defaults),JSON.parse(localStorage.getItem(KEY)||"{}"));loaded.config=Object.assign(copy(defaults.config),loaded.config||{});return loaded}catch{return copy(defaults)}}
+function loadCache(){
+ try{
+  const loaded=Object.assign(copy(defaults),JSON.parse(localStorage.getItem(KEY)||"{}"));
+  loaded.config=Object.assign(copy(defaults.config),loaded.config||{});
+  loaded.config.paymentFees=Object.assign(copy(defaults.config.paymentFees),loaded.config.paymentFees||{});
+  return loaded
+ }catch{return copy(defaults)}
+}
 function setSync(text,kind=""){const el=document.getElementById("syncStatus");if(!el)return;el.textContent=text;el.className="syncpill "+kind}
 function save(){
   try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}
@@ -716,6 +862,7 @@ function openRouteSheet(routeId=""){
 }
 function openSaleSheet(saleId=""){
  saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);
+ saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=Number(s?.routeCost||0);sOtherCost.value=Number(s?.otherCost||0);
  saleSheetTitle.textContent=s?"Editar venda":"Nova venda";
  saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";
  sDate.value=s?.date||today();sClient.value=s?.clientId||"";sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";
@@ -751,6 +898,27 @@ function clientStats(id){
 function saleCostValue(s){return (s.items||[]).reduce((a,i)=>a+Number(i.cost||0),0)}
 function saleGrossProfit(s){return Number(s.marginValue!=null?s.marginValue:Number(s.total||0)-saleCostValue(s))}
 function saleRentability(s){return Number(s.total||0)>0?saleGrossProfit(s)/Number(s.total)*100:0}
+function paymentFeeRate(method){return Number(state.config?.paymentFees?.[method]||0)}
+function saleOperationalBreakdown(s){
+ const revenue=Number(s.total||0),productCost=saleCostValue(s);
+ const feeRate=Number(s.paymentFeeRate!=null?s.paymentFeeRate:paymentFeeRate(s.method));
+ const taxRate=Number(s.taxRate!=null?s.taxRate:state.config?.taxRate||0);
+ const paymentFee=s.paymentFeeValue!=null?Number(s.paymentFeeValue):revenue*feeRate/100;
+ const tax=s.taxValue!=null?Number(s.taxValue):revenue*taxRate/100;
+ const routeCost=Number(s.routeCost||0),otherCost=Number(s.otherCost||0);
+ const totalCosts=productCost+paymentFee+tax+routeCost+otherCost,result=revenue-totalCosts;
+ const rentability=revenue>0?result/revenue*100:0;
+ return {revenue,productCost,feeRate,paymentFee,taxRate,tax,routeCost,otherCost,totalCosts,result,rentability,grossProfit:revenue-productCost}
+}
+function rentabilityClass(value){const min=Number(state.config?.minRentability??10);return value<min?"bad":value<20?"warn":"good"}
+function rentabilityText(value){const cls=rentabilityClass(value);return cls==="bad"?"Margem baixa — atenção":cls==="warn"?"Margem moderada":"Margem saudável"}
+function moneyPrivate(v){return homeFinanceVisible?brl(v):"R$ ••••••"}
+function toggleHomeFinance(){homeFinanceVisible=!homeFinanceVisible;renderHome()}
+function toggleSaleAdminResult(force){
+ saleAdminResultVisible=typeof force==="boolean"?force:!saleAdminResultVisible;
+ saleAdminPanel.classList.toggle("hidden",!saleAdminResultVisible);
+ saleAdminToggle.querySelector("span:first-child").textContent=saleAdminResultVisible?"🙈 Ocultar resultado da venda":"👁 Ver resultado da venda";
+}
 
 function criticalClients(){
  const windowDays=Number(state.config.window||5);
@@ -876,7 +1044,7 @@ function isoWeekInfo(dateStr){
 function migrateOrderNumbers(){
  const missing=(state.sales||[]).filter(s=>!s.orderNumber).sort((a,b)=>(a.date||"").localeCompare(b.date||"")||String(a.id).localeCompare(String(b.id)));
  missing.forEach(s=>s.orderNumber=nextOrderNumber(s.date,s.id));
- state.sales.forEach(s=>{if(s.subtotal==null)s.subtotal=(s.items||[]).reduce((a,i)=>a+Number(i.line||0),0);if(s.scrapDiscount==null)s.scrapDiscount=0;if(!s.scrapItems)s.scrapItems=[];if(!s.paymentMode)s.paymentMode=(s.installments?.length>1||["Boleto","Cartão"].includes(s.method))?"prazo":"ato";if(!s.sellerName)s.sellerName=state.config?.sellerName||"Alex"})
+ state.sales.forEach(s=>{if(s.subtotal==null)s.subtotal=(s.items||[]).reduce((a,i)=>a+Number(i.line||0),0);if(s.scrapDiscount==null)s.scrapDiscount=0;if(!s.scrapItems)s.scrapItems=[];if(!s.paymentMode)s.paymentMode=(s.installments?.length>1||["Boleto","Cartão"].includes(s.method))?"prazo":"ato";if(!s.sellerName)s.sellerName=state.config?.sellerName||"Alex";if(s.routeCost==null)s.routeCost=0;if(s.otherCost==null)s.otherCost=0})
 }
 function nextOrderNumber(dateStr,excludeId=""){
  const {year,week}=isoWeekInfo(dateStr),prefix=String(week).padStart(2,"0");
@@ -951,17 +1119,33 @@ function renderScrap(){
  const legacy=state.warranties.filter(w=>w.type==="Sucata");
  scrapHistoryList.innerHTML=(tx.length||legacy.length)?`<div class="list">${tx.map(t=>`<div class="listitem scrap-movement ${t.direction}"><div><div class="title">${t.direction==="in"?"Entrada":"Revenda"} • ${esc(t.typeName||state.scrapTypes.find(x=>x.id===t.typeId)?.name||"Sucata")}</div><div class="meta">${fmt(t.date)} • ${t.qty} un. • ${Number(t.weight||0).toFixed(2)} kg ${t.orderNumber?`• pedido ${t.orderNumber}`:""}</div></div><div style="text-align:right"><b>${t.direction==="out"?brl(t.resaleValue):brl(t.creditedValue)}</b><div class="meta">${t.direction==="out"?"valor revendido":"desconto concedido"}</div></div></div>`).join("")}${legacy.map(w=>`<div class="listitem"><div><div class="title">Registro antigo de sucata • ${esc(w.model||"")}</div><div class="meta">${fmt(w.collect)} • preservado do sistema anterior</div></div></div>`).join("")}</div>`:'<div class="empty">Nenhuma movimentação de sucata.</div>'
 }
+function monthlyFinancialSummary(){
+ const months=recentMonths().slice().reverse();
+ return months.map((m,idx)=>{
+  const sales=state.sales.filter(s=>String(s.date||"").slice(0,7)===m.key),revenue=sales.reduce((a,s)=>a+Number(s.total||0),0),costs=sales.reduce((a,s)=>a+saleOperationalBreakdown(s).totalCosts,0);
+  return {...m,revenue,costs,rentability:revenue>0?(revenue-costs)/revenue*100:0,isCurrent:idx===months.length-1}
+ })
+}
+function renderHomeFinanceChart(){
+ homeChartPrivacyBadge.textContent=homeFinanceVisible?"visível":"oculto";homeChartPrivacyBadge.className="badge "+(homeFinanceVisible?"good":"");
+ if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para visualizar o desempenho.</span></div>';return}
+ const rows=monthlyFinancialSummary(),max=Math.max(1,...rows.flatMap(r=>[r.revenue,r.costs])),h=145;
+ homeFinanceChart.innerHTML=`<div class="finance-chart"><div class="chart-legend"><div class="legend-item"><span class="legend-swatch"></span>Faturamento</div><div class="legend-item"><span class="legend-swatch cost"></span>Custos totais</div></div><div class="grouped-chart">${rows.map(r=>{const rh=Math.max(r.revenue?4:2,Math.round(r.revenue/max*h)),ch=Math.max(r.costs?4:2,Math.round(r.costs/max*h)),cls=rentabilityClass(r.rentability);return `<div class="chart-month"><div class="chart-bars"><div class="chart-bar" style="height:${rh}px"><span class="chart-bar-label">${brl(r.revenue)}</span></div><div class="chart-bar cost" style="height:${ch}px"><span class="chart-bar-label">${brl(r.costs)}</span></div></div><div class="chart-month-name">${r.label}${r.isCurrent?"*":""}<small>${r.isCurrent?"mês parcial":"mês fechado"}</small></div><div class="chart-rent"><span class="badge ${cls}">Rent. ${r.rentability.toFixed(1)}%</span></div></div>`}).join("")}</div><div class="muted" style="margin-top:11px">* O mês atual é parcial. Custos totais incluem produtos, taxas, impostos estimados e custos adicionais registrados.</div></div>`
+}
 function renderHome(){
- const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart());hSales.textContent=brl(month.reduce((a,s)=>a+Number(s.total),0));hOpen.textContent=brl(state.sales.reduce((a,s)=>a+saleOpen(s),0));
- hOver.textContent=brl(state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0));
+ const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),monthSales=month.reduce((a,s)=>a+Number(s.total),0),openValue=state.sales.reduce((a,s)=>a+saleOpen(s),0),overValue=state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0);
+ hSales.textContent=moneyPrivate(monthSales);hOpen.textContent=moneyPrivate(openValue);hOver.textContent=moneyPrivate(overValue);
+ hSales.classList.toggle("money-mask",!homeFinanceVisible);hOpen.classList.toggle("money-mask",!homeFinanceVisible);hOver.classList.toggle("money-mask",!homeFinanceVisible);homeFinanceToggle.textContent=homeFinanceVisible?"🙈 Ocultar valores":"👁 Ver valores";
  const urgent=state.warranties.filter(w=>w.type==="Garantia"&&w.mfg&&!["Aprovada","Rejeitada","Substituída"].includes(w.status)&&days(today(),addMonths(w.mfg,9))<=30).length;hWar.textContent=urgent;
  const critical=criticalClients();
- if(smartRoutePlan?.routes?.length){const best=smartRoutePlan.routes[0];homeRoute.innerHTML=`<div class="routebox"><div class="routehead"><div><b>Rota sugerida</b><div class="muted">${best.order.length} cliente(s) • ${best.km.toFixed(0)} km</div></div><span class="badge ${best.result>0?"good":"warn"}">${best.result>0?"Recomendada":"Avaliar"}</span></div><div class="routekpis"><div>Faturamento potencial<b>${brl(best.revenue)}</b></div><div>Lucro bruto potencial<b>${brl(best.grossProfit)}</b></div><div>Resultado da rota<b>${brl(best.result)}</b></div></div></div>`}
+ if(smartRoutePlan?.routes?.length){const best=smartRoutePlan.routes[0];homeRoute.innerHTML=`<div class="routebox"><div class="routehead"><div><b>Rota sugerida</b><div class="muted">${best.order.length} cliente(s) • ${best.km.toFixed(0)} km</div></div><span class="badge ${best.result>0?"good":"warn"}">${best.result>0?"Recomendada":"Avaliar"}</span></div><div class="routekpis"><div>Faturamento potencial<b>${moneyPrivate(best.revenue)}</b></div><div>Lucro bruto potencial<b>${moneyPrivate(best.grossProfit)}</b></div><div>Resultado da rota<b>${moneyPrivate(best.result)}</b></div></div></div>`}
  else homeRoute.innerHTML=critical.length?`<div class="listitem"><div><div class="title">${critical.length} cliente(s) precisam de análise de rota</div><div class="meta">Abra Rotas e toque em “Analisar rotas”.</div></div><button class="btn secondary" onclick="go('routes')">Analisar</button></div>`:'<div class="empty">Nenhum cliente está crítico para visita agora.</div>';
- const over=state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0),low=state.products.filter(p=>Number(p.qty)<=Number(p.min)).length,list=[];
- if(over)list.push(`<div class="listitem"><div><div class="title">${brl(over)} vencidos</div><div class="meta">Prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);if(urgent)list.push(`<div class="listitem"><div><div class="title">${urgent} garantia(s) próximas do limite</div><div class="meta">Verificar coleta/envio</div></div><span class="badge bad">Urgente</span></div>`);homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>'
+ const low=state.products.filter(p=>Number(p.qty)<=Number(p.min)).length,list=[];
+ if(overValue)list.push(`<div class="listitem"><div><div class="title">${homeFinanceVisible?brl(overValue)+" vencidos":"Há valores vencidos"}</div><div class="meta">Prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);
+ if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);
+ if(urgent)list.push(`<div class="listitem"><div><div class="title">${urgent} garantia(s) próximas do limite</div><div class="meta">Verificar coleta/envio</div></div><span class="badge bad">Urgente</span></div>`);
+ homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>';renderHomeFinanceChart()
 }
-
 function renderSales(){
  if(!state.sales.length){salesList.innerHTML='<div class="empty">Nenhuma venda registrada.</div>';return}
  salesList.innerHTML=[...state.sales].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>{const c=state.clients.find(c=>c.id===s.clientId),profit=saleGrossProfit(s),rent=saleRentability(s);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Lucro bruto: ${brl(profit)} • Rentabilidade: ${rent.toFixed(1)}% • Em aberto: ${brl(saleOpen(s))}</div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
@@ -1010,6 +1194,7 @@ async function analyzeSmartRoutes(){
  renderRoutes();renderHome()
 }
 
+function toggleSaleCardResult(id,btn){const el=document.getElementById("saleResult_"+id);if(!el)return;const show=el.classList.contains("hidden");el.classList.toggle("hidden",!show);if(btn)btn.textContent=show?"🙈 Ocultar":"👁 Resultado"}
 function renderCollections(){
  const rows=[];state.sales.forEach(s=>s.installments.forEach(p=>{if(!p.paid)rows.push({s,p})}));rows.sort((a,b)=>a.p.due.localeCompare(b.p.due));
  if(!rows.length){collectionsList.innerHTML='<div class="empty">Nenhuma cobrança pendente.</div>';return}
@@ -1056,7 +1241,7 @@ function renderSales(){
  let list=state.sales.filter(s=>keys.includes(String(s.date||"").slice(0,7)));if(salesMonthFilter!=="all")list=list.filter(s=>String(s.date||"").slice(0,7)===salesMonthFilter);if(salesStatusFilter==="paid")list=list.filter(s=>salePaid(s));if(salesStatusFilter==="open")list=list.filter(s=>!salePaid(s));
  list.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||String(b.orderNumber||"").localeCompare(String(a.orderNumber||"")));
  if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda encontrada com esses filtros.</div>';return}
- salesList.innerHTML=list.map(s=>{const c=state.clients.find(c=>c.id===s.clientId),profit=saleGrossProfit(s),rent=saleRentability(s),disc=Number(s.scrapDiscount||0);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.paymentMode==="prazo"&&s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">${disc?`Subtotal ${brl(s.subtotal)} • Sucata -${brl(disc)} • `:""}Lucro bruto: ${brl(profit)} • Rentabilidade: ${rent.toFixed(1)}% • Em aberto: ${brl(saleOpen(s))}</div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
+ salesList.innerHTML=list.map(s=>{const c=state.clients.find(c=>c.id===s.clientId),disc=Number(s.scrapDiscount||0),op=saleOperationalBreakdown(s),cls=rentabilityClass(op.rentability);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.paymentMode==="prazo"&&s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">${disc?`Subtotal ${brl(s.subtotal)} • Sucata -${brl(disc)} • `:""}Em aberto: ${brl(saleOpen(s))}</div><div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">Custos totais: ${brl(op.totalCosts)} • Resultado operacional: <b class="rent-${cls}">${brl(op.result)}</b> • Rentabilidade: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b></div></div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="toggleSaleCardResult('${s.id}',this)">👁 Resultado</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
 }
 function renderCollections(){
  ensureState();collectionStatusFilters.innerHTML=[["all","Tudo"],["upcoming","A vencer"],["late","Atrasado"],["sent","Enviado"]].map(([k,l])=>`<button class="filter-btn ${collectionStatusFilter===k?"active":""}" onclick="setCollectionStatusFilter('${k}')">${l}</button>`).join("");
@@ -1079,13 +1264,24 @@ function renderWarranties(){
  const list=state.warranties.filter(w=>w.type!=="Sucata");if(!list.length){warrantyList.innerHTML='<div class="empty">Nenhuma garantia registrada.</div>';return}
  warrantyList.innerHTML=list.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),limit=w.mfg?addMonths(w.mfg,9):null,left=limit?days(today(),limit):null;return `<div class="listitem"><div><div class="title">${esc(c?.name||"Cliente")} • ${esc(w.model)}</div><div class="meta">coleta ${fmt(w.collect)} ${limit?`• limite ${fmt(limit)}`:""}</div></div><div style="text-align:right"><span class="badge ${left!=null&&left<=30?"warn":"good"}">${esc(w.status)}</span><div class="actions" style="justify-content:flex-end;margin-top:6px"><button class="btn secondary" onclick="openWarrantySheet('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWarranty('${w.id}')">Excluir</button></div></div></div>`}).join("")
 }
-function renderSettings(){ensureState();cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgSellerName.value=state.config.sellerName||"Alex";cfgMapsKey.value=state.config.googleMapsApiKey||"";mapsStatus.textContent=mapsConfigured()?"configurado":"não configurado";mapsStatus.className="badge "+(mapsConfigured()?"good":"warn")}
+function renderSettings(){
+ ensureState();ensureConfig();cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgSellerName.value=state.config.sellerName||"Alex";
+ cfgTaxRate.value=Number(state.config.taxRate||0);cfgMinRentability.value=Number(state.config.minRentability??10);cfgFeePix.value=Number(state.config.paymentFees?.PIX||0);cfgFeeCash.value=Number(state.config.paymentFees?.Dinheiro||0);cfgFeeCheque.value=Number(state.config.paymentFees?.Cheque||0);cfgFeeBoleto.value=Number(state.config.paymentFees?.Boleto||0);cfgFeeCard.value=Number(state.config.paymentFees?.["Cartão"]||0);
+ cfgMapsKey.value=state.config.googleMapsApiKey||"";mapsStatus.textContent=mapsConfigured()?"configurado":"não configurado";mapsStatus.className="badge "+(mapsConfigured()?"good":"warn")
+}
 function renderAll(){ensureState();fillSelects();renderHome();renderSales();renderRoutes();renderCollections();renderClients();renderPriceTables();renderProducts();renderWarranties();renderScrap();renderMonth();renderSettings()}
 function updateSale(){
  let subtotal=0,cost=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);subtotal+=line;cost+=p?Number(p.cost||0)*q:0});
  let discount=0;document.querySelectorAll(".scrapRow").forEach(r=>{const t=state.scrapTypes.find(t=>t.id===r.querySelector(".sst").value),q=Number(r.querySelector(".ssq").value||0),d=t?Number(t.value||0)*q:0;r.querySelector(".scrapDiscount").textContent=`- ${brl(d)}`;discount+=d});
- const total=Math.max(0,subtotal-discount),profit=total-cost,rent=total>0?profit/total*100:0;
- saleSubtotalPreview.textContent=brl(subtotal);saleScrapDiscountPreview.textContent=`- ${brl(discount)}`;saleTotal.textContent=brl(total);saleCostPreview.textContent=brl(cost);saleProfitPreview.textContent=brl(profit);saleRentabilityPreview.textContent=rent.toFixed(1)+"%";
+ const total=Math.max(0,subtotal-discount),grossProfit=total-cost;
+ const feeRate=paymentFeeRate(sMethod.value),paymentFee=total*feeRate/100,taxRate=Number(state.config?.taxRate||0),tax=total*taxRate/100;
+ const routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),totalCosts=cost+paymentFee+tax+routeCost+otherCost,result=total-totalCosts,rent=total>0?result/total*100:0,cls=rentabilityClass(rent);
+ saleSubtotalPreview.textContent=brl(subtotal);saleScrapDiscountPreview.textContent=`- ${brl(discount)}`;saleTotal.textContent=brl(total);
+ saleCostPreview.textContent=brl(cost);salePaymentFeePreview.textContent=brl(paymentFee);saleTaxPreview.textContent=brl(tax);saleExtraCostsPreview.textContent=brl(routeCost+otherCost);
+ saleGrossProfitPreview.textContent=brl(grossProfit);saleTotalCostsPreview.textContent=brl(totalCosts);saleProfitPreview.textContent=brl(result);saleRentabilityPreview.textContent=rent.toFixed(1)+"%";
+ saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;
+ saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;
+ saleRentabilityAlert.className=`notice rent-panel-${cls}`;saleRentabilityAlert.innerHTML=`<b>${rentabilityText(rent)}</b> • Rentabilidade operacional estimada ${rent.toFixed(1)}%.`;
  saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
 }
 
@@ -1096,7 +1292,7 @@ function addSaleItem(productId="",qty=1){
 }
 
 sClient.addEventListener("change",()=>{const c=state.clients.find(c=>c.id===sClient.value);if(c)sTable.value=c.price||"0";updateSale()});sTable.addEventListener("change",updateSale);
-sMethod.addEventListener("change",()=>{salePaidLabel.textContent=sMethod.value==="Cheque"?"Recebido / compensado?":"Recebido no ato?"});
+sMethod.addEventListener("change",()=>{salePaidLabel.textContent=sMethod.value==="Cheque"?"Recebido / compensado?":"Recebido no ato?";updateSale()});sRouteCost.addEventListener("input",updateSale);sOtherCost.addEventListener("input",updateSale);
 
 clientForm.addEventListener("submit",e=>{e.preventDefault();let c=state.clients.find(c=>c.id===cId.value);const data={name:cName.value.trim(),contact:cContact.value.trim(),phone:cPhone.value.trim(),doc:cDoc.value.trim(),address:cAddress.value.trim(),city:cCity.value.trim(),routeId:c?.routeId||"",price:cPrice.value,interval:Number(cInterval.value),note:cNote.value.trim(),visitPriority:!!c?.visitPriority};if(c)Object.assign(c,data);else state.clients.push({id:uid(),...data});smartRoutePlan=null;closeSheet("clientSheet");save()});
 productForm.addEventListener("submit",e=>{e.preventDefault();let p=state.products.find(p=>p.id===pId.value);const data={name:pName.value.trim(),qty:Number(pQty.value),min:Number(pMin.value),cost:Number(pCost.value)};if(p)Object.assign(p,data);else state.products.push({id:uid(),...data,prices:[0,0,0,0,0,0]});closeSheet("productSheet");save()});
@@ -1127,14 +1323,18 @@ saleForm.addEventListener("submit",e=>{
  if(mode==="prazo")parts.forEach((p,i)=>{if(!original?.installments?.[i]?.paid)p.paid=false});
  if(original&&original.installments.some(p=>p.paid)&&Math.abs(Number(original.total)-total)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor mudou. Deseja continuar e recalcular as parcelas?"))return;
  const method=sMethod.value;
+ const routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0);
+ const paymentFeeRateSnapshot=paymentFeeRate(method),taxRateSnapshot=Number(state.config?.taxRate||0);
+ const paymentFeeValue=total*paymentFeeRateSnapshot/100,taxValue=total*taxRateSnapshot/100;
+ const totalCosts=cost+paymentFeeValue+taxValue+routeCost+otherCost,operationalResult=total-totalCosts,operationalRentability=total>0?operationalResult/total*100:0;
  let savedSale;
  if(original){
    (original.items||[]).forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)+Number(i.qty)});
    items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});
-   Object.assign(original,{clientId:c.id,date:sDate.value,method,paymentMode:mode,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,total,marginValue:total-cost,installments:parts,sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});
+   Object.assign(original,{clientId:c.id,date:sDate.value,method,paymentMode:mode,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:paymentFeeRateSnapshot,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:parts,sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});
    const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id});savedSale=original
  }else{
-   const sale={id:uid(),clientId:c.id,date:sDate.value,createdAt:new Date().toISOString(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),method,paymentMode:mode,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,total,marginValue:total-cost,installments:parts};
+   const sale={id:uid(),clientId:c.id,date:sDate.value,createdAt:new Date().toISOString(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),method,paymentMode:mode,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:paymentFeeRateSnapshot,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:parts};
    state.sales.push(sale);items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale
  }
  syncSaleScrapTransactions(savedSale);smartRoutePlan=null;closeSheet("saleSheet");save();setTimeout(()=>openReceipt(savedSale.id),60)
@@ -1170,7 +1370,10 @@ function deleteWarranty(id){
 }
 
 function toggleVisitPriority(cid){const c=state.clients.find(c=>c.id===cid);if(!c)return;c.visitPriority=!c.visitPriority;smartRoutePlan=null;save();if(document.getElementById("clientDetail").classList.contains("active"))showClient(cid)}
-function saveSettings(){ensureState();Object.assign(state.config,{costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim(),sellerName:cfgSellerName.value.trim()||"Alex"});smartRoutePlan=null;save();alert("Configurações salvas.")}
+function saveSettings(){
+ ensureState();ensureConfig();Object.assign(state.config,{costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim(),sellerName:cfgSellerName.value.trim()||"Alex",taxRate:Number(cfgTaxRate.value||0),minRentability:Number(cfgMinRentability.value||10),paymentFees:{PIX:Number(cfgFeePix.value||0),Dinheiro:Number(cfgFeeCash.value||0),Cheque:Number(cfgFeeCheque.value||0),Boleto:Number(cfgFeeBoleto.value||0),"Cartão":Number(cfgFeeCard.value||0)}});
+ smartRoutePlan=null;save();alert("Configurações salvas.")
+}
 function saveMapsKey(){ensureConfig();state.config.googleMapsApiKey=cfgMapsKey.value.trim();mapsLoaderPromise=null;smartRoutePlan=null;save();alert("Integração de rotas salva.")}
 function receiptFileName(s){return `AX-Baterias-Pedido-${s.orderNumber||"sem-numero"}.png`}
 function formatPhone(v){let d=String(v||"").replace(/\D/g,"");if(d.startsWith("55")&&d.length>=12)d=d.slice(2);if(d.length===11)return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;if(d.length===10)return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;return v||""}
@@ -1186,25 +1389,139 @@ function renderReceiptHtml(s,c){
  rcSubtotal.textContent=brl(subtotal);rcSubtotalLine.classList.toggle("hidden",disc<=0);rcScrapLine.classList.toggle("hidden",disc<=0);rcScrapDiscount.textContent=`- ${brl(disc)}`;rcTotal.textContent=brl(s.total);
  rcSeller.textContent=`Pedido feito por: ${s.sellerName||"Alex"}`;rcPhone.textContent=state.config.companyPhone?`WhatsApp: ${formatPhone(state.config.companyPhone)}`:"";
 }
-function openReceipt(sid){const s=state.sales.find(s=>s.id===sid);if(!s)return;const c=state.clients.find(c=>c.id===s.clientId);activeReceiptSaleId=sid;renderReceiptHtml(s,c);openSheet("receiptSheet")}
+function clearPreparedReceipt(){
+ activeReceiptBlob=null;activeReceiptFile=null;receiptGenerationPromise=null;
+ if(activeReceiptObjectUrl){try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}activeReceiptObjectUrl=null}
+ if(window.receiptImagePreview){receiptImagePreview.removeAttribute("src");receiptImagePreview.classList.add("hidden")}
+ if(window.receiptPreparing)receiptPreparing.classList.remove("hidden");
+ if(window.receiptReadyLine)receiptReadyLine.classList.add("hidden");
+ if(window.receiptShareBtn)receiptShareBtn.disabled=true;
+ if(window.receiptSaveBtn)receiptSaveBtn.disabled=true;
+ if(window.receiptShareStatus)receiptShareStatus.textContent="Aguarde a imagem ficar pronta.";
+}
+function setReceiptReady(blob,file){
+ activeReceiptBlob=blob;activeReceiptFile=file;
+ if(activeReceiptObjectUrl){try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}}
+ activeReceiptObjectUrl=URL.createObjectURL(blob);
+ receiptImagePreview.src=activeReceiptObjectUrl;
+ receiptImagePreview.classList.remove("hidden");
+ receiptPreparing.classList.add("hidden");
+ receiptReadyLine.classList.remove("hidden");
+ receiptShareBtn.disabled=false;receiptSaveBtn.disabled=false;
+ receiptShareStatus.textContent="Imagem pronta. Toque em Enviar por WhatsApp.";
+}
+async function waitReceiptRender(){
+ await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ try{if(document.fonts?.ready)await document.fonts.ready}catch{}
+ const imgs=[...receiptCard.querySelectorAll("img")].filter(i=>!i.complete);
+ if(imgs.length)await Promise.all(imgs.map(i=>new Promise(r=>{i.addEventListener("load",r,{once:true});i.addEventListener("error",r,{once:true})})));
+}
+async function prepareReceiptImage(sid=activeReceiptSaleId){
+ const s=state.sales.find(s=>s.id===sid);if(!s)throw new Error("Pedido não encontrado.");
+ if(activeReceiptSaleId===sid&&activeReceiptFile&&activeReceiptBlob)return activeReceiptFile;
+ if(activeReceiptSaleId===sid&&receiptGenerationPromise)return receiptGenerationPromise;
+ const token=++receiptGenerationToken;
+ clearPreparedReceipt();
+ receiptGenerationPromise=(async()=>{
+   await waitReceiptRender();
+   const blob=await receiptBlob();
+   if(token!==receiptGenerationToken)throw new Error("Geração substituída por outro pedido.");
+   const file=new File([blob],receiptFileName(s),{type:"image/png",lastModified:Date.now()});
+   setReceiptReady(blob,file);
+   return file
+ })().catch(e=>{
+   console.error(e);
+   if(token===receiptGenerationToken){
+     receiptPreparing.innerHTML='<b>Não foi possível preparar a imagem.</b><span>Feche e abra o recibo novamente.</span>';
+     receiptShareStatus.textContent="Falha ao gerar a imagem.";
+   }
+   throw e
+ }).finally(()=>{if(token===receiptGenerationToken)receiptGenerationPromise=null});
+ return receiptGenerationPromise
+}
+function openReceipt(sid){
+ const s=state.sales.find(s=>s.id===sid);if(!s)return;
+ const c=state.clients.find(c=>c.id===s.clientId);
+ activeReceiptSaleId=sid;
+ renderReceiptHtml(s,c);
+ openSheet("receiptSheet");
+ prepareReceiptImage(sid).catch(()=>{})
+}
 async function receiptBlob(){
  if(!window.html2canvas)throw new Error("Gerador de imagem não carregado.");
- const canvas=await html2canvas(receiptCard,{scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false,windowWidth:receiptCard.scrollWidth,windowHeight:receiptCard.scrollHeight});
- return await new Promise(resolve=>canvas.toBlob(resolve,"image/png",.96))
+ const canvas=await html2canvas(receiptCard,{
+   scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false,
+   windowWidth:680,windowHeight:receiptCard.scrollHeight,
+   scrollX:0,scrollY:0
+ });
+ return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Falha ao criar PNG.")),"image/png",.96))
 }
-function triggerBlobDownload(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
-async function downloadReceipt(){const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;try{const blob=await receiptBlob();triggerBlobDownload(blob,receiptFileName(s))}catch(e){console.error(e);alert("Não foi possível gerar a imagem do pedido.")}}
-function normalizedWhats(phone){let d=String(phone||"").replace(/\D/g,"").replace(/^0+/,"");if(!d)return"";if(!d.startsWith("55"))d="55"+d;return d}
-async function sendReceiptWhatsApp(){
- const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;const c=state.clients.find(c=>c.id===s.clientId),phone=normalizedWhats(c?.phone);
- if(!phone){alert("Este cliente não tem WhatsApp cadastrado. Atualize o cadastro antes de enviar.");return}
- const who=c?.contact?`, ${c.contact}`:"",text=`Olá${who}! Segue o resumo do seu pedido nº ${s.orderNumber}.`;
- const popup=window.open("about:blank","_blank");
+function triggerBlobDownload(blob,name){
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)
+}
+async function downloadReceipt(){
+ const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;
+ receiptSaveBtn.disabled=true;
  try{
-   const blob=await receiptBlob();triggerBlobDownload(blob,receiptFileName(s));
-   try{if(navigator.clipboard&&window.ClipboardItem)await navigator.clipboard.write([new ClipboardItem({"image/png":blob})])}catch{}
-   const url=`https://wa.me/${phone}?text=${encodeURIComponent(text)}`;if(popup)popup.location.href=url;else window.location.href=url;
- }catch(e){if(popup)popup.close();console.error(e);alert("Não foi possível gerar a imagem do pedido.")}
+   const file=await prepareReceiptImage(s.id);
+   triggerBlobDownload(file,receiptFileName(s));
+   receiptShareStatus.textContent="Imagem salva."
+ }catch(e){console.error(e);alert("Não foi possível salvar a imagem do pedido.")}
+ finally{if(activeReceiptFile)receiptSaveBtn.disabled=false}
+}
+function normalizedWhats(phone){
+ let d=String(phone||"").replace(/\D/g,"").replace(/^0+/,"");
+ if(!d)return"";if(!d.startsWith("55"))d="55"+d;return d
+}
+async function copyReceiptImageToClipboard(blob){
+ try{
+   if(navigator.clipboard&&window.ClipboardItem){
+     await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
+     return true
+   }
+ }catch(e){console.warn("Cópia da imagem não permitida",e)}
+ return false
+}
+async function sendReceiptWhatsApp(){
+ const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;
+ const c=state.clients.find(c=>c.id===s.clientId),phone=normalizedWhats(c?.phone);
+ if(!phone){alert("Este cliente não tem WhatsApp cadastrado. Atualize o cadastro antes de enviar.");return}
+ const hello=c?.contact?`Olá, ${c.contact}!`:"Olá!";
+ const text=`${hello} Segue o resumo do seu pedido nº ${s.orderNumber}.`;
+ receiptShareBtn.disabled=true;receiptShareStatus.textContent="Preparando envio…";
+ try{
+   const file=await prepareReceiptImage(s.id);
+   // Melhor caminho disponível em celular: compartilha o PNG real + mensagem.
+   if(navigator.share){
+     const payload={title:`Pedido ${s.orderNumber} • AX Baterias`,text,files:[file]};
+     const canShareFiles=!navigator.canShare||navigator.canShare({files:[file]});
+     if(canShareFiles){
+       try{
+         await navigator.share(payload);
+         receiptShareStatus.textContent="Compartilhamento concluído.";
+         return
+       }catch(e){
+         if(e?.name==="AbortError"){receiptShareStatus.textContent="Envio cancelado.";return}
+         console.warn("Compartilhamento nativo falhou; usando conversa direta.",e)
+       }
+     }
+   }
+   // Fallback: preserva a exigência de abrir exatamente o cliente.
+   const copied=await copyReceiptImageToClipboard(activeReceiptBlob);
+   if(!copied)triggerBlobDownload(activeReceiptBlob,receiptFileName(s));
+   receiptShareStatus.textContent=copied
+     ?"Imagem copiada. Abrindo a conversa do cliente — se necessário, cole a imagem no WhatsApp."
+     :"Imagem salva. Abrindo a conversa do cliente para anexar o arquivo.";
+   const url=`https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+   const popup=window.open(url,"_blank");
+   if(!popup)window.location.href=url
+ }catch(e){
+   console.error(e);receiptShareStatus.textContent="Não foi possível preparar o envio.";
+   alert("Não foi possível gerar a imagem do pedido.")
+ }finally{
+   if(activeReceiptFile)receiptShareBtn.disabled=false
+ }
 }
 function contactClientLabel(c){return c?.contact?`${c.contact} - ${c.name}`:(c?.name||"")}
 function collectionStatus(p){return p.due&&p.due<today()?"late":"upcoming"}
