@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101828">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AX Baterias">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>AX Baterias</title>
+<style>
+:root{
+ --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
+ --nav:#101828;--good:#067647;--warn:#b54708;--bad:#b42318;--blue:#175cd3;
+ --soft:#f2f4f7;--shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+body{padding-bottom:82px}
+.appbar{position:sticky;top:0;z-index:20;background:rgba(246,247,251,.94);backdrop-filter:blur(12px);padding:14px 16px 10px;border-bottom:1px solid rgba(228,231,236,.7)}
+.brand{font-size:21px;font-weight:850;letter-spacing:-.02em}.brand small{display:block;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+.wrap{max-width:920px;margin:auto;padding:14px 14px 24px}
+.screen{display:none}.screen.active{display:block}
+h1{font-size:24px;line-height:1.15;margin:2px 0 4px;letter-spacing:-.03em}h2{font-size:17px;margin:0}h3{font-size:14px;margin:0}.muted{font-size:12px;color:var(--muted)}
+.hero{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+.metric{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.metric .label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800}.metric .value{font-size:23px;font-weight:850;margin-top:5px}.metric .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow);margin-bottom:12px}
+.cardhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.quick button{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;text-align:left;box-shadow:var(--shadow);font-weight:800;color:var(--text)}
+.quick button span{display:block;font-size:20px;margin-bottom:6px}
+.list{display:flex;flex-direction:column;gap:9px}
+.listitem{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.listitem .title{font-size:13px;font-weight:800}.listitem .meta{font-size:11px;color:var(--muted);margin-top:3px}
+.badge{display:inline-flex;padding:5px 8px;border-radius:999px;background:var(--soft);font-size:10px;font-weight:800;color:#475467}
+.badge.good{background:#ecfdf3;color:var(--good)}.badge.warn{background:#fff7ed;color:var(--warn)}.badge.bad{background:#fef3f2;color:var(--bad)}
+.btn{border:0;border-radius:10px;padding:10px 12px;background:var(--nav);color:#fff;font-weight:800;font-size:12px}.btn.secondary{background:var(--soft);color:var(--text)}.btn.blue{background:var(--blue)}.btn.good{background:var(--good)}.btn.danger{background:#991b1b}.btn.icon{width:38px;height:38px;padding:0;border-radius:11px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.search{display:flex;gap:8px;margin-bottom:12px}.search input{flex:1}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff;color:var(--text);outline:none}
+textarea{min-height:88px;resize:vertical}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:800;color:var(--muted)}.span2{grid-column:1/-1}
+.bottomnav{position:fixed;z-index:30;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr)}
+.bottomnav button{border:0;background:transparent;color:#667085;font-size:10px;font-weight:800;padding:4px 2px}.bottomnav button .ico{display:block;font-size:19px;line-height:22px;margin-bottom:1px}.bottomnav button.active{color:#101828}
+.fab{position:fixed;right:18px;bottom:90px;width:54px;height:54px;border-radius:50%;border:0;background:#101828;color:#fff;font-size:27px;box-shadow:0 10px 22px rgba(16,24,40,.25);z-index:25}
+.moregrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.morecard{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px;text-align:left;font-weight:800;color:var(--text);box-shadow:var(--shadow)}.morecard span{display:block;font-size:21px;margin-bottom:7px}.morecard small{display:block;color:var(--muted);font-size:10px;font-weight:600;margin-top:4px;line-height:1.35}
+.back{border:0;background:transparent;padding:0;color:var(--blue);font-weight:800;font-size:12px;margin-bottom:8px}
+.sheet{position:fixed;inset:0;background:rgba(16,24,40,.28);z-index:50;display:none;align-items:flex-end}.sheet.show{display:flex}
+.sheetpanel{background:#fff;border-radius:22px 22px 0 0;width:100%;max-height:88vh;overflow:auto;padding:18px 16px calc(22px + env(safe-area-inset-bottom))}
+.sheetbar{width:42px;height:5px;background:#d0d5dd;border-radius:99px;margin:0 auto 14px}
+.notice{padding:11px 12px;border-radius:12px;background:#f9fafb;border:1px solid var(--line);font-size:11px;color:#475467}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+table{border-collapse:collapse;width:100%;font-size:11px;min-width:650px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left}th{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;background:#fcfcfd}tr:last-child td{border-bottom:0}
+.price-tabs{display:flex;gap:7px;overflow:auto;padding-bottom:8px}.price-tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:800;font-size:11px;white-space:nowrap}.price-tabs button.active{background:var(--nav);color:#fff;border-color:var(--nav)}
+.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px;background:#fff}
+.detailtop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.detailname{font-size:20px;font-weight:850}.kpis3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.mini{padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}.mini b{display:block;font-size:15px}.mini span{font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:800}
+.routebox{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff;margin-bottom:9px}
+.routehead{display:flex;justify-content:space-between;gap:10px}.routekpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.routekpis div{font-size:10px;color:var(--muted)}.routekpis b{display:block;font-size:13px;color:var(--text)}
+.saleRow{display:grid;grid-template-columns:1.5fr .55fr .7fr auto;gap:7px;margin-bottom:7px}.lineTotal{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:11px}
+
+.authgate{position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,#101828 0,#1d2939 42%,#f6f7fb 42%);display:flex;align-items:center;justify-content:center;padding:20px}
+.authbox{width:min(430px,100%);background:#fff;border-radius:22px;padding:22px;box-shadow:0 20px 50px rgba(16,24,40,.25)}
+.authlogo{font-size:25px;font-weight:900;margin-bottom:3px}.authsub{font-size:12px;color:var(--muted);margin-bottom:18px}.authgrid{display:grid;gap:10px}
+.authmsg{min-height:18px;font-size:11px;color:var(--muted);margin-top:8px}.authmsg.error{color:var(--bad)}.authmsg.good{color:var(--good)}
+body:not(.auth-locked) .authgate{display:none}
+body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-locked>.bottomnav{display:none!important}
+.appbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.syncpill{font-size:10px;font-weight:800;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 8px;white-space:nowrap}
+.syncpill.syncing{color:var(--warn)}.syncpill.ok{color:var(--good)}.syncpill.error{color:var(--bad)}
+
+@media(min-width:760px){body{padding-bottom:20px}.bottomnav{left:50%;transform:translateX(-50%);max-width:760px;border:1px solid var(--line);border-radius:18px 18px 0 0}.hero{grid-template-columns:repeat(4,1fr)}.quick{grid-template-columns:repeat(4,1fr)}.moregrid{grid-template-columns:repeat(3,1fr)}.fab{right:calc(50% - 420px)}}
+@media(max-width:520px){.formgrid{grid-template-columns:1fr}.span2{grid-column:auto}.kpis3{grid-template-columns:1fr 1fr 1fr}.routekpis{grid-template-columns:1fr 1fr 1fr}.saleRow{grid-template-columns:1fr 70px}.lineTotal,.saleRow button{grid-column:auto}}
+</style>
+</head>
+<body class="auth-locked">
+<div class="authgate" id="authGate">
+  <div class="authbox">
+    <div class="authlogo">AX Baterias</div>
+    <div class="authsub">Entre para sincronizar clientes, vendas, estoque e cobranças entre celular e computador.</div>
+    <div class="authgrid">
+      <input id="authEmail" type="email" autocomplete="email" placeholder="E-mail">
+      <input id="authPassword" type="password" autocomplete="current-password" placeholder="Senha">
+      <button class="btn" type="button" onclick="login()">Entrar</button>
+      <button class="btn secondary" type="button" onclick="signup()">Criar primeiro acesso</button>
+    </div>
+    <div id="authMsg" class="authmsg"></div>
+  </div>
+</div>
+<div class="appbar"><div class="brand">AX Baterias<small>Gestão comercial</small></div><div id="syncStatus" class="syncpill">offline</div></div>
+<div class="wrap">
+
+<section id="home" class="screen active">
+  <h1>Olá, Alex</h1><div class="muted">O que precisa da sua atenção hoje.</div>
+  <div class="hero">
+    <div class="metric"><div class="label">Vendas no mês</div><div class="value" id="hSales">R$ 0</div><div class="sub">faturamento</div></div>
+    <div class="metric"><div class="label">A receber</div><div class="value" id="hOpen">R$ 0</div><div class="sub">parcelas abertas</div></div>
+    <div class="metric"><div class="label">Vencido</div><div class="value" id="hOver">R$ 0</div><div class="sub">cobrar</div></div>
+    <div class="metric"><div class="label">Garantias urgentes</div><div class="value" id="hWar">0</div><div class="sub">próximas do limite</div></div>
+  </div>
+
+  <div class="quick">
+    <button onclick="openSaleSheet()"><span>＋</span>Nova venda</button>
+    <button onclick="go('routes')"><span>🗺️</span>Planejar rota</button>
+    <button onclick="go('collections')"><span>💰</span>Cobranças</button>
+    <button onclick="go('warranties')"><span>🛡️</span>Garantias</button>
+  </div>
+
+  <div class="card">
+    <div class="cardhead"><h2>Melhor rota agora</h2><button class="btn secondary" onclick="go('routes')">Ver todas</button></div>
+    <div id="homeRoute"></div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><h2>Atenção</h2></div>
+    <div id="homeAlerts" class="list"></div>
+  </div>
+</section>
+
+<section id="sales" class="screen">
+  <div class="cardhead"><div><h1>Vendas</h1><div class="muted">Pedidos e recebimentos.</div></div><button class="btn" onclick="openSaleSheet()">＋ Nova venda</button></div>
+  <div id="salesList"></div>
+</section>
+
+<section id="routes" class="screen">
+  <div class="cardhead"><div><h1>Rotas</h1><div class="muted">Clientes no melhor momento de compra.</div></div><button class="btn secondary" onclick="openRouteSheet()">＋ Região</button></div>
+  <div class="notice" style="margin-bottom:12px">Custo da região é cadastrado uma única vez. Ticket, frequência, margem e próxima compra vêm do histórico de vendas.</div>
+  <div id="routesList"></div>
+</section>
+
+<section id="collections" class="screen">
+  <h1>Cobranças</h1><div class="muted" style="margin-bottom:12px">Fila de notificações e controle de envio.</div>
+  <div id="collectionsList"></div>
+  <div class="card">
+    <div class="cardhead"><h2>Mensagem padrão</h2><button class="btn secondary" onclick="saveCollectionTemplate()">Salvar</button></div>
+    <textarea id="collectionTemplate"></textarea>
+  </div>
+</section>
+
+<section id="more" class="screen">
+  <h1>Mais</h1><div class="muted" style="margin-bottom:13px">Cadastros e controles de apoio.</div>
+  <div class="moregrid">
+    <button class="morecard" onclick="go('clients')"><span>👥</span>Clientes<small>Cadastro, busca e ficha individual</small></button>
+    <button class="morecard" onclick="go('priceTables')"><span>🏷️</span>Tabelas de preço<small>Seis tabelas separadas do estoque</small></button>
+    <button class="morecard" onclick="go('products')"><span>🔋</span>Produtos e estoque<small>Modelos, custo e saldo</small></button>
+    <button class="morecard" onclick="go('warranties')"><span>🛡️</span>Garantias / sucatas<small>Prazo, coleta e status</small></button>
+    <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
+    <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Custos de rota e backup</small></button>
+  </div>
+</section>
+
+<section id="clients" class="screen">
+  <button class="back" onclick="go('more')">← Voltar</button>
+  <div class="cardhead"><div><h1>Clientes</h1><div class="muted">Cadastro e ficha econômica.</div></div><button class="btn" onclick="openClientSheet()">＋ Cliente</button></div>
+  <div class="search"><input id="clientSearch" placeholder="Buscar por nome ou cidade"><button class="btn secondary" onclick="renderClients()">Buscar</button></div>
+  <div id="clientsList"></div>
+</section>
+
+<section id="clientDetail" class="screen">
+  <button class="back" onclick="go('clients')">← Clientes</button>
+  <div id="clientDetailContent"></div>
+</section>
+
+<section id="priceTables" class="screen">
+  <button class="back" onclick="go('more')">← Voltar</button>
+  <h1>Tabelas de preço</h1><div class="muted" style="margin-bottom:12px">Escolha a tabela e edite os preços de todos os produtos.</div>
+  <div class="price-tabs" id="priceTabs"></div>
+  <div class="card">
+    <div class="cardhead"><div><h2 id="priceTableTitle">Tabela 0</h2><div class="muted">Essa tabela pode ser definida como padrão de cada cliente.</div></div><button class="btn" onclick="savePriceTable()">Salvar preços</button></div>
+    <div id="priceTableEditor"></div>
+  </div>
+</section>
+
+<section id="products" class="screen">
+  <button class="back" onclick="go('more')">← Voltar</button>
+  <div class="cardhead"><div><h1>Produtos / Estoque</h1><div class="muted">Cadastro operacional, sem poluir com preços.</div></div><button class="btn" onclick="openProductSheet()">＋ Produto</button></div>
+  <div id="productsList"></div>
+</section>
+
+<section id="warranties" class="screen">
+  <button class="back" onclick="go('more')">← Voltar</button>
+  <div class="cardhead"><div><h1>Garantias / Sucatas</h1><div class="muted">Prazo de garantia e coleta.</div></div><button class="btn" onclick="openWarrantySheet()">＋ Registrar</button></div>
+  <div id="warrantyList"></div>
+</section>
+
+<section id="reports" class="screen">
+  <button class="back" onclick="go('more')">← Voltar</button>
+  <h1>Relatórios</h1><div class="muted" style="margin-bottom:12px">Para contador e conferências.</div>
+  <div class="moregrid">
+    <button class="morecard" onclick="exportSales()"><span>📄</span>Vendas<small>Exportar CSV</small></button>
+    <button class="morecard" onclick="exportReceivables()"><span>💳</span>Recebimentos<small>Exportar CSV</small></button>
+    <button class="morecard" onclick="exportClients()"><span>👥</span>Clientes<small>Exportar CSV</small></button>
+  </div>
+  <div class="card" style="margin-top:12px"><div class="cardhead"><h2>Resumo do mês</h2></div><div id="monthReport"></div></div>
+</section>
+
+<section id="settings" class="screen">
+  <button class="back" onclick="go('more')">← Voltar</button>
+  <h1>Configurações</h1>
+  <div class="card">
+    <div class="formgrid">
+      <div class="field"><label>Custo estimado por km</label><input id="cfgKm" type="number" step=".01"></div>
+      <div class="field"><label>Janela de visita (dias)</label><input id="cfgWindow" type="number" step="1"></div>
+      <div class="field span2"><label>Cidade/base</label><input id="cfgBase"></div>
+    </div>
+    <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar</button></div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><h2>Dados</h2></div>
+    <div class="actions"><button class="btn secondary" onclick="seedDemo()">Dados de demonstração</button><button class="btn secondary" onclick="backup()">Exportar backup</button><label class="btn secondary">Importar backup<input id="restoreFile" type="file" accept=".json" style="display:none"></label><button class="btn secondary" onclick="logout()">Sair da conta</button><button class="btn danger" onclick="resetAll()">Apagar tudo</button></div>
+  </div>
+</section>
+
+</div>
+
+<button class="fab" onclick="openQuickSheet()">＋</button>
+
+<nav class="bottomnav" id="bottomnav">
+  <button data-main="home" class="active" onclick="go('home')"><span class="ico">⌂</span>Início</button>
+  <button data-main="sales" onclick="go('sales')"><span class="ico">🧾</span>Vendas</button>
+  <button data-main="routes" onclick="go('routes')"><span class="ico">🗺️</span>Rotas</button>
+  <button data-main="collections" onclick="go('collections')"><span class="ico">💰</span>Cobranças</button>
+  <button data-main="more" onclick="go('more')"><span class="ico">☰</span>Mais</button>
+</nav>
+
+<!-- Quick actions -->
+<div class="sheet" id="quickSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Ação rápida</h2><button class="btn secondary" onclick="closeSheet('quickSheet')">Fechar</button></div>
+<div class="moregrid">
+<button class="morecard" onclick="closeSheet('quickSheet');openSaleSheet()"><span>🧾</span>Nova venda</button>
+<button class="morecard" onclick="closeSheet('quickSheet');openClientSheet()"><span>👤</span>Novo cliente</button>
+<button class="morecard" onclick="closeSheet('quickSheet');openWarrantySheet()"><span>🛡️</span>Garantia</button>
+<button class="morecard" onclick="closeSheet('quickSheet');go('collections')"><span>💰</span>Cobranças</button>
+</div></div></div>
+
+<!-- Client sheet -->
+<div class="sheet" id="clientSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2 id="clientSheetTitle">Novo cliente</h2><button class="btn secondary" onclick="closeSheet('clientSheet')">Fechar</button></div>
+<form id="clientForm" class="formgrid">
+<input type="hidden" id="cId">
+<div class="field span2"><label>Nome / Razão social</label><input id="cName" required></div>
+<div class="field"><label>WhatsApp</label><input id="cPhone" placeholder="11999999999"></div>
+<div class="field"><label>CPF/CNPJ</label><input id="cDoc"></div>
+<div class="field span2"><label>Endereço</label><input id="cAddress"></div>
+<div class="field"><label>Cidade</label><input id="cCity" required></div>
+<div class="field"><label>Rota / região</label><select id="cRoute"></select></div>
+<div class="field"><label>Tabela padrão</label><select id="cPrice"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+<div class="field"><label>Intervalo inicial</label><select id="cInterval"><option value="15">15 dias</option><option value="20">20 dias</option><option value="30">30 dias</option><option value="45">45 dias</option></select></div>
+<div class="field span2"><label>Observação</label><textarea id="cNote"></textarea></div>
+<div class="field span2"><button class="btn" type="submit">Salvar cliente</button></div>
+</form></div></div>
+
+<!-- Product sheet -->
+<div class="sheet" id="productSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Novo produto</h2><button class="btn secondary" onclick="closeSheet('productSheet')">Fechar</button></div>
+<form id="productForm" class="formgrid">
+<div class="field span2"><label>Produto</label><input id="pName" required placeholder="Bateria 5A"></div>
+<div class="field"><label>Estoque atual</label><input id="pQty" type="number" step="1" required></div>
+<div class="field"><label>Estoque mínimo</label><input id="pMin" type="number" step="1" value="5"></div>
+<div class="field span2"><label>Custo unitário</label><input id="pCost" type="number" step=".01" value="0"></div>
+<div class="field span2"><button class="btn" type="submit">Salvar produto</button></div>
+</form></div></div>
+
+<!-- Route sheet -->
+<div class="sheet" id="routeSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Nova região</h2><button class="btn secondary" onclick="closeSheet('routeSheet')">Fechar</button></div>
+<form id="routeForm" class="formgrid">
+<div class="field span2"><label>Nome da rota / região</label><input id="rName" required placeholder="Ex.: Sorocaba"></div>
+<div class="field"><label>Km total estimado</label><input id="rKm" type="number" value="0"></div>
+<div class="field"><label>Pedágios</label><input id="rToll" type="number" step=".01" value="0"></div>
+<div class="field span2"><label>Hospedagem / outros</label><input id="rHotel" type="number" step=".01" value="0"></div>
+<div class="field span2"><button class="btn" type="submit">Salvar região</button></div>
+</form></div></div>
+
+<!-- Sale sheet -->
+<div class="sheet" id="saleSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Nova venda</h2><button class="btn secondary" onclick="closeSheet('saleSheet')">Fechar</button></div>
+<form id="saleForm" class="formgrid">
+<div class="field span2"><label>Cliente</label><select id="sClient" required></select></div>
+<div class="field"><label>Data</label><input id="sDate" type="date" required></div>
+<div class="field"><label>Tabela aplicada</label><select id="sTable"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+<div class="field"><label>Forma de pagamento</label><select id="sMethod"><option>PIX</option><option>Dinheiro</option><option>Cheque</option><option>Boleto</option><option>Transferência</option><option>Cartão</option></select></div>
+<div class="field"><label>Parcelas</label><input id="sParts" type="number" min="1" max="24" value="1"></div>
+<div class="field"><label>1º vencimento</label><input id="sDue" type="date"></div>
+<div class="field"><label>Recebido no ato?</label><select id="sPaid"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+<div class="field span2"><label>Itens</label><div id="saleItems"></div><button class="btn secondary" type="button" onclick="addSaleItem()">＋ Adicionar item</button></div>
+<div class="field"><label>Total</label><div class="metric" style="padding:10px"><div class="value" id="saleTotal" style="font-size:18px">R$ 0,00</div></div></div>
+<div class="field"><label>Margem estimada</label><div class="metric" style="padding:10px"><div class="value" id="saleMargin" style="font-size:18px">R$ 0,00</div></div></div>
+<div class="field span2"><label>Observação</label><input id="sNote"></div>
+<div class="field span2"><button class="btn" type="submit">Finalizar venda</button></div>
+</form></div></div>
+
+<!-- Warranty sheet -->
+<div class="sheet" id="warrantySheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2>Garantia / sucata</h2><button class="btn secondary" onclick="closeSheet('warrantySheet')">Fechar</button></div>
+<form id="warrantyForm" class="formgrid">
+<div class="field span2"><label>Cliente</label><select id="wClient" required></select></div>
+<div class="field"><label>Tipo</label><select id="wType"><option>Garantia</option><option>Sucata</option></select></div>
+<div class="field"><label>Modelo</label><input id="wModel" required></div>
+<div class="field"><label>Código fabricação</label><input id="wCode"></div>
+<div class="field"><label>Data fabricação</label><input id="wMfg" type="date"></div>
+<div class="field"><label>Data coleta</label><input id="wCollect" type="date" required></div>
+<div class="field"><label>Status</label><select id="wStatus"><option>Coletada</option><option>Enviada à fábrica</option><option>Aprovada</option><option>Rejeitada</option><option>Substituída</option></select></div>
+<div class="field span2"><button class="btn" type="submit">Salvar</button></div>
+</form></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script>
+const KEY="ax_baterias_mobile_v4_cache";
+const defaults={clients:[],routes:[],products:[],sales:[],visits:[],warranties:[],config:{costKm:.85,window:5,base:""},collectionTemplate:"Oi, {cliente}! Tudo bem? Passando para lembrar do pagamento de {valor}, referente ao pedido de {data}, com vencimento em {vencimento}. Quando conseguir realizar, me avisa por favor. Obrigado!"};
+let state=loadCache();
+let currentPriceTable=0;
+let sb=null,currentUser=null,remoteTimer=null;
+
+function copy(o){return JSON.parse(JSON.stringify(o))}
+function loadCache(){try{return Object.assign(copy(defaults),JSON.parse(localStorage.getItem(KEY)||"{}"))}catch{return copy(defaults)}}
+function setSync(text,kind=""){const el=document.getElementById("syncStatus");if(!el)return;el.textContent=text;el.className="syncpill "+kind}
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}
+  renderAll();
+  scheduleRemoteSave();
+}
+function scheduleRemoteSave(){
+  if(!sb||!currentUser)return;
+  setSync("salvando…","syncing");
+  clearTimeout(remoteTimer);
+  remoteTimer=setTimeout(async()=>{
+    const {error}=await sb.from("ax_app_state").upsert({user_id:currentUser.id,data:state,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+    if(error){console.error(error);setSync("erro ao sincronizar","error")}
+    else setSync("sincronizado","ok");
+  },300);
+}
+function backendConfigured(){
+  const c=window.AX_CONFIG||{};
+  return c.supabaseUrl && c.supabasePublishableKey && !c.supabaseUrl.includes("COLE_") && !c.supabasePublishableKey.includes("COLE_");
+}
+async function loadRemote(user){
+  currentUser=user;
+  setSync("sincronizando…","syncing");
+  const {data,error}=await sb.from("ax_app_state").select("data").eq("user_id",user.id).maybeSingle();
+  if(error){console.error(error);setSync("erro no banco","error");throw error}
+  if(data?.data){
+    state=Object.assign(copy(defaults),data.data);
+    try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}
+  }else{
+    const {error:upErr}=await sb.from("ax_app_state").upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+    if(upErr)throw upErr;
+  }
+  document.body.classList.remove("auth-locked");
+  renderAll();
+  setSync("sincronizado","ok");
+}
+async function initBackend(){
+  if(!backendConfigured()){
+    authMsg.textContent="Falta preencher o arquivo config.js com a URL e a Publishable Key do Supabase.";
+    authMsg.className="authmsg error";
+    return;
+  }
+  try{
+    sb=window.supabase.createClient(window.AX_CONFIG.supabaseUrl,window.AX_CONFIG.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    const {data:{session}}=await sb.auth.getSession();
+    if(session)await loadRemote(session.user);
+    sb.auth.onAuthStateChange(async(event,session)=>{
+      if(event==="SIGNED_OUT"){currentUser=null;document.body.classList.add("auth-locked");setSync("offline","")}
+    });
+  }catch(e){
+    console.error(e);authMsg.textContent="Não foi possível conectar ao Supabase. Confira config.js e o banco.";authMsg.className="authmsg error";
+  }
+}
+async function login(){
+  if(!sb){authMsg.textContent="Configure o Supabase primeiro.";authMsg.className="authmsg error";return}
+  authMsg.textContent="Entrando…";authMsg.className="authmsg";
+  const {data,error}=await sb.auth.signInWithPassword({email:authEmail.value.trim(),password:authPassword.value});
+  if(error){authMsg.textContent="Não foi possível entrar: "+error.message;authMsg.className="authmsg error";return}
+  await loadRemote(data.user);authMsg.textContent="";
+}
+async function signup(){
+  if(!sb){authMsg.textContent="Configure o Supabase primeiro.";authMsg.className="authmsg error";return}
+  if(authPassword.value.length<8){authMsg.textContent="Use uma senha com pelo menos 8 caracteres.";authMsg.className="authmsg error";return}
+  authMsg.textContent="Criando acesso…";authMsg.className="authmsg";
+  const {data,error}=await sb.auth.signUp({email:authEmail.value.trim(),password:authPassword.value});
+  if(error){authMsg.textContent="Não foi possível criar: "+error.message;authMsg.className="authmsg error";return}
+  if(data.session){await loadRemote(data.user);authMsg.textContent=""}
+  else{authMsg.textContent="Conta criada. Confira o e-mail para confirmar o acesso e depois entre.";authMsg.className="authmsg good"}
+}
+async function logout(){
+  if(sb)await sb.auth.signOut();
+  currentUser=null;document.body.classList.add("auth-locked");setSync("offline","");
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function today(){return new Date().toISOString().slice(0,10)}
+function brl(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function fmt(v){return v?new Date(v+"T12:00:00").toLocaleDateString("pt-BR"):"—"}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function days(a,b){return Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/86400000)}
+function addDays(v,n){const d=new Date(v+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function addMonths(v,n){const d=new Date(v+"T12:00:00");d.setMonth(d.getMonth()+n);return d.toISOString().slice(0,10)}
+function monthStart(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),1)}
+
+function go(id){
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ const main=["home","sales","routes","collections","more"].includes(id)?id:"more";
+ document.querySelectorAll("#bottomnav button").forEach(b=>b.classList.toggle("active",b.dataset.main===main));
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function openSheet(id){document.getElementById(id).classList.add("show")}
+function closeSheet(id){document.getElementById(id).classList.remove("show")}
+function openQuickSheet(){openSheet("quickSheet")}
+function openClientSheet(clientId=""){
+ cId.value=clientId;
+ const c=state.clients.find(c=>c.id===clientId);
+ clientSheetTitle.textContent=c?"Editar cliente":"Novo cliente";
+ cName.value=c?.name||"";cPhone.value=c?.phone||"";cDoc.value=c?.doc||"";cAddress.value=c?.address||"";cCity.value=c?.city||"";cRoute.value=c?.routeId||"";cPrice.value=c?.price||"0";cInterval.value=String(c?.interval||15);cNote.value=c?.note||"";
+ openSheet("clientSheet")
+}
+function openProductSheet(){productForm.reset();pMin.value=5;pCost.value=0;openSheet("productSheet")}
+function openRouteSheet(){routeForm.reset();rKm.value=0;rToll.value=0;rHotel.value=0;openSheet("routeSheet")}
+function openSaleSheet(){saleForm.reset();sDate.value=today();sDue.value=today();sParts.value=1;sPaid.value="no";saleItems.innerHTML="";addSaleItem();openSheet("saleSheet")}
+function openWarrantySheet(){warrantyForm.reset();wCollect.value=today();openSheet("warrantySheet")}
+
+function saleOpen(s){return s.installments.reduce((a,p)=>a+(!p.paid?Number(p.amount):0),0)}
+function salePaid(s){return s.installments.every(p=>p.paid)}
+function saleOverdue(s){return s.installments.some(p=>!p.paid&&p.due&&p.due<today())}
+function clientStats(id){
+ const sales=state.sales.filter(s=>s.clientId===id).sort((a,b)=>a.date.localeCompare(b.date));
+ const ticket=sales.length?sales.reduce((a,s)=>a+Number(s.total),0)/sales.length:0;
+ const avgMargin=sales.length?sales.reduce((a,s)=>a+Number(s.marginValue||0),0)/sales.length:0;
+ const dates=[...new Set(sales.map(s=>s.date))];let avgInterval=null;
+ if(dates.length>=2){const gaps=[];for(let i=1;i<dates.length;i++)gaps.push(days(dates[i-1],dates[i]));avgInterval=Math.round(gaps.reduce((a,b)=>a+b,0)/gaps.length)}
+ const c=state.clients.find(c=>c.id===id);const interval=avgInterval||Number(c?.interval||30);const last=dates.at(-1)||null;const next=last?addDays(last,interval):null;
+ const open=sales.reduce((a,s)=>a+saleOpen(s),0);const visits=state.visits.filter(v=>v.clientId===id);const conv=visits.length?visits.filter(v=>v.result==="Venda").length/visits.length:1;
+ return {ticket,avgMargin,avgInterval,interval,last,next,open,orders:sales.length,visits:visits.length,conv}
+}
+function routeMetrics(r){
+ const cs=state.clients.filter(c=>c.routeId===r.id);let due=0,potential=0,margin=0;const people=[];
+ cs.forEach(c=>{const st=clientStats(c.id);if(!st.orders)return;const delta=days(today(),st.next);if(delta<=Number(state.config.window||5)){const readiness=delta<=0?1:Math.max(.55,1-(delta/(Number(state.config.window||5)+1))*.35);const conv=Math.max(.25,st.conv);due++;potential+=st.ticket*readiness*conv;margin+=st.avgMargin*readiness*conv;people.push({c,st})}});
+ const cost=Number(r.km||0)*Number(state.config.costKm||0)+Number(r.toll||0)+Number(r.hotel||0);const result=margin-cost;let label="Aguardar",cls="bad";if(due&&result>0){label="Recomendada";cls="good"}else if(due&&margin>=cost*.75){label="Avaliar";cls="warn"}
+ return {due,potential,margin,cost,result,label,cls,people}
+}
+
+function fillSelects(){
+ cRoute.innerHTML='<option value="">Sem rota</option>'+state.routes.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join("");
+ const opts='<option value="">Selecione</option>'+state.clients.map(c=>`<option value="${c.id}">${esc(c.name)} — ${esc(c.city)}</option>`).join("");
+ sClient.innerHTML=opts;wClient.innerHTML=opts
+}
+function renderHome(){
+ const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart());hSales.textContent=brl(month.reduce((a,s)=>a+Number(s.total),0));hOpen.textContent=brl(state.sales.reduce((a,s)=>a+saleOpen(s),0));
+ hOver.textContent=brl(state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0));
+ const urgent=state.warranties.filter(w=>w.type==="Garantia"&&w.mfg&&!["Aprovada","Rejeitada","Substituída"].includes(w.status)&&days(today(),addMonths(w.mfg,9))<=30).length;hWar.textContent=urgent;
+ const best=state.routes.map(r=>({r,m:routeMetrics(r)})).sort((a,b)=>b.m.result-a.m.result)[0];
+ homeRoute.innerHTML=best?`<div class="routebox"><div class="routehead"><div><b>${esc(best.r.name)}</b><div class="muted">${best.m.due} cliente(s) na janela</div></div><span class="badge ${best.m.cls}">${best.m.label}</span></div><div class="routekpis"><div>Venda potencial<b>${brl(best.m.potential)}</b></div><div>Custo<b>${brl(best.m.cost)}</b></div><div>Resultado<b>${brl(best.m.result)}</b></div></div></div>`:'<div class="empty">Cadastre rotas e vendas para gerar recomendações.</div>';
+ const over=state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0);const low=state.products.filter(p=>Number(p.qty)<=Number(p.min)).length;const list=[];
+ if(over)list.push(`<div class="listitem"><div><div class="title">${brl(over)} vencidos</div><div class="meta">Prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);
+ if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);
+ if(urgent)list.push(`<div class="listitem"><div><div class="title">${urgent} garantia(s) próximas do limite</div><div class="meta">Verificar coleta/envio</div></div><span class="badge bad">Urgente</span></div>`);
+ homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>'
+}
+function renderSales(){
+ if(!state.sales.length){salesList.innerHTML='<div class="empty">Nenhuma venda registrada.</div>';return}
+ salesList.innerHTML=[...state.sales].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>{const c=state.clients.find(c=>c.id===s.clientId);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Em aberto: ${brl(saleOpen(s))}</div></div>`}).join("")
+}
+function renderRoutes(){
+ if(!state.routes.length){routesList.innerHTML='<div class="empty">Nenhuma região cadastrada.</div>';return}
+ routesList.innerHTML=state.routes.map(r=>{const m=routeMetrics(r);return `<div class="routebox"><div class="routehead"><div><b>${esc(r.name)}</b><div class="muted">${r.km||0} km • pedágio ${brl(r.toll)} • outros ${brl(r.hotel)}</div></div><span class="badge ${m.cls}">${m.label}</span></div><div class="routekpis"><div>Venda potencial<b>${brl(m.potential)}</b></div><div>Custo<b>${brl(m.cost)}</b></div><div>Resultado<b>${brl(m.result)}</b></div></div>${m.people.length?`<div class="list" style="margin-top:10px">${m.people.map(x=>`<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">Próxima compra: ${fmt(x.st.next)} • ticket ${brl(x.st.ticket)}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">WhatsApp</button></div>`).join("")}</div>`:""}</div>`}).join("")
+}
+function renderCollections(){
+ const rows=[];state.sales.forEach(s=>s.installments.forEach(p=>{if(!p.paid)rows.push({s,p})}));rows.sort((a,b)=>a.p.due.localeCompare(b.p.due));
+ if(!rows.length){collectionsList.innerHTML='<div class="empty">Nenhuma cobrança pendente.</div>';return}
+ collectionsList.innerHTML=rows.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">Parcela ${p.number}/${s.installments.length} • ${fmt(p.due)}</div></div><span class="badge ${p.sent?"good":"warn"}">${p.sent?"Enviado":"Não enviado"}</span></div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div><div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button></div></div>`}).join("")
+ collectionTemplate.value=state.collectionTemplate
+}
+function renderClients(){
+ const q=(clientSearch?.value||"").toLowerCase().trim();const list=state.clients.filter(c=>!q||c.name.toLowerCase().includes(q)||c.city.toLowerCase().includes(q));
+ if(!list.length){clientsList.innerHTML='<div class="empty">Nenhum cliente encontrado.</div>';return}
+ clientsList.innerHTML=list.map(c=>{const st=clientStats(c.id),r=state.routes.find(r=>r.id===c.routeId);return `<div class="listitem" onclick="showClient('${c.id}')"><div><div class="title">${esc(c.name)}</div><div class="meta">${esc(c.city)} • ${esc(r?.name||"sem rota")} • tabela ${c.price}</div></div><div style="text-align:right"><b>${st.orders?brl(st.ticket):"Novo"}</b><div class="meta">${st.orders?`próx. ${fmt(st.next)}`:"sem histórico"}</div></div></div>`}).join("")
+}
+function showClient(id){
+ const c=state.clients.find(c=>c.id===id);if(!c)return;const st=clientStats(id),r=state.routes.find(r=>r.id===c.routeId);
+ clientDetailContent.innerHTML=`<div class="detailtop"><div><div class="detailname">${esc(c.name)}</div><div class="muted">${esc(c.city)} • ${esc(r?.name||"sem rota")}</div></div><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button></div><div class="kpis3"><div class="mini"><b>${st.orders?brl(st.ticket):"—"}</b><span>Ticket médio</span></div><div class="mini"><b>${st.orders?st.interval+" dias":"—"}</b><span>Entre compras</span></div><div class="mini"><b>${brl(st.open)}</b><span>Em aberto</span></div></div><div class="card" style="margin-top:12px"><div class="cardhead"><h2>Próxima compra provável</h2></div><div style="font-size:22px;font-weight:850">${fmt(st.next)}</div><div class="muted" style="margin-top:4px">Última compra: ${fmt(st.last)}</div></div><div class="card"><div class="cardhead"><h2>Contato</h2></div><div class="muted">${esc(c.phone||"sem WhatsApp")}<br>${esc(c.address||"")} ${esc(c.city||"")}</div><div class="actions" style="margin-top:10px"><button class="btn blue" onclick="openPreVisit('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="logNoSaleVisit('${c.id}')">Registrar visita sem venda</button></div></div>`;
+ go("clientDetail")
+}
+function renderPriceTables(){
+ priceTabs.innerHTML=[0,1,2,3,4,5].map(i=>`<button class="${i===currentPriceTable?"active":""}" onclick="selectPriceTable(${i})">Tabela ${i}</button>`).join("");
+ priceTableTitle.textContent=`Tabela ${currentPriceTable}`;
+ if(!state.products.length){priceTableEditor.innerHTML='<div class="empty">Cadastre os produtos primeiro.</div>';return}
+ priceTableEditor.innerHTML=`<div class="list">${state.products.map(p=>`<div class="listitem"><div><div class="title">${esc(p.name)}</div><div class="meta">Custo ${brl(p.cost)}</div></div><div style="width:130px"><input data-price-product="${p.id}" type="number" step=".01" value="${Number((p.prices||[])[currentPriceTable]||0)}"></div></div>`).join("")}</div>`
+}
+function selectPriceTable(i){currentPriceTable=i;renderPriceTables()}
+function savePriceTable(){document.querySelectorAll("[data-price-product]").forEach(inp=>{const p=state.products.find(p=>p.id===inp.dataset.priceProduct);if(p){p.prices||=[0,0,0,0,0,0];p.prices[currentPriceTable]=Number(inp.value||0)}});save();alert("Preços salvos.")}
+function renderProducts(){
+ if(!state.products.length){productsList.innerHTML='<div class="empty">Nenhum produto cadastrado.</div>';return}
+ productsList.innerHTML=state.products.map(p=>`<div class="listitem"><div><div class="title">${esc(p.name)}</div><div class="meta">Custo ${brl(p.cost)} • mínimo ${p.min}</div></div><div style="text-align:right"><b>${p.qty} un.</b><div class="meta"><span class="badge ${Number(p.qty)<=Number(p.min)?"bad":"good"}">${Number(p.qty)<=Number(p.min)?"Repor":"OK"}</span></div></div></div>`).join("")
+}
+function renderWarranties(){
+ if(!state.warranties.length){warrantyList.innerHTML='<div class="empty">Nenhuma garantia ou sucata registrada.</div>';return}
+ warrantyList.innerHTML=state.warranties.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),limit=w.type==="Garantia"&&w.mfg?addMonths(w.mfg,9):null,left=limit?days(today(),limit):null;return `<div class="listitem"><div><div class="title">${esc(c?.name||"Cliente")} • ${esc(w.model)}</div><div class="meta">${esc(w.type)} • coleta ${fmt(w.collect)} ${limit?`• limite ${fmt(limit)}`:""}</div></div><span class="badge ${left!=null&&left<=30?"warn":"good"}">${esc(w.status)}</span></div>`}).join("")
+}
+function renderMonth(){
+ const m=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),sold=m.reduce((a,s)=>a+Number(s.total),0),open=m.reduce((a,s)=>a+saleOpen(s),0);
+ monthReport.innerHTML=`<div class="kpis3"><div class="mini"><b>${brl(sold)}</b><span>Vendas</span></div><div class="mini"><b>${brl(sold-open)}</b><span>Recebido</span></div><div class="mini"><b>${brl(open)}</b><span>A receber</span></div></div>`
+}
+function renderSettings(){cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||""}
+function renderAll(){fillSelects();renderHome();renderSales();renderRoutes();renderCollections();renderClients();renderPriceTables();renderProducts();renderWarranties();renderMonth();renderSettings()}
+
+function addSaleItem(){
+ const row=document.createElement("div");row.className="saleRow";
+ row.innerHTML=`<select class="sp"><option value="">Produto</option>${state.products.map(p=>`<option value="${p.id}">${esc(p.name)} • ${p.qty} un.</option>`).join("")}</select><input class="sq" type="number" min="1" value="1"><div class="lineTotal">R$ 0,00</div><button class="btn secondary" type="button">×</button>`;
+ row.querySelector(".sp").onchange=updateSale;row.querySelector(".sq").oninput=updateSale;row.querySelector("button").onclick=()=>{row.remove();updateSale()};saleItems.appendChild(row);updateSale()
+}
+function updateSale(){let total=0,cost=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);total+=line;cost+=p?Number(p.cost||0)*q:0});saleTotal.textContent=brl(total);saleMargin.textContent=brl(total-cost)}
+sClient.addEventListener("change",()=>{const c=state.clients.find(c=>c.id===sClient.value);if(c)sTable.value=c.price||"0";updateSale()});sTable.addEventListener("change",updateSale);
+
+clientForm.addEventListener("submit",e=>{e.preventDefault();let c=state.clients.find(c=>c.id===cId.value);const data={name:cName.value.trim(),phone:cPhone.value.trim(),doc:cDoc.value.trim(),address:cAddress.value.trim(),city:cCity.value.trim(),routeId:cRoute.value,price:cPrice.value,interval:Number(cInterval.value),note:cNote.value.trim()};if(c)Object.assign(c,data);else state.clients.push({id:uid(),...data});closeSheet("clientSheet");save()});
+productForm.addEventListener("submit",e=>{e.preventDefault();state.products.push({id:uid(),name:pName.value.trim(),qty:Number(pQty.value),min:Number(pMin.value),cost:Number(pCost.value),prices:[0,0,0,0,0,0]});closeSheet("productSheet");save()});
+routeForm.addEventListener("submit",e=>{e.preventDefault();state.routes.push({id:uid(),name:rName.value.trim(),km:Number(rKm.value),toll:Number(rToll.value),hotel:Number(rHotel.value)});closeSheet("routeSheet");save()});
+saleForm.addEventListener("submit",e=>{e.preventDefault();const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Selecione o cliente.");return}const items=[];let total=0,cost=0;for(const r of document.querySelectorAll(".saleRow")){const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(!p||q<=0)continue;if(p.qty<q){alert(`Estoque insuficiente de ${p.name}.`);return}const unit=Number((p.prices||[])[Number(sTable.value)]||0);items.push({productId:p.id,name:p.name,qty:q,unit,line:unit*q,cost:Number(p.cost||0)*q});total+=unit*q;cost+=Number(p.cost||0)*q}if(!items.length){alert("Adicione pelo menos um item.");return}const n=Math.max(1,Number(sParts.value||1)),first=sDue.value||sDate.value,parts=[],base=Math.floor((total/n)*100)/100;let acc=0;for(let i=0;i<n;i++){const amount=i===n-1?Math.round((total-acc)*100)/100:base;acc+=amount;parts.push({id:uid(),number:i+1,due:addDays(first,i*30),amount,paid:sPaid.value==="yes",sent:false})}const sale={id:uid(),clientId:c.id,date:sDate.value,method:sMethod.value,priceTable:sTable.value,note:sNote.value.trim(),items,total,marginValue:total-cost,installments:parts};state.sales.push(sale);items.forEach(i=>state.products.find(p=>p.id===i.productId).qty-=i.qty);state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});closeSheet("saleSheet");save()});
+warrantyForm.addEventListener("submit",e=>{e.preventDefault();if(wType.value==="Garantia"&&!wMfg.value){alert("Informe a data de fabricação.");return}state.warranties.push({id:uid(),clientId:wClient.value,type:wType.value,model:wModel.value.trim(),code:wCode.value.trim(),mfg:wMfg.value,collect:wCollect.value,status:wStatus.value});closeSheet("warrantySheet");save()});
+
+function collectionMsg(s,p,c){return state.collectionTemplate.replaceAll("{cliente}",c?.name||"").replaceAll("{valor}",brl(p.amount)).replaceAll("{data}",fmt(s.date)).replaceAll("{vencimento}",fmt(p.due))}
+function openWhats(phone,text){let d=String(phone||"").replace(/\D/g,"");if(!d){alert("Cliente sem WhatsApp.");return}if(!d.startsWith("55"))d="55"+d;window.open(`https://wa.me/${d}?text=${encodeURIComponent(text)}`,"_blank")}
+function openCollectionWhats(sid,pid){const s=state.sales.find(s=>s.id===sid),p=s.installments.find(p=>p.id===pid),c=state.clients.find(c=>c.id===s.clientId);openWhats(c?.phone,collectionMsg(s,p,c))}
+function openPreVisit(cid){const c=state.clients.find(c=>c.id===cid);openWhats(c?.phone,`Oi, ${c?.name}! Tudo bem? Vou estar pela sua região nos próximos dias. Como está seu estoque de baterias? Se precisar, já posso separar o seu pedido para levar.`)}
+function toggleSent(sid,pid){state.sales.find(s=>s.id===sid).installments.find(p=>p.id===pid).sent=!state.sales.find(s=>s.id===sid).installments.find(p=>p.id===pid).sent;save()}
+function markPaid(sid,pid){state.sales.find(s=>s.id===sid).installments.find(p=>p.id===pid).paid=true;save()}
+function logNoSaleVisit(cid){state.visits.push({id:uid(),clientId:cid,date:today(),result:"Sem venda"});save();alert("Visita sem venda registrada.")}
+function saveCollectionTemplate(){state.collectionTemplate=collectionTemplate.value;save();alert("Mensagem salva.")}
+function saveSettings(){state.config={costKm:Number(cfgKm.value),window:Number(cfgWindow.value),base:cfgBase.value.trim()};save();alert("Configurações salvas.")}
+
+function download(name,text,type="text/csv;charset=utf-8;"){const b=new Blob(["\ufeff"+text],{type}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+function csv(rows){return rows.map(r=>r.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(";")).join("\n")}
+function exportSales(){download("ax-vendas.csv",csv([["Data","Cliente","Documento","Valor","Pagamento","A receber"],...state.sales.map(s=>{const c=state.clients.find(c=>c.id===s.clientId);return[s.date,c?.name,c?.doc,s.total,s.method,saleOpen(s)]})]))}
+function exportReceivables(){const rows=[["Cliente","Data","Parcela","Valor","Vencimento","Status"]];state.sales.forEach(s=>{const c=state.clients.find(c=>c.id===s.clientId);s.installments.forEach(p=>rows.push([c?.name,s.date,`${p.number}/${s.installments.length}`,p.amount,p.due,p.paid?"Pago":"Aberto"]))});download("ax-recebimentos.csv",csv(rows))}
+function exportClients(){download("ax-clientes.csv",csv([["Cliente","Documento","Cidade","Tabela","Ticket médio","Próxima compra","Em aberto"],...state.clients.map(c=>{const st=clientStats(c.id);return[c.name,c.doc,c.city,c.price,st.ticket,st.next,st.open]})]))}
+function backup(){download("ax-baterias-backup.json",JSON.stringify(state,null,2),"application/json")}
+restoreFile.addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{state=Object.assign(copy(defaults),JSON.parse(await f.text()));save();alert("Backup importado.")}catch{alert("Backup inválido.")}})
+function resetAll(){if(confirm("Apagar todos os dados?")){state=copy(defaults);save()}}
+function seedDemo(){
+ if(state.clients.length||state.products.length||state.routes.length||state.sales.length){if(!confirm("Já existem dados. Adicionar demonstração mesmo assim?"))return}
+ const r={id:uid(),name:"Sorocaba",km:210,toll:70,hotel:0};state.routes.push(r);
+ const c={id:uid(),name:"Moto Peças Avenida",phone:"11999990001",doc:"",address:"Av. Exemplo, 100",city:"Sorocaba",routeId:r.id,price:"2",interval:20,note:""};state.clients.push(c);
+ const p1={id:uid(),name:"Bateria 5A",qty:18,min:8,cost:70,prices:[105,103,101,99,97,95]},p2={id:uid(),name:"Bateria 6A",qty:20,min:8,cost:82,prices:[120,118,116,114,112,110]};state.products.push(p1,p2);
+ const d=addDays(today(),-22);state.sales.push({id:uid(),clientId:c.id,date:d,method:"PIX",priceTable:"2",note:"",items:[],total:1900,marginValue:390,installments:[{id:uid(),number:1,due:addDays(today(),-3),amount:1900,paid:false,sent:false}]});state.visits.push({id:uid(),clientId:c.id,date:d,result:"Venda"});save()
+}
+renderAll();
+initBackend();
+</script>
+</body>
+</html>
