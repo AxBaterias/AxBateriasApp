@@ -533,7 +533,7 @@ function plainMatrix(matrix){
  return {rows:(matrix?.rows||[]).map(r=>({items:(r?.items||[]).map(i=>({condition:i?.condition||"",distanceMeters:Number(i?.distanceMeters||0),durationMillis:Number(i?.durationMillis||0)}))}))}
 }
 async function buildRouteMatrix(candidates){
- const signature=routeAnalysisKey(candidates),cached=readTimedCache(ROUTE_MATRIX_CACHE_KEY,signature,24*60*60*1000);
+ const signature=routeAnalysisKey(candidates),cached=readTimedCache(ROUTE_MATRIX_CACHE_KEY,signature,30*24*60*60*1000);
  const base=state.config.base||"Osasco, SP, Brasil",points=[base,...candidates.map(x=>x.address)];
  if(cached?.matrix)return {matrix:cached.matrix,points,fromCache:true};
  await loadGoogleMaps();const {RouteMatrix}=await google.maps.importLibrary("routes");
@@ -641,7 +641,7 @@ function fmtHours(minutes){const h=Math.floor(minutes/60),m=Math.round(minutes%6
 function routeSequenceHtml(order,candidates){const base=(state.config.base||"Osasco").split(",")[0],names=[base,...order.map(i=>candidates[i-1]?.c?.city||candidates[i-1]?.c?.name||"Cliente"),base];return `<div class="route-seq">${names.map((n,i)=>`${i?'<span class="route-arrow">→</span>':""}<span class="route-stop">${esc(n)}</span>`).join("")}</div>`}
 function renderSmartRoutePlan(){
  const p=smartRoutePlan;if(p.error){smartRoutesList.innerHTML=`<div class="card"><span class="badge bad">Não foi possível calcular</span><div class="explain">${esc(p.error)}</div></div>`;return}
- let h=`<div class="card"><div class="cardhead"><div><h2>Plano recomendado</h2><div class="muted">Base: ${esc(state.config.base)} • matriz ${p.fromCache?"reaproveitada":"atualizada"} • pedágio calculado só nas rotas finais</div></div><span class="badge good">${p.routes.length} rota(s)</span></div><div class="explain">Primeiro o sistema compara todos os clientes usando apenas distância e tempo (cálculo mais econômico). Depois de escolher os grupos, consulta pedágios somente das rotas finais. Se nada mudar, a matriz fica em cache por até 24h para evitar chamadas repetidas.</div></div>`;
+ let h=`<div class="card"><div class="cardhead"><div><h2>Plano recomendado</h2><div class="muted">Base: ${esc(state.config.base)} • matriz ${p.fromCache?"reaproveitada":"atualizada"} • pedágio calculado só nas rotas finais</div></div><span class="badge good">${p.routes.length} rota(s)</span></div><div class="explain">Primeiro o sistema compara todos os clientes usando apenas distância e tempo (cálculo mais econômico). Depois de escolher os grupos, consulta pedágios somente das rotas finais. Se nada mudar, a matriz fica em cache por até 30 dias para evitar chamadas repetidas.</div></div>`;
  p.routes.forEach((r,i)=>{
    const cls=r.result>0?"good":r.grossProfit>=r.travelCost*.75?"warn":"bad";
    h+=`<div class="card"><div class="cardhead"><div><h2>Rota ${i+1}</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${cls}">${r.result>0?"Recomendada":cls==="warn"?"Avaliar":"Baixo retorno"}</span></div>${routeSequenceHtml(r.order,p.candidates)}
