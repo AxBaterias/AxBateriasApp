@@ -7,9 +7,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AX Baterias">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.webmanifest?v=51">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v51.png">
+<link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
+<meta name="application-name" content="AX Baterias">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -157,12 +159,38 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   .receipt-totalbox{font-size:16px;padding:15px 14px}
 }
 
+
+/* v5.1 - identidade visual AX Baterias */
+.brandlockup{display:flex;align-items:center;gap:10px;min-width:0}
+.brandmark{
+  width:40px;height:40px;flex:0 0 40px;display:block;object-fit:contain;
+  background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;
+  box-shadow:0 1px 2px rgba(16,24,40,.05)
+}
+.brandtext{min-width:0}
+.authbrand{display:flex;align-items:center;gap:11px;margin-bottom:16px}
+.authbrand img{
+  width:48px;height:48px;object-fit:contain;background:#fff;
+  border:1px solid var(--line);border-radius:12px;padding:3px
+}
+.authbrand-copy{min-width:0}
+@media(max-width:380px){
+  .brandmark{width:36px;height:36px;flex-basis:36px}
+  .brand{font-size:19px}
+}
+
 </style>
 </head>
 <body class="auth-locked">
 <div class="authgate" id="authGate">
   <div class="authbox">
-    <div class="authlogo">AX Baterias</div>
+    <div class="authbrand">
+      <img src="./ax-logo.png?v=51" alt="Logo AX Baterias">
+      <div class="authbrand-copy">
+        <div class="authlogo">AX Baterias</div>
+        <div class="authsub" style="margin-bottom:0">Gestão comercial</div>
+      </div>
+    </div>
     <div class="authsub">Entre para sincronizar clientes, vendas, estoque e cobranças entre celular e computador.</div>
     <div class="authgrid">
       <input id="authEmail" type="email" autocomplete="email" placeholder="E-mail">
@@ -173,7 +201,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div id="authMsg" class="authmsg"></div>
   </div>
 </div>
-<div class="appbar"><div class="brand">AX Baterias<small>Gestão comercial</small></div><div id="syncStatus" class="syncpill syncing">sincronizando…</div></div>
+<div class="appbar">
+  <div class="brandlockup">
+    <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
+    <div class="brandtext"><div class="brand">AX Baterias<small>Gestão comercial</small></div></div>
+  </div>
+  <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
+</div>
 <div class="wrap">
 
 <section id="home" class="screen active">
