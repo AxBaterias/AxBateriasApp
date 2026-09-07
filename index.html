@@ -521,18 +521,93 @@ async function loadGoogleMaps(){
  return mapsLoaderPromise
 }
 function moneyValue(m){if(!m)return 0;return Number(m.units||0)+Number(m.nanos||0)/1e9}
-function matrixCell(matrix,i,j){const item=matrix?.rows?.[i]?.items?.[j];if(!item||item.condition==="ROUTE_NOT_FOUND")return {km:Infinity,minutes:Infinity,toll:0};const prices=item.travelAdvisory?.tollInfo?.estimatedPrices||[],br=prices.find(p=>p.currencyCode==="BRL")||prices[0];return {km:Number(item.distanceMeters||0)/1000,minutes:Number(item.durationMillis||0)/60000,toll:moneyValue(br)}}
+function matrixCell(matrix,i,j){const item=matrix?.rows?.[i]?.items?.[j];if(!item||item.condition==="ROUTE_NOT_FOUND")return {km:Infinity,minutes:Infinity,toll:0};return {km:Number(item.distanceMeters||0)/1000,minutes:Number(item.durationMillis||0)/60000,toll:0}}
+const ROUTE_MATRIX_CACHE_KEY="ax_route_matrix_essentials_v1";
+const ROUTE_DETAIL_CACHE_KEY="ax_route_detail_tolls_v1";
+function routeAnalysisKey(candidates){return JSON.stringify({base:state.config.base||"Osasco, SP, Brasil",addresses:candidates.map(x=>x.address)})}
+function readTimedCache(key,signature,maxAgeMs){
+ try{const v=JSON.parse(localStorage.getItem(key)||"null");if(v&&v.signature===signature&&Date.now()-Number(v.at||0)<maxAgeMs)return v.data}catch{}return null
+}
+function writeTimedCache(key,signature,data){try{localStorage.setItem(key,JSON.stringify({signature,at:Date.now(),data}))}catch{}}
+function plainMatrix(matrix){
+ return {rows:(matrix?.rows||[]).map(r=>({items:(r?.items||[]).map(i=>({condition:i?.condition||"",distanceMeters:Number(i?.distanceMeters||0),durationMillis:Number(i?.durationMillis||0)}))}))}
+}
 async function buildRouteMatrix(candidates){
- await loadGoogleMaps();const {RouteMatrix}=await google.maps.importLibrary("routes");const base=state.config.base||"Osasco, SP, Brasil",points=[base,...candidates.map(x=>x.address)];let result,hasTolls=true;
- try{const origins=points.map(a=>({waypoint:a,routeModifiers:{vehicleInfo:{emissionType:"GASOLINE"}}}));result=await RouteMatrix.computeRouteMatrix({origins,destinations:points,travelMode:"DRIVING",units:"METRIC",language:"pt-BR",region:"BR",extraComputations:["TOLLS"],fields:["distanceMeters","durationMillis","condition","travelAdvisory.tollInfo"]})}
- catch(err){console.warn("Tolls unavailable; retrying without tolls",err);hasTolls=false;result=await RouteMatrix.computeRouteMatrix({origins:points,destinations:points,travelMode:"DRIVING",units:"METRIC",language:"pt-BR",region:"BR",fields:["distanceMeters","durationMillis","condition"]})}
- return {matrix:result.matrix,points,hasTolls}
+ const signature=routeAnalysisKey(candidates),cached=readTimedCache(ROUTE_MATRIX_CACHE_KEY,signature,24*60*60*1000);
+ const base=state.config.base||"Osasco, SP, Brasil",points=[base,...candidates.map(x=>x.address)];
+ if(cached?.matrix)return {matrix:cached.matrix,points,fromCache:true};
+ await loadGoogleMaps();const {RouteMatrix}=await google.maps.importLibrary("routes");
+ // IMPORTANT: no TOLLS here. This keeps the large all-to-all matrix in the cheaper Essentials tier.
+ const result=await RouteMatrix.computeRouteMatrix({origins:points,destinations:points,travelMode:"DRIVING",units:"METRIC",language:"pt-BR",region:"BR",fields:["distanceMeters","durationMillis","condition"]});
+ const matrix=plainMatrix(result.matrix);writeTimedCache(ROUTE_MATRIX_CACHE_KEY,signature,{matrix});
+ return {matrix,points,fromCache:false}
+}
+function routeDetailSignature(origin,destination,intermediates){return JSON.stringify({origin,destination,intermediates})}
+async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
+ const signature=routeDetailSignature(origin,destination,intermediates),cached=readTimedCache(ROUTE_DETAIL_CACHE_KEY+":"+btoa(unescape(encodeURIComponent(signature))).slice(0,50),signature,24*60*60*1000);
+ if(cached)return {...cached,fromCache:true};
+ await loadGoogleMaps();const {Route}=await google.maps.importLibrary("routes");
+ try{
+   // Tolls are requested only for routes the optimizer actually selected, not for every pair in the matrix.
+   const request={origin,destination,travelMode:"DRIVING",extraComputations:["TOLLS"],routeModifiers:{vehicleInfo:{emissionType:"GASOLINE"}},fields:["distanceMeters","durationMillis","travelAdvisory"]};
+   if(intermediates.length)request.intermediates=intermediates.map(location=>({location}));
+   const {routes}=await Route.computeRoutes(request);const r=routes?.[0];
+   if(!r)throw new Error("Rota final não encontrada.");
+   const prices=r.travelAdvisory?.tollInfo?.estimatedPrices||[],br=prices.find(p=>p.currencyCode==="BRL")||prices[0];
+   const data={km:Number(r.distanceMeters||0)/1000,driveMinutes:Number(r.durationMillis||0)/60000,toll:moneyValue(br),tollAvailable:!!br};
+   writeTimedCache(ROUTE_DETAIL_CACHE_KEY+":"+btoa(unescape(encodeURIComponent(signature))).slice(0,50),signature,data);return data
+ }catch(err){console.warn("Não foi possível obter pedágio da rota final",err);return {km:null,driveMinutes:null,toll:0,tollAvailable:false,error:true}}
+}
+async function enrichSelectedRoutes(routes,candidates){
+ const base=state.config.base||"Osasco, SP, Brasil";
+ for(const r of routes){
+   const stops=r.order.map(i=>candidates[i-1]?.address).filter(Boolean);
+   const d=await computeSelectedRouteDetail(base,base,stops);
+   if(d.km!=null){r.km=d.km;r.minutes=d.driveMinutes+r.order.length*Number(state.config.visitMinutes||35)}
+   r.toll=d.toll;r.tollAvailable=d.tollAvailable;r.travelCost=r.km*Number(state.config.costKm||0)+r.toll;r.result=r.grossProfit-r.travelCost
+ }
+ return routes
 }
 function orderCluster(indices,matrix){if(!indices.length)return [];const remaining=[...indices];remaining.sort((a,b)=>matrixCell(matrix,0,b).km-matrixCell(matrix,0,a).km);const order=[remaining.shift()];while(remaining.length){const cur=order.at(-1);let best=0,bestScore=Infinity;remaining.forEach((idx,k)=>{const score=matrixCell(matrix,cur,idx).km+.18*matrixCell(matrix,idx,0).km;if(score<bestScore){bestScore=score;best=k}});order.push(remaining.splice(best,1)[0])}return order}
 function pathTotals(path,matrix,visitCount=0){let km=0,minutes=0,toll=0;for(let i=1;i<path.length;i++){const x=matrixCell(matrix,path[i-1],path[i]);km+=x.km;minutes+=x.minutes;toll+=x.toll}minutes+=visitCount*Number(state.config.visitMinutes||35);return {km,minutes,toll}}
 function routeEconomics(order,candidates,matrix){const t=pathTotals([0,...order,0],matrix,order.length);let revenue=0,grossProfit=0;order.forEach(idx=>{const x=candidates[idx-1];revenue+=x?.revenue||0;grossProfit+=x?.grossProfit||0});const travelCost=t.km*Number(state.config.costKm||0)+t.toll;return {order,...t,revenue,grossProfit,travelCost,result:grossProfit-travelCost}}
 function makeDailyClusters(candidates,matrix){const maxMinutes=Number(state.config.maxDailyHours||9)*60;let unassigned=candidates.map((_,i)=>i+1);const clusters=[];while(unassigned.length){unassigned.sort((a,b)=>matrixCell(matrix,0,b).km-matrixCell(matrix,0,a).km);let cluster=[unassigned.shift()];const nearby=[...unassigned].sort((a,b)=>matrixCell(matrix,cluster[0],a).km-matrixCell(matrix,cluster[0],b).km);for(const idx of nearby){const trial=[...cluster,idx],eco=routeEconomics(orderCluster(trial,matrix),candidates,matrix);if(eco.minutes<=maxMinutes&&trial.length<=7){cluster=trial;unassigned=unassigned.filter(x=>x!==idx)}}clusters.push(routeEconomics(orderCluster(cluster,matrix),candidates,matrix))}return clusters.sort((a,b)=>b.result-a.result)}
-function overnightAlternative(routes,candidates,matrix){if(routes.length<2)return null;const maxMinutes=Number(state.config.maxDailyHours||9)*60;let best=null;for(let a=0;a<routes.length;a++)for(let b=a+1;b<routes.length;b++)for(const swap of [false,true]){const A=swap?routes[b]:routes[a],B=swap?routes[a]:routes[b];for(const revA of [false,true])for(const revB of [false,true]){const oa=revA?[...A.order].reverse():[...A.order],ob=revB?[...B.order].reverse():[...B.order],d1=pathTotals([0,...oa],matrix,oa.length),d2=pathTotals([oa.at(-1),...ob,0],matrix,ob.length);if(d1.minutes>maxMinutes||d2.minutes>maxMinutes)continue;const km=d1.km+d2.km,toll=d1.toll+d2.toll,travelCost=km*Number(state.config.costKm||0)+toll+Number(state.config.hotelCost||0),separateCost=A.travelCost+B.travelCost,revenue=A.revenue+B.revenue,grossProfit=A.grossProfit+B.grossProfit,alt={day1:oa,day2:ob,d1,d2,km,toll,travelCost,separateCost,savings:separateCost-travelCost,revenue,grossProfit,result:grossProfit-travelCost};if(!best||alt.travelCost<best.travelCost)best=alt}}return best}
+function overnightAlternative(routes,candidates,matrix){
+ if(routes.length<2)return null;const maxMinutes=Number(state.config.maxDailyHours||9)*60;let best=null;
+ for(let a=0;a<routes.length;a++)for(let b=a+1;b<routes.length;b++)for(const swap of [false,true]){
+   const A=swap?routes[b]:routes[a],B=swap?routes[a]:routes[b];
+   for(const revA of [false,true])for(const revB of [false,true]){
+     const oa=revA?[...A.order].reverse():[...A.order],ob=revB?[...B.order].reverse():[...B.order],
+       d1=pathTotals([0,...oa],matrix,oa.length),d2=pathTotals([oa.at(-1),...ob,0],matrix,ob.length);
+     if(d1.minutes>maxMinutes||d2.minutes>maxMinutes)continue;
+     const km=d1.km+d2.km,travelCost=km*Number(state.config.costKm||0)+Number(state.config.hotelCost||0),
+       separateCost=A.km*Number(state.config.costKm||0)+B.km*Number(state.config.costKm||0),
+       revenue=A.revenue+B.revenue,grossProfit=A.grossProfit+B.grossProfit,
+       alt={day1:oa,day2:ob,d1,d2,km,toll:0,tollAvailable:false,travelCost,separateCost,savings:separateCost-travelCost,revenue,grossProfit,result:grossProfit-travelCost};
+     if(!best||alt.travelCost<best.travelCost)best=alt
+   }
+ }
+ return best
+}
+async function enrichOvernight(alt,candidates,routes){
+ if(!alt)return null;
+ const base=state.config.base||"Osasco, SP, Brasil";
+ const day1Stops=alt.day1.map(i=>candidates[i-1]?.address).filter(Boolean);
+ const overnightAddress=day1Stops.at(-1);
+ const d1=await computeSelectedRouteDetail(base,overnightAddress,day1Stops.slice(0,-1));
+ const day2Stops=alt.day2.map(i=>candidates[i-1]?.address).filter(Boolean);
+ const d2=await computeSelectedRouteDetail(overnightAddress,base,day2Stops);
+ if(d1.km!=null&&d2.km!=null){
+   alt.km=d1.km+d2.km;
+   alt.d1={km:d1.km,minutes:d1.driveMinutes+alt.day1.length*Number(state.config.visitMinutes||35),toll:d1.toll};
+   alt.d2={km:d2.km,minutes:d2.driveMinutes+alt.day2.length*Number(state.config.visitMinutes||35),toll:d2.toll};
+ }
+ alt.toll=Number(d1.toll||0)+Number(d2.toll||0);alt.tollAvailable=!!(d1.tollAvailable||d2.tollAvailable);
+ alt.travelCost=alt.km*Number(state.config.costKm||0)+alt.toll+Number(state.config.hotelCost||0);
+ const related=routes.slice(0,2),separate=related.reduce((a,r)=>a+r.travelCost,0);
+ alt.separateCost=separate;alt.savings=separate-alt.travelCost;alt.result=alt.grossProfit-alt.travelCost;
+ return alt
+}
 
 
 
@@ -564,8 +639,41 @@ function renderRoutes(){
 }
 function fmtHours(minutes){const h=Math.floor(minutes/60),m=Math.round(minutes%60);return `${h}h${String(m).padStart(2,"0")}`}
 function routeSequenceHtml(order,candidates){const base=(state.config.base||"Osasco").split(",")[0],names=[base,...order.map(i=>candidates[i-1]?.c?.city||candidates[i-1]?.c?.name||"Cliente"),base];return `<div class="route-seq">${names.map((n,i)=>`${i?'<span class="route-arrow">→</span>':""}<span class="route-stop">${esc(n)}</span>`).join("")}</div>`}
-function renderSmartRoutePlan(){const p=smartRoutePlan;if(p.error){smartRoutesList.innerHTML=`<div class="card"><span class="badge bad">Não foi possível calcular</span><div class="explain">${esc(p.error)}</div></div>`;return}let h=`<div class="card"><div class="cardhead"><div><h2>Plano recomendado</h2><div class="muted">Base: ${esc(state.config.base)} • ${p.hasTolls?"pedágios estimados incluídos":"pedágios indisponíveis nesta análise"}</div></div><span class="badge good">${p.routes.length} rota(s)</span></div><div class="explain">O sistema agrupou clientes próximos, respeitou o limite diário de ${state.config.maxDailyHours}h e priorizou começar pelos pontos mais distantes para ir voltando em direção à base.</div></div>`;p.routes.forEach((r,i)=>{const cls=r.result>0?"good":r.grossProfit>=r.travelCost*.75?"warn":"bad";h+=`<div class="card"><div class="cardhead"><div><h2>Rota ${i+1}</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${cls}">${r.result>0?"Recomendada":cls==="warn"?"Avaliar":"Baixo retorno"}</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${brl(r.revenue)}</b><span>Faturamento potencial</span></div><div class="mini"><b>${brl(r.grossProfit)}</b><span>Lucro bruto potencial</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado da viagem</span></div><div class="mini"><b>${brl(r.result)}</b><span>Resultado estimado da rota</span></div></div><div class="muted">Rodagem: ${brl(r.km*Number(state.config.costKm||0))}${r.toll?` • Pedágios: ${brl(r.toll)}`:""}</div><div class="list" style="margin-top:10px">${r.order.map(idx=>{const x=p.candidates[idx-1];return `<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ticket ${brl(x.st.ticket)} • lucro médio ${brl(x.st.avgMargin)}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">Confirmar visita</button></div>`}).join("")}</div></div>`});if(p.overnight){const o=p.overnight,good=o.savings>0;h+=`<div class="card"><div class="cardhead"><div><h2>Alternativa com 1 hospedagem</h2><div class="muted">Comparação com duas rotas separadas.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode compensar":"Não economiza"}</span></div><div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div><div class="explain">${good?`Dormir fora reduz o custo total estimado em ${brl(o.savings)}. O cálculo inclui uma noite de ${brl(state.config.hotelCost)}.`:`A economia de deslocamento não paga a hospedagem de ${brl(state.config.hotelCost)}. As rotas separadas ficam mais econômicas.`}</div></div>`}smartRoutesList.innerHTML=h}
-async function analyzeSmartRoutes(){const candidates=criticalClients();smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Calculando distâncias, tempos, pedágios e combinações...</div>';if(!candidates.length){smartRoutePlan=null;renderRoutes();return}if(candidates.length>24){smartRoutePlan={error:"Há mais de 24 clientes críticos. Reduza a janela ou priorize os clientes em blocos."};renderRoutes();return}if(!mapsConfigured()){smartRoutePlan={error:"A integração de rotas ainda não está configurada. Vá em Mais → Configurações → Integração de rotas e informe a Google Maps API Key."};renderRoutes();return}try{const {matrix,hasTolls}=await buildRouteMatrix(candidates),daily=makeDailyClusters(candidates,matrix);smartRoutePlan={candidates,matrix,routes:daily,hasTolls,overnight:overnightAlternative(daily,candidates,matrix)}}catch(e){console.error(e);smartRoutePlan={error:e?.message||"Erro ao calcular as rotas."}}renderRoutes();renderHome()}
+function renderSmartRoutePlan(){
+ const p=smartRoutePlan;if(p.error){smartRoutesList.innerHTML=`<div class="card"><span class="badge bad">Não foi possível calcular</span><div class="explain">${esc(p.error)}</div></div>`;return}
+ let h=`<div class="card"><div class="cardhead"><div><h2>Plano recomendado</h2><div class="muted">Base: ${esc(state.config.base)} • matriz ${p.fromCache?"reaproveitada":"atualizada"} • pedágio calculado só nas rotas finais</div></div><span class="badge good">${p.routes.length} rota(s)</span></div><div class="explain">Primeiro o sistema compara todos os clientes usando apenas distância e tempo (cálculo mais econômico). Depois de escolher os grupos, consulta pedágios somente das rotas finais. Se nada mudar, a matriz fica em cache por até 24h para evitar chamadas repetidas.</div></div>`;
+ p.routes.forEach((r,i)=>{
+   const cls=r.result>0?"good":r.grossProfit>=r.travelCost*.75?"warn":"bad";
+   h+=`<div class="card"><div class="cardhead"><div><h2>Rota ${i+1}</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${cls}">${r.result>0?"Recomendada":cls==="warn"?"Avaliar":"Baixo retorno"}</span></div>${routeSequenceHtml(r.order,p.candidates)}
+   <div class="smart-route-summary"><div class="mini"><b>${brl(r.revenue)}</b><span>Faturamento potencial</span></div><div class="mini"><b>${brl(r.grossProfit)}</b><span>Lucro bruto potencial</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado da viagem</span></div><div class="mini"><b>${brl(r.result)}</b><span>Resultado estimado da rota</span></div></div>
+   <div class="muted">Rodagem: ${brl(r.km*Number(state.config.costKm||0))} • Pedágios: ${r.tollAvailable?brl(r.toll):"não informado pelo Google"}</div>
+   <div class="list" style="margin-top:10px">${r.order.map(idx=>{const x=p.candidates[idx-1];return `<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ticket ${brl(x.st.ticket)} • lucro médio ${brl(x.st.avgMargin)}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">Confirmar visita</button></div>`}).join("")}</div></div>`
+ });
+ if(p.overnight){
+   const o=p.overnight,good=o.savings>0;
+   h+=`<div class="card"><div class="cardhead"><div><h2>Alternativa com 1 hospedagem</h2><div class="muted">Comparação com as rotas separadas, incluindo pedágio quando disponível.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode compensar":"Não economiza"}</span></div>
+   <div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div>
+   <div class="muted">Pedágios da viagem: ${o.tollAvailable?brl(o.toll):"não informado pelo Google"}</div>
+   <div class="explain">${good?`Dormir fora reduz o custo total estimado em ${brl(o.savings)}. O cálculo inclui uma noite de ${brl(state.config.hotelCost)}.`:`A economia de deslocamento não paga a hospedagem de ${brl(state.config.hotelCost)}. As rotas separadas ficam mais econômicas.`}</div></div>`
+ }
+ smartRoutesList.innerHTML=h
+}
+async function analyzeSmartRoutes(){
+ const candidates=criticalClients();smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Comparando os clientes por distância e tempo...</div>';
+ if(!candidates.length){smartRoutePlan=null;renderRoutes();return}
+ if(candidates.length>24){smartRoutePlan={error:"Há mais de 24 clientes críticos. Reduza a janela ou priorize os clientes em blocos."};renderRoutes();return}
+ if(!mapsConfigured()){smartRoutePlan={error:"A integração de rotas ainda não está configurada. Vá em Mais → Configurações → Integração de rotas e informe a Google Maps API Key."};renderRoutes();return}
+ try{
+   const {matrix,fromCache}=await buildRouteMatrix(candidates);
+   let daily=makeDailyClusters(candidates,matrix);
+   smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Grupos definidos. Calculando pedágios somente das rotas escolhidas...</div>';
+   daily=await enrichSelectedRoutes(daily,candidates);
+   let overnight=overnightAlternative(daily,candidates,matrix);
+   if(overnight)overnight=await enrichOvernight(overnight,candidates,daily);
+   smartRoutePlan={candidates,matrix,routes:daily,fromCache,overnight}
+ }catch(e){console.error(e);smartRoutePlan={error:e?.message||"Erro ao calcular as rotas."}}
+ renderRoutes();renderHome()
+}
 
 function renderCollections(){
  const rows=[];state.sales.forEach(s=>s.installments.forEach(p=>{if(!p.paid)rows.push({s,p})}));rows.sort((a,b)=>a.p.due.localeCompare(b.p.due));
