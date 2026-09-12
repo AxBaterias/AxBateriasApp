@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.5">
-<meta name="ax-build" content="2026-09-12-v5.5-final">
+<meta name="ax-version" content="5.6">
+<meta name="ax-build" content="2026-09-12-v5.6-ui-order">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -283,6 +283,138 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 .version-chip{display:inline-flex;align-items:center;margin-left:7px;padding:2px 6px;border:1px solid var(--line);border-radius:999px;font-size:9px;font-weight:850;color:var(--muted);vertical-align:middle;background:#fff}
 @media(max-width:520px){.payment-row-grid{grid-template-columns:1fr 1fr}.payment-row-grid .pm-condition-wrap{grid-column:1/-1}.payment-row-extra{grid-template-columns:1fr 1fr}.payment-row-extra .pm-due-wrap{grid-column:1/-1}.payment-split-summary{grid-template-columns:1fr 1fr}.payment-split-summary .mini:last-child{grid-column:1/-1}.sale-fixed-summary .mini b{font-size:10px}.sale-fixed-summary .mini span{font-size:6px}}
 
+
+/* v5.6 — fluxo de pedido por etapas */
+.sale-step{
+  grid-column:1/-1;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#fff;
+  padding:14px;
+  box-shadow:0 5px 18px rgba(16,24,40,.045);
+}
+.sale-step-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.sale-step-number{
+  width:27px;height:27px;min-width:27px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  background:#111827;color:#fff;
+  font-size:11px;font-weight:900;
+}
+.sale-step-copy{min-width:0;flex:1}
+.sale-step-title{font-size:13px;font-weight:900;line-height:1.15}
+.sale-step-helper{font-size:9px;color:var(--muted);margin-top:2px;line-height:1.35}
+.sale-step-body{margin-top:12px}
+.sale-step-date .sale-step-head{align-items:center}
+.sale-date-input{
+  width:148px!important;
+  max-width:148px;
+  height:39px;
+  padding:0 9px!important;
+  margin-left:auto;
+  font-size:12px!important;
+  font-weight:800;
+  border-radius:11px!important;
+  cursor:pointer;
+  background:#fff;
+}
+.sale-client-table-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 104px;
+  gap:10px;
+  align-items:start;
+}
+.sale-client-table-grid .field{margin:0}
+.sale-table-mini select{
+  height:40px;
+  padding:0 8px;
+  font-weight:850;
+}
+.sale-table-caption{
+  font-size:9px;color:var(--muted);
+  margin-top:3px;
+}
+.sale-price-preview{
+  margin-top:10px;
+  padding-top:9px;
+  border-top:1px solid #f0f1f3;
+}
+.sale-price-preview-title{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:9px;color:var(--muted);margin-bottom:6px;
+}
+.sale-price-preview-title b{font-size:10px;color:var(--text)}
+.sale-price-strip{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding-bottom:2px;
+}
+.sale-price-strip::-webkit-scrollbar{display:none}
+.sale-price-chip{
+  flex:0 0 auto;
+  min-width:86px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:6px 8px;
+  background:#fafafa;
+  line-height:1.2;
+}
+.sale-price-chip span{display:block;font-size:8px;color:var(--muted);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sale-price-chip b{display:block;font-size:10px;margin-top:2px}
+.sale-block-actions{margin-left:auto}
+.sale-section-card{
+  border:1px solid #eceef1;
+  border-radius:14px;
+  background:#fcfcfd;
+  padding:11px;
+}
+.sale-section-card + .sale-section-card{margin-top:9px}
+.sale-section-card-title{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:11px;font-weight:900;margin-bottom:8px;
+}
+.sale-section-card-title small{font-size:8px;color:var(--muted);font-weight:700}
+.sale-credit-empty{
+  border:1px dashed #d8dce2;
+  border-radius:11px;
+  padding:10px;
+  background:#fff;
+  font-size:10px;
+  color:var(--muted);
+  line-height:1.4;
+}
+.sale-credit-empty b{color:var(--text)}
+.sale-final-button{width:100%;min-height:46px;font-size:13px}
+.sale-step .segmented{margin:0}
+.sale-step .formgrid{gap:9px}
+#saleWarrantyCreditSection{display:block!important}
+#saleWarrantyCreditSection.hidden{display:block!important}
+#saleWarrantyCreditSection > label{display:none}
+.sale-items-head,.sale-benefits-head{margin-bottom:10px}
+.sale-step-note{
+  border-radius:11px;
+  background:#f8f9fb;
+  padding:8px 9px;
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.4;
+}
+@media(max-width:520px){
+  .sale-step{padding:12px;border-radius:16px}
+  .sale-date-input{width:136px!important;max-width:136px;font-size:11px!important}
+  .sale-client-table-grid{grid-template-columns:minmax(0,1fr) 88px;gap:8px}
+  .sale-table-mini label{font-size:8px}
+  .sale-price-chip{min-width:80px}
+  .sale-step-number{width:25px;height:25px;min-width:25px}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -308,7 +440,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.5</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.6</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -394,7 +526,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.5</div>
+  <div class="version-note">AX Baterias • v5.6</div>
 </section>
 
 <section id="clients" class="screen">
@@ -498,7 +630,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   </div>
   <div class="card">
     <div class="cardhead"><div><h2>Sobre o sistema</h2><div class="muted">Confirma se o celular já carregou a versão publicada.</div></div></div>
-    <div class="system-card-row"><span>Versão do sistema</span><b>5.5</b></div>
+    <div class="system-card-row"><span>Versão do sistema</span><b>5.6</b></div>
     <div class="system-card-row"><span>Data da versão</span><b>12/09/2026</b></div>
   </div>
   <div class="card">
@@ -568,56 +700,190 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 </form></div></div>
 
 <!-- Sale sheet -->
-<div class="sheet" id="saleSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2 id="saleSheetTitle">Nova venda</h2><div id="saleOrderHint" class="muted"></div></div><button class="btn secondary" onclick="closeSheet('saleSheet')">Fechar</button></div>
+<div class="sheet" id="saleSheet"><div class="sheetpanel"><div class="sheetbar"></div>
+<div class="cardhead"><div><h2 id="saleSheetTitle">Nova venda</h2><div id="saleOrderHint" class="muted"></div></div><button class="btn secondary" onclick="closeSheet('saleSheet')">Fechar</button></div>
+
 <form id="saleForm" class="formgrid">
 <input type="hidden" id="sId">
 <input type="hidden" id="sClient" value="">
 <input type="hidden" id="sPaymentMode" value="ato">
 <input type="hidden" id="sPaymentSplitMode" value="single">
-<div class="field span2"><label>Cliente</label><div class="autocomplete"><input id="sClientSearch" autocomplete="off" placeholder="Digite nome, contato ou cidade"><div id="sClientOptions" class="autocomplete-menu hidden"></div></div><div id="sClientSelectedHint" class="muted" style="margin-top:5px">Selecione um cliente cadastrado.</div></div>
-<div class="field"><label>Data</label><input id="sDate" type="date" required></div>
-<div class="field"><label>Tabela aplicada</label><select id="sTable"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
-<div class="field span2"><label>Pagamento</label><div class="segmented"><button id="paymentSingleBtn" class="segment-btn active" type="button" onclick="setPaymentSplitMode('single')">Pagamento único</button><button id="paymentSplitBtn" class="segment-btn" type="button" onclick="setPaymentSplitMode('multiple')">Dividir pagamento</button></div></div>
-<div id="singlePaymentSection" class="span2"><div class="formgrid"><div class="field span2"><label>Condição de pagamento</label><div class="segmented"><button id="payModeAto" class="segment-btn active" type="button" onclick="setPaymentMode('ato')">No ato</button><button id="payModePrazo" class="segment-btn" type="button" onclick="setPaymentMode('prazo')">A prazo</button></div></div><div class="field"><label>Forma de pagamento</label><select id="sMethod"></select></div><div id="salePaidField" class="field"><label id="salePaidLabel">Recebido no ato?</label><select id="sPaid"><option value="no">Não</option><option value="yes">Sim</option></select></div><div id="saleTermsFields" class="span2 hidden"><div class="formgrid"><div class="field"><label>Parcelas</label><input id="sParts" type="number" min="1" max="24" value="1"></div><div class="field"><label>1º vencimento</label><input id="sDue" type="date"></div></div></div></div></div>
-<div id="multiPaymentSection" class="field span2 hidden"><div class="payment-split-summary"><div class="mini"><b id="multiPaymentTotal">R$ 0,00</b><span>Total do pedido</span></div><div class="mini"><b id="multiPaymentAllocated">R$ 0,00</b><span>Distribuído</span></div><div class="mini"><b id="multiPaymentRemaining">R$ 0,00</b><span>Falta distribuir</span></div></div><div id="paymentRows"></div><button class="btn secondary" type="button" onclick="addPaymentRow()">＋ Adicionar forma de pagamento</button></div>
 
-<div class="field span2"><label>Itens</label><div id="saleItems"></div><button class="btn secondary" type="button" onclick="addSaleItem()">＋ Adicionar item</button></div>
-
-<div class="field span2"><label>Desconto em sucata</label>
-  <div class="segmented"><button id="scrapModeNo" class="segment-btn active" type="button" onclick="setSaleScrapMode(false)">Sem sucata</button><button id="scrapModeYes" class="segment-btn" type="button" onclick="setSaleScrapMode(true)">Com sucata</button></div>
-</div>
-<div id="saleScrapSection" class="field span2 hidden">
-  <div id="saleScrapItems"></div>
-  <button class="btn secondary" type="button" onclick="addSaleScrapItem()">＋ Adicionar sucata</button>
-  <div id="saleScrapNotice" class="muted" style="margin-top:6px"></div>
-</div>
-
-<div id="saleWarrantyCreditSection" class="field span2 hidden"><label>Crédito de garantia</label><div id="saleWarrantyCredits"></div><div id="saleWarrantyCreditHint" class="muted" style="margin-top:6px"></div></div>
-
-<div class="field span2">
-  <button id="saleAdminToggle" class="btn secondary sale-admin-toggle" type="button" onclick="toggleSaleAdminResult()"><span>👁 Ver resultado da venda</span><span>Privado</span></button>
-  <div id="saleAdminPanel" class="sale-admin-panel hidden">
-    <div class="sale-admin-title">Resultado administrativo</div>
-    <div class="sale-admin-note">Informações privadas. Taxas e impostos vêm das Configurações. Informe abaixo apenas custos adicionais específicos deste pedido.</div>
-    <div class="formgrid" style="margin-top:10px">
-      <div class="field"><label>Custo de rota atribuído a este pedido (R$)</label><input id="sRouteCost" type="number" min="0" step=".01" value="0"></div>
-      <div class="field"><label>Outros custos desta venda (R$)</label><input id="sOtherCost" type="number" min="0" step=".01" value="0"></div>
+<!-- ETAPA 1 -->
+<div class="sale-step sale-step-date">
+  <div class="sale-step-head">
+    <span class="sale-step-number">1</span>
+    <div class="sale-step-copy">
+      <div class="sale-step-title">Data do pedido</div>
+      <div class="sale-step-helper">Hoje por padrão. Toque na data para alterar.</div>
     </div>
-    <div class="sale-admin-grid">
-      <div class="mini"><b id="saleCostPreview">R$ 0,00</b><span>Custo dos produtos</span></div>
-      <div class="mini"><b id="salePaymentFeePreview">R$ 0,00</b><span>Taxa de pagamento</span></div>
-      <div class="mini"><b id="saleTaxPreview">R$ 0,00</b><span>Impostos estimados</span></div>
-      <div class="mini"><b id="saleExtraCostsPreview">R$ 0,00</b><span>Rota + outros</span></div>
-      <div class="mini"><b id="saleGrossProfitPreview">R$ 0,00</b><span>Lucro bruto</span></div>
-      <div class="mini"><b id="saleTotalCostsPreview">R$ 0,00</b><span>Custos totais</span></div>
-      <div id="saleOperationalResultBox" class="mini"><b id="saleProfitPreview">R$ 0,00</b><span>Resultado operacional</span></div>
-      <div id="saleRentabilityBox" class="mini"><b id="saleRentabilityPreview">0%</b><span>Rentabilidade operacional</span></div>
-    </div>
-    <div id="saleRentabilityAlert" class="notice" style="margin-top:9px"></div>
+    <input id="sDate" class="sale-date-input" type="date" required onclick="this.showPicker&&this.showPicker()">
   </div>
 </div>
-<div class="field span2"><label>Observação</label><input id="sNote"></div>
-<div class="field span2"><button class="btn" type="submit">Finalizar venda</button></div>
+
+<!-- ETAPA 2 -->
+<div class="sale-step">
+  <div class="sale-step-head">
+    <span class="sale-step-number">2</span>
+    <div class="sale-step-copy">
+      <div class="sale-step-title">Cliente e tabela</div>
+      <div class="sale-step-helper">Busque o cliente e confirme a tabela de preços aplicada.</div>
+    </div>
+  </div>
+  <div class="sale-step-body">
+    <div class="sale-client-table-grid">
+      <div class="field">
+        <label>Cliente</label>
+        <div class="autocomplete">
+          <input id="sClientSearch" autocomplete="off" placeholder="Digite nome, contato ou cidade">
+          <div id="sClientOptions" class="autocomplete-menu hidden"></div>
+        </div>
+        <div id="sClientSelectedHint" class="muted" style="margin-top:5px">Selecione um cliente cadastrado.</div>
+      </div>
+      <div class="field sale-table-mini">
+        <label>Tabela</label>
+        <select id="sTable"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+        <div class="sale-table-caption">Pode alterar</div>
+      </div>
+    </div>
+    <div class="sale-price-preview">
+      <div class="sale-price-preview-title"><span>Valores cadastrados</span><b id="sTableAppliedText">Tabela 0</b></div>
+      <div id="sTablePricePreview" class="sale-price-strip"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ETAPA 3 -->
+<div class="sale-step">
+  <div class="sale-step-head">
+    <span class="sale-step-number">3</span>
+    <div class="sale-step-copy">
+      <div class="sale-step-title">Forma de pagamento</div>
+      <div class="sale-step-helper">Use uma única forma ou divida o valor entre quantas forem necessárias.</div>
+    </div>
+  </div>
+  <div class="sale-step-body">
+    <div class="segmented">
+      <button id="paymentSingleBtn" class="segment-btn active" type="button" onclick="setPaymentSplitMode('single')">Pagamento único</button>
+      <button id="paymentSplitBtn" class="segment-btn" type="button" onclick="setPaymentSplitMode('multiple')">Dividir pagamento</button>
+    </div>
+
+    <div id="singlePaymentSection" style="margin-top:10px">
+      <div class="formgrid">
+        <div class="field span2">
+          <label>Condição</label>
+          <div class="segmented">
+            <button id="payModeAto" class="segment-btn active" type="button" onclick="setPaymentMode('ato')">No ato</button>
+            <button id="payModePrazo" class="segment-btn" type="button" onclick="setPaymentMode('prazo')">A prazo</button>
+          </div>
+        </div>
+        <div class="field"><label>Forma</label><select id="sMethod"></select></div>
+        <div id="salePaidField" class="field"><label id="salePaidLabel">Recebido no ato?</label><select id="sPaid"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+        <div id="saleTermsFields" class="span2 hidden">
+          <div class="formgrid">
+            <div class="field"><label>Parcelas</label><input id="sParts" type="number" min="1" max="24" value="1"></div>
+            <div class="field"><label>1º vencimento</label><input id="sDue" type="date"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="multiPaymentSection" class="hidden" style="margin-top:10px">
+      <div class="payment-split-summary">
+        <div class="mini"><b id="multiPaymentTotal">R$ 0,00</b><span>Total do pedido</span></div>
+        <div class="mini"><b id="multiPaymentAllocated">R$ 0,00</b><span>Distribuído</span></div>
+        <div class="mini"><b id="multiPaymentRemaining">R$ 0,00</b><span>Falta distribuir</span></div>
+      </div>
+      <div id="paymentRows"></div>
+      <button class="btn secondary" type="button" onclick="addPaymentRow()">＋ Adicionar forma de pagamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- ETAPA 4 -->
+<div class="sale-step">
+  <div class="sale-step-head sale-items-head">
+    <span class="sale-step-number">4</span>
+    <div class="sale-step-copy">
+      <div class="sale-step-title">Itens do pedido</div>
+      <div class="sale-step-helper">Os valores seguem a tabela selecionada acima.</div>
+    </div>
+    <button class="btn secondary sale-block-actions" type="button" onclick="addSaleItem()">＋ Item</button>
+  </div>
+  <div id="saleItems"></div>
+</div>
+
+<!-- ETAPA 5 -->
+<div class="sale-step">
+  <div class="sale-step-head sale-benefits-head">
+    <span class="sale-step-number">5</span>
+    <div class="sale-step-copy">
+      <div class="sale-step-title">Descontos e créditos</div>
+      <div class="sale-step-helper">Sucata e garantia reduzem o valor antes da distribuição do pagamento.</div>
+    </div>
+  </div>
+
+  <div class="sale-section-card">
+    <div class="sale-section-card-title"><span>♻️ Desconto em sucata</span><small>Opcional</small></div>
+    <div class="segmented">
+      <button id="scrapModeNo" class="segment-btn active" type="button" onclick="setSaleScrapMode(false)">Sem sucata</button>
+      <button id="scrapModeYes" class="segment-btn" type="button" onclick="setSaleScrapMode(true)">Com sucata</button>
+    </div>
+    <div id="saleScrapSection" class="hidden" style="margin-top:9px">
+      <div id="saleScrapItems"></div>
+      <button class="btn secondary" type="button" onclick="addSaleScrapItem()">＋ Adicionar sucata</button>
+      <div id="saleScrapNotice" class="muted" style="margin-top:6px"></div>
+    </div>
+  </div>
+
+  <div class="sale-section-card">
+    <div class="sale-section-card-title"><span>🛡️ Crédito de garantia</span><small>Do cliente</small></div>
+    <div id="saleWarrantyCreditSection">
+      <div id="saleWarrantyCredits"></div>
+      <div id="saleWarrantyCreditHint" class="muted" style="margin-top:6px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ETAPA 6 -->
+<div class="sale-step">
+  <div class="sale-step-head">
+    <span class="sale-step-number">6</span>
+    <div class="sale-step-copy">
+      <div class="sale-step-title">Finalização</div>
+      <div class="sale-step-helper">Observação opcional e resultado administrativo privado.</div>
+    </div>
+  </div>
+  <div class="sale-step-body">
+    <div class="field"><label>Observação</label><input id="sNote" placeholder="Opcional"></div>
+
+    <div style="margin-top:10px">
+      <button id="saleAdminToggle" class="btn secondary sale-admin-toggle" type="button" onclick="toggleSaleAdminResult()"><span>👁 Ver resultado da venda</span><span>Privado</span></button>
+      <div id="saleAdminPanel" class="sale-admin-panel hidden" style="margin-top:8px">
+        <div class="sale-admin-title">Resultado administrativo</div>
+        <div class="sale-admin-note">Informações privadas. Taxas e impostos vêm das Configurações. Informe abaixo apenas custos adicionais específicos deste pedido.</div>
+        <div class="formgrid" style="margin-top:10px">
+          <div class="field"><label>Custo de rota atribuído a este pedido (R$)</label><input id="sRouteCost" type="number" min="0" step=".01" value="0"></div>
+          <div class="field"><label>Outros custos desta venda (R$)</label><input id="sOtherCost" type="number" min="0" step=".01" value="0"></div>
+        </div>
+        <div class="sale-admin-grid">
+          <div class="mini"><b id="saleCostPreview">R$ 0,00</b><span>Custo dos produtos</span></div>
+          <div class="mini"><b id="salePaymentFeePreview">R$ 0,00</b><span>Taxa de pagamento</span></div>
+          <div class="mini"><b id="saleTaxPreview">R$ 0,00</b><span>Impostos estimados</span></div>
+          <div class="mini"><b id="saleExtraCostsPreview">R$ 0,00</b><span>Rota + outros</span></div>
+          <div class="mini"><b id="saleGrossProfitPreview">R$ 0,00</b><span>Lucro bruto</span></div>
+          <div class="mini"><b id="saleTotalCostsPreview">R$ 0,00</b><span>Custos totais</span></div>
+          <div id="saleOperationalResultBox" class="mini"><b id="saleProfitPreview">R$ 0,00</b><span>Resultado operacional</span></div>
+          <div id="saleRentabilityBox" class="mini"><b id="saleRentabilityPreview">0%</b><span>Rentabilidade operacional</span></div>
+        </div>
+        <div id="saleRentabilityAlert" class="notice" style="margin-top:9px"></div>
+      </div>
+    </div>
+
+    <button class="btn sale-final-button" type="submit" style="margin-top:12px">Finalizar venda</button>
+  </div>
+</div>
+
 <div class="sale-sheet-summary-space span2"></div>
 <div id="saleFixedSummary" class="sale-fixed-summary" style="grid-template-columns:repeat(4,1fr)">
   <div class="mini"><b id="saleSubtotalPreview">R$ 0,00</b><span>Subtotal</span></div>
@@ -729,7 +995,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.5';
+const AX_APP_VERSION='5.6';
 const TEST_MODE=false;
 const KEY="ax_baterias_mobile_v5_cache";
 const defaults={
@@ -901,9 +1167,21 @@ function openRouteSheet(routeId=""){
  rName.value=r?.name||"";rKm.value=r?.km??0;rToll.value=r?.toll??0;rHotel.value=r?.hotel??0;openSheet("routeSheet")
 }
 
+function renderSaleTablePricePreview(){
+ const tableIndex=Math.max(0,Math.min(5,Number(sTable.value||0)));
+ sTableAppliedText.textContent=`Tabela ${tableIndex}`;
+ if(!state.products.length){
+   sTablePricePreview.innerHTML='<div class="sale-credit-empty">Nenhum produto cadastrado.</div>';
+   return
+ }
+ sTablePricePreview.innerHTML=state.products.map(p=>{
+   const value=Number((p.prices||[])[tableIndex]||0);
+   return `<div class="sale-price-chip"><span>${esc(p.name)}</span><b>${value>0?brl(value):"—"}</b></div>`
+ }).join("")
+}
 function recentClientIds(limit=8){return [...state.sales].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(s=>s.clientId).filter((id,i,a)=>id&&a.indexOf(id)===i).slice(0,limit)}
 function renderSaleClientOptions(query=""){const q=String(query||"").trim().toLowerCase();let list=state.clients.filter(c=>!q||[c.name,c.contact,c.city].some(v=>String(v||"").toLowerCase().includes(q)));if(!q){const recent=recentClientIds();list.sort((a,b)=>{const ia=recent.indexOf(a.id),ib=recent.indexOf(b.id);return (ia<0?999:ia)-(ib<0?999:ib)||a.name.localeCompare(b.name)})}list=list.slice(0,12);sClientOptions.innerHTML=list.length?list.map(c=>`<button type="button" class="autocomplete-option" onclick="selectSaleClient('${c.id}')"><b>${esc(c.name)}</b><small>${c.contact?esc(c.contact)+" • ":""}${esc(c.city||"")}</small></button>`).join(""):'<div class="empty" style="padding:12px">Nenhum cliente encontrado.</div>';sClientOptions.classList.remove("hidden")}
-function selectSaleClient(id){const c=state.clients.find(c=>c.id===id);if(!c)return;sClient.value=id;sClientSearch.value=c.name;sClientSelectedHint.textContent=`Selecionado: ${c.name}${c.contact?` • ${c.contact}`:""} • ${c.city||""}`;sClientOptions.classList.add("hidden");sTable.value=c.price||"0";renderSaleWarrantyCredits();updateSale()}
+function selectSaleClient(id){const c=state.clients.find(c=>c.id===id);if(!c)return;sClient.value=id;sClientSearch.value=c.name;sClientSelectedHint.textContent=`Selecionado: ${c.name}${c.contact?` • ${c.contact}`:""} • ${c.city||""}`;sClientOptions.classList.add("hidden");sTable.value=c.price||"0";renderSaleTablePricePreview();renderSaleWarrantyCredits();updateSale()}
 function clearSaleClientIfNeeded(){const c=state.clients.find(c=>c.id===sClient.value);if(!c||sClientSearch.value.trim()!==c.name)sClient.value=""}
 function setPaymentSplitMode(mode,silent=false){sPaymentSplitMode.value=mode;paymentSingleBtn.classList.toggle("active",mode==="single");paymentSplitBtn.classList.toggle("active",mode==="multiple");singlePaymentSection.classList.toggle("hidden",mode!=="single");multiPaymentSection.classList.toggle("hidden",mode!=="multiple");if(mode==="multiple"&&!paymentRows.children.length)addPaymentRow({amount:currentSalePayableTotal()});if(!silent)updateSale()}
 function paymentMethods(){return ["PIX","Dinheiro","Cheque","Boleto","Cartão"]}
@@ -915,7 +1193,26 @@ function updateMultiPaymentSummary(total){const allocated=[...paymentRows.queryS
 function warrantyApplications(w){return Array.isArray(w.applications)?w.applications:[]}
 function warrantyAvailableAmount(w,excludeSaleId=""){const used=warrantyApplications(w).filter(a=>!(excludeSaleId&&a.saleId===excludeSaleId&&a.kind==="sale")).reduce((a,x)=>a+Number(x.amount||0),0);return Math.max(0,Number(w.creditValue||0)-used)}
 function availableWarrantyCredits(clientId,excludeSaleId=""){return state.warranties.filter(w=>w.type!=="Sucata"&&w.clientId===clientId&&(w.solution==="credit"||w.resolution==="credit")&&warrantyAvailableAmount(w,excludeSaleId)>.009)}
-function renderSaleWarrantyCredits(){const clientId=sClient.value,saleId=sId.value||"",credits=availableWarrantyCredits(clientId,saleId),current=state.sales.find(s=>s.id===saleId),selectedIds=new Set((current?.warrantyCredits||[]).map(x=>x.warrantyId));saleWarrantyCreditSection.classList.toggle("hidden",!clientId||!credits.length);if(!clientId||!credits.length){saleWarrantyCredits.innerHTML="";saleWarrantyCreditHint.textContent="";return}saleWarrantyCredits.innerHTML=credits.map(w=>{const avail=warrantyAvailableAmount(w,saleId),checked=selectedIds.has(w.id);return `<div class="warranty-credit-row"><label><input class="swc" type="checkbox" value="${w.id}" ${checked?"checked":""} onchange="updateSale()"><span><b>${brl(avail)}</b> disponíveis<small>${esc(w.model||state.products.find(p=>p.id===w.productId)?.name||"Garantia")} • ${fmt(w.collect)}</small></span></label></div>`}).join("");saleWarrantyCreditHint.textContent="Marque o crédito que deseja usar. O sistema aplica somente até o valor necessário do pedido."}
+function renderSaleWarrantyCredits(){
+ const clientId=sClient.value,saleId=sId.value||"",current=state.sales.find(s=>s.id===saleId);
+ saleWarrantyCreditSection.classList.remove("hidden");
+ if(!clientId){
+   saleWarrantyCredits.innerHTML='<div class="sale-credit-empty"><b>Selecione o cliente</b><br>Os créditos de garantia disponíveis aparecerão aqui.</div>';
+   saleWarrantyCreditHint.textContent="";
+   return
+ }
+ const credits=availableWarrantyCredits(clientId,saleId),selectedIds=new Set((current?.warrantyCredits||[]).map(x=>x.warrantyId));
+ if(!credits.length){
+   saleWarrantyCredits.innerHTML='<div class="sale-credit-empty"><b>Nenhum crédito de garantia disponível.</b><br>Se uma garantia deste cliente gerar crédito, ele ficará disponível para abatimento no pedido.</div>';
+   saleWarrantyCreditHint.textContent="";
+   return
+ }
+ saleWarrantyCredits.innerHTML=credits.map(w=>{
+   const avail=warrantyAvailableAmount(w,saleId),checked=selectedIds.has(w.id);
+   return `<div class="warranty-credit-row"><label><input class="swc" type="checkbox" value="${w.id}" ${checked?"checked":""} onchange="updateSale()"><span><b>${brl(avail)}</b> disponíveis<small>${esc(w.model||state.products.find(p=>p.id===w.productId)?.name||"Garantia")} • ${fmt(w.collect)}</small></span></label></div>`
+ }).join("");
+ saleWarrantyCreditHint.textContent="Marque o crédito que deseja usar. O sistema aplica somente até o valor necessário do pedido."
+}
 function previewSelectedWarrantyCredit(maxAmount){let remaining=Math.max(0,Number(maxAmount||0)),sum=0,saleId=sId.value||"";document.querySelectorAll(".swc:checked").forEach(ch=>{const w=state.warranties.find(w=>w.id===ch.value);if(!w||remaining<=0)return;const use=Math.min(remaining,warrantyAvailableAmount(w,saleId));sum+=use;remaining-=use});return Math.round(sum*100)/100}
 function buildWarrantyCreditsForSale(maxAmount){let remaining=Math.max(0,Number(maxAmount||0)),out=[],saleId=sId.value||"";document.querySelectorAll(".swc:checked").forEach(ch=>{const w=state.warranties.find(w=>w.id===ch.value);if(!w||remaining<=0)return;const amount=Math.min(remaining,warrantyAvailableAmount(w,saleId));if(amount>.009){out.push({warrantyId:w.id,amount});remaining-=amount}});return out}
 function syncWarrantyCreditApplications(sale){state.warranties.forEach(w=>{w.applications=warrantyApplications(w).filter(a=>!(a.saleId===sale.id&&a.kind==="sale"))});(sale.warrantyCredits||[]).forEach(x=>{const w=state.warranties.find(w=>w.id===x.warrantyId);if(w)w.applications.push({id:uid(),saleId:sale.id,amount:Number(x.amount||0),kind:"sale",date:sale.date})})}
@@ -927,7 +1224,7 @@ function saleOpenExcludingWarranty(s,warrantyId=""){const unpaid=(s.installments
 function updateWarrantyResolutionFields(){const credit=wResolution.value==="credit";wCreditFields.classList.toggle("hidden",!credit);if(credit)updateWarrantyOpenSales()}
 function updateWarrantyOpenSales(){const show=wResolution.value==="credit"&&wCreditDestination.value==="open";wOpenSaleField.classList.toggle("hidden",!show);if(!show)return;const currentWarrantyId=wId.value,rows=state.sales.filter(s=>s.clientId===wClient.value&&saleOpenExcludingWarranty(s,currentWarrantyId)>.009).sort((a,b)=>(b.date||"").localeCompare(a.date||""));wOpenSale.innerHTML='<option value="">Selecione</option>'+rows.map(s=>`<option value="${s.id}">Pedido ${esc(s.orderNumber||"—")} • saldo ${brl(saleOpenExcludingWarranty(s,currentWarrantyId))}</option>`).join("");wOpenSaleHint.textContent=rows.length?"O crédito reduz o saldo em aberto sem alterar o valor original do pedido.":"Este cliente não possui pedido em aberto."}
 function openSaleSheet(saleId=""){
- saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=Number(s?.routeCost||0);sOtherCost.value=Number(s?.otherCost||0);saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));renderSaleWarrantyCredits();updateSale();openSheet("saleSheet")
+ saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=Number(s?.routeCost||0);sOtherCost.value=Number(s?.otherCost||0);saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));renderSaleTablePricePreview();renderSaleWarrantyCredits();updateSale();openSheet("saleSheet")
 }
 function openWarrantySheet(warrantyId=""){
  warrantyForm.reset();wId.value=warrantyId;const w=state.warranties.find(w=>w.id===warrantyId);warrantySheetTitle.textContent=w?"Editar garantia":"Nova garantia";wClient.value=w?.clientId||"";wProduct.value=w?.productId||state.products.find(p=>p.name===w?.model)?.id||"";wQty.value=Number(w?.qty||1);wCode.value=w?.code||"";wMfg.value=w?.mfg||"";wCollect.value=w?.collect||today();wResolution.value=(w?.solution||w?.resolution)==="credit"?"credit":"exchange";wCreditValue.value=Number(w?.creditValue||0);wCreditDestination.value=w?.creditDestination||"next";wNote.value=w?.note||"";updateWarrantyResolutionFields();if(w?.applications?.some(a=>a.kind==="open")){const a=w.applications.find(a=>a.kind==="open");wCreditDestination.value="open";updateWarrantyOpenSales();wOpenSale.value=a.saleId||""}openSheet("warrantySheet")
@@ -1352,7 +1649,7 @@ function addSaleItem(productId="",qty=1){
  row.querySelector(".sp").onchange=updateSale;row.querySelector(".sq").oninput=updateSale;row.querySelector("button").onclick=()=>{row.remove();updateSale()};saleItems.appendChild(row);updateSale()
 }
 
-sClientSearch.addEventListener("focus",()=>renderSaleClientOptions(sClientSearch.value));sClientSearch.addEventListener("input",()=>{clearSaleClientIfNeeded();renderSaleClientOptions(sClientSearch.value);renderSaleWarrantyCredits();updateSale()});document.addEventListener("click",e=>{if(!e.target.closest(".autocomplete"))sClientOptions.classList.add("hidden")});sTable.addEventListener("change",updateSale);
+sClientSearch.addEventListener("focus",()=>renderSaleClientOptions(sClientSearch.value));sClientSearch.addEventListener("input",()=>{clearSaleClientIfNeeded();renderSaleClientOptions(sClientSearch.value);renderSaleWarrantyCredits();updateSale()});document.addEventListener("click",e=>{if(!e.target.closest(".autocomplete"))sClientOptions.classList.add("hidden")});sTable.addEventListener("change",()=>{renderSaleTablePricePreview();updateSale()});
 sMethod.addEventListener("change",()=>{salePaidLabel.textContent=sMethod.value==="Cheque"?"Recebido / compensado?":"Recebido no ato?";updateSale()});sRouteCost.addEventListener("input",updateSale);sOtherCost.addEventListener("input",updateSale);
 
 clientForm.addEventListener("submit",e=>{e.preventDefault();let c=state.clients.find(c=>c.id===cId.value);const data={name:cName.value.trim(),contact:cContact.value.trim(),phone:cPhone.value.trim(),doc:cDoc.value.trim(),address:cAddress.value.trim(),city:cCity.value.trim(),routeId:c?.routeId||"",price:cPrice.value,interval:Number(cInterval.value),note:cNote.value.trim(),visitPriority:!!c?.visitPriority};if(c)Object.assign(c,data);else state.clients.push({id:uid(),...data});smartRoutePlan=null;closeSheet("clientSheet");save()});
