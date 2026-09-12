@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.9">
-<meta name="ax-build" content="2026-09-12-v5.9-auto-credit-payment-balance">
+<meta name="ax-version" content="5.10">
+<meta name="ax-build" content="2026-09-12-v5.10-order-rentability-thumb">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -513,6 +513,28 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 .payment-balance-ok{color:var(--good)!important}
 .payment-balance-bad{color:var(--bad)!important}
 
+
+/* v5.10 — indicador rápido de rentabilidade */
+.sale-total-value-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  min-height:20px;
+}
+.sale-rentability-thumb{
+  display:inline-grid;
+  place-items:center;
+  min-width:18px;
+  font-size:16px;
+  line-height:1;
+  transform:translateY(-1px);
+}
+.sale-rentability-thumb:empty{display:none}
+@media(max-width:520px){
+  .sale-rentability-thumb{font-size:15px;min-width:16px}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -538,7 +560,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.9</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.10</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -624,7 +646,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.9</div>
+  <div class="version-note">AX Baterias • v5.10</div>
 </section>
 
 <section id="clients" class="screen">
@@ -728,7 +750,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   </div>
   <div class="card">
     <div class="cardhead"><div><h2>Sobre o sistema</h2><div class="muted">Confirma se o celular já carregou a versão publicada.</div></div></div>
-    <div class="system-card-row"><span>Versão do sistema</span><b>5.9</b></div>
+    <div class="system-card-row"><span>Versão do sistema</span><b>5.10</b></div>
     <div class="system-card-row"><span>Data da versão</span><b>12/09/2026</b></div>
   </div>
   <div class="card">
@@ -866,55 +888,8 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 
 <!-- ETAPA 4 -->
 <div class="sale-step">
-  <div class="sale-step-head">
-    <span class="sale-step-number">4</span>
-    <div class="sale-step-copy">
-      <div class="sale-step-title">Forma de pagamento</div>
-      <div class="sale-step-helper">Use uma única forma ou divida o valor entre quantas forem necessárias.</div>
-    </div>
-  </div>
-  <div class="sale-step-body">
-    <div class="segmented">
-      <button id="paymentSingleBtn" class="segment-btn active" type="button" onclick="setPaymentSplitMode('single')">Pagamento único</button>
-      <button id="paymentSplitBtn" class="segment-btn" type="button" onclick="setPaymentSplitMode('multiple')">Dividir pagamento</button>
-    </div>
-
-    <div id="singlePaymentSection" style="margin-top:10px">
-      <div class="formgrid">
-        <div class="field span2">
-          <label>Condição</label>
-          <div class="segmented">
-            <button id="payModeAto" class="segment-btn active" type="button" onclick="setPaymentMode('ato')">No ato</button>
-            <button id="payModePrazo" class="segment-btn" type="button" onclick="setPaymentMode('prazo')">A prazo</button>
-          </div>
-        </div>
-        <div class="field"><label>Forma</label><select id="sMethod"></select></div>
-        <div id="salePaidField" class="field"><label id="salePaidLabel">Recebido no ato?</label><select id="sPaid"><option value="no">Não</option><option value="yes">Sim</option></select></div>
-        <div id="saleTermsFields" class="span2 hidden">
-          <div class="formgrid">
-            <div class="field"><label>Parcelas</label><input id="sParts" type="number" min="1" max="24" value="1"></div>
-            <div class="field"><label>1º vencimento</label><input id="sDue" type="date"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="multiPaymentSection" class="hidden" style="margin-top:10px">
-      <div class="payment-split-summary">
-        <div class="mini"><b id="multiPaymentTotal">R$ 0,00</b><span>Total do pedido</span></div>
-        <div class="mini"><b id="multiPaymentAllocated">R$ 0,00</b><span>Distribuído</span></div>
-        <div class="mini"><b id="multiPaymentRemaining">R$ 0,00</b><span>Falta distribuir</span></div>
-      </div>
-      <div id="paymentRows"></div>
-      <button class="btn secondary" type="button" onclick="addPaymentRow()">＋ Adicionar forma de pagamento</button><div class="payment-autofill-note">A nova forma recebe automaticamente o valor que ainda falta distribuir.</div>
-    </div>
-  </div>
-</div>
-
-<!-- ETAPA 5 -->
-<div class="sale-step">
   <div class="sale-step-head sale-benefits-head">
-    <span class="sale-step-number">5</span>
+    <span class="sale-step-number">4</span>
     <div class="sale-step-copy">
       <div class="sale-step-title">Descontos e créditos</div>
       <div class="sale-step-helper">Sucata e garantia ficam vinculadas a este pedido.</div>
@@ -979,6 +954,53 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   </div>
 </div>
 
+<!-- ETAPA 5 -->
+<div class="sale-step">
+  <div class="sale-step-head">
+    <span class="sale-step-number">5</span>
+    <div class="sale-step-copy">
+      <div class="sale-step-title">Forma de pagamento</div>
+      <div class="sale-step-helper">Use uma única forma ou divida o valor entre quantas forem necessárias.</div>
+    </div>
+  </div>
+  <div class="sale-step-body">
+    <div class="segmented">
+      <button id="paymentSingleBtn" class="segment-btn active" type="button" onclick="setPaymentSplitMode('single')">Pagamento único</button>
+      <button id="paymentSplitBtn" class="segment-btn" type="button" onclick="setPaymentSplitMode('multiple')">Dividir pagamento</button>
+    </div>
+
+    <div id="singlePaymentSection" style="margin-top:10px">
+      <div class="formgrid">
+        <div class="field span2">
+          <label>Condição</label>
+          <div class="segmented">
+            <button id="payModeAto" class="segment-btn active" type="button" onclick="setPaymentMode('ato')">No ato</button>
+            <button id="payModePrazo" class="segment-btn" type="button" onclick="setPaymentMode('prazo')">A prazo</button>
+          </div>
+        </div>
+        <div class="field"><label>Forma</label><select id="sMethod"></select></div>
+        <div id="salePaidField" class="field"><label id="salePaidLabel">Recebido no ato?</label><select id="sPaid"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+        <div id="saleTermsFields" class="span2 hidden">
+          <div class="formgrid">
+            <div class="field"><label>Parcelas</label><input id="sParts" type="number" min="1" max="24" value="1"></div>
+            <div class="field"><label>1º vencimento</label><input id="sDue" type="date"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="multiPaymentSection" class="hidden" style="margin-top:10px">
+      <div class="payment-split-summary">
+        <div class="mini"><b id="multiPaymentTotal">R$ 0,00</b><span>Total do pedido</span></div>
+        <div class="mini"><b id="multiPaymentAllocated">R$ 0,00</b><span>Distribuído</span></div>
+        <div class="mini"><b id="multiPaymentRemaining">R$ 0,00</b><span>Falta distribuir</span></div>
+      </div>
+      <div id="paymentRows"></div>
+      <button class="btn secondary" type="button" onclick="addPaymentRow()">＋ Adicionar forma de pagamento</button><div class="payment-autofill-note">A nova forma recebe automaticamente o valor que ainda falta distribuir.</div>
+    </div>
+  </div>
+</div>
+
 <!-- ETAPA 6 -->
 <div class="sale-step">
   <div class="sale-step-head">
@@ -1023,7 +1045,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   <div class="mini"><b id="saleSubtotalPreview">R$ 0,00</b><span>Subtotal</span></div>
   <div class="mini"><b id="saleScrapDiscountPreview">- R$ 0,00</b><span>Sucata</span></div>
   <div class="mini"><b id="saleWarrantyCreditPreview">- R$ 0,00</b><span>Garantia</span></div>
-  <div class="mini"><b id="saleTotal">R$ 0,00</b><span>Total a pagar</span></div>
+  <div class="mini">
+    <div class="sale-total-value-row">
+      <b id="saleTotal">R$ 0,00</b>
+      <span id="saleRentabilityThumb" class="sale-rentability-thumb" aria-label=""></span>
+    </div>
+    <span>Total a pagar</span>
+  </div>
 </div>
 </form></div></div>
 
@@ -1128,7 +1156,8 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.9';
+const AX_APP_VERSION='5.10';
+const SALE_RENTABILITY_THUMB_THRESHOLD=13;
 const TEST_MODE=false;
 const KEY="ax_baterias_mobile_v5_cache";
 const defaults={
@@ -1882,7 +1911,17 @@ function updateSale(){
  let discount=0;document.querySelectorAll(".scrapRow").forEach(r=>{const t=state.scrapTypes.find(t=>t.id===r.querySelector(".sst").value),q=Number(r.querySelector(".ssq").value||0),d=t?Number(t.value||0)*q:0;r.querySelector(".scrapDiscount").textContent=`- ${brl(d)}`;discount+=d});
  const beforeWarranty=Math.max(0,subtotal-discount),warrantyCredit=previewSelectedWarrantyCredit(beforeWarranty),total=Math.max(0,Math.round((beforeWarranty-warrantyCredit)*100)/100),grossProfit=total-cost;let paymentFee=0;if(sPaymentSplitMode.value==="multiple"){paymentFee=[...paymentRows.querySelectorAll(".payment-row")].reduce((sum,row)=>sum+Number(row.querySelector(".pm-amount").value||0)*paymentFeeRate(row.querySelector(".pm-method").value)/100,0);updateMultiPaymentSummary(total)}else paymentFee=total*paymentFeeRate(sMethod.value)/100;
  const taxRate=Number(state.config?.taxRate||0),tax=total*taxRate/100,routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),totalCosts=cost+paymentFee+tax+routeCost+otherCost,result=total-totalCosts,rent=total>0?result/total*100:0,cls=rentabilityClass(rent);
- saleSubtotalPreview.textContent=brl(subtotal);saleScrapDiscountPreview.textContent=`- ${brl(discount)}`;saleWarrantyCreditPreview.textContent=`- ${brl(warrantyCredit)}`;saleTotal.textContent=brl(total);saleCostPreview.textContent=brl(cost);salePaymentFeePreview.textContent=brl(paymentFee);saleTaxPreview.textContent=brl(tax);saleExtraCostsPreview.textContent=brl(routeCost+otherCost);saleGrossProfitPreview.textContent=brl(grossProfit);saleTotalCostsPreview.textContent=brl(totalCosts);saleProfitPreview.textContent=brl(result);saleRentabilityPreview.textContent=rent.toFixed(1)+"%";saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;saleRentabilityAlert.className=`notice rent-panel-${cls}`;saleRentabilityAlert.innerHTML=`<b>${rentabilityText(rent)}</b> • Rentabilidade operacional estimada ${rent.toFixed(1)}%.`;saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
+ saleSubtotalPreview.textContent=brl(subtotal);saleScrapDiscountPreview.textContent=`- ${brl(discount)}`;saleWarrantyCreditPreview.textContent=`- ${brl(warrantyCredit)}`;saleTotal.textContent=brl(total);
+ if(total>0){
+   const goodQuickRentability=rent>=SALE_RENTABILITY_THUMB_THRESHOLD;
+   saleRentabilityThumb.textContent=goodQuickRentability?"👍":"👎";
+   saleRentabilityThumb.setAttribute("aria-label",goodQuickRentability?"Rentabilidade igual ou acima de 13%":"Rentabilidade abaixo de 13%");
+   saleRentabilityThumb.title=goodQuickRentability?"Rentabilidade ≥ 13%":"Rentabilidade < 13%";
+ }else{
+   saleRentabilityThumb.textContent="";
+   saleRentabilityThumb.removeAttribute("aria-label");
+   saleRentabilityThumb.removeAttribute("title")
+ }saleCostPreview.textContent=brl(cost);salePaymentFeePreview.textContent=brl(paymentFee);saleTaxPreview.textContent=brl(tax);saleExtraCostsPreview.textContent=brl(routeCost+otherCost);saleGrossProfitPreview.textContent=brl(grossProfit);saleTotalCostsPreview.textContent=brl(totalCosts);saleProfitPreview.textContent=brl(result);saleRentabilityPreview.textContent=rent.toFixed(1)+"%";saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;saleRentabilityAlert.className=`notice rent-panel-${cls}`;saleRentabilityAlert.innerHTML=`<b>${rentabilityText(rent)}</b> • Rentabilidade operacional estimada ${rent.toFixed(1)}%.`;saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
 }
 function addSaleItem(productId="",qty=1){
  const row=document.createElement("div");row.className="saleRow";
