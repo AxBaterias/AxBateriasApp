@@ -13,6 +13,7 @@
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
 <meta name="ax-version" content="5.5">
+<meta name="ax-build" content="2026-09-12-v5.5-final">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -279,6 +280,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 .receipt-date{font-size:11px;color:#667085;font-weight:700;margin-top:-18px;margin-bottom:22px}.receipt-payline{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #f2f4f7;font-size:12px}.receipt-payline:last-child{border-bottom:0}
 .receipt-capture-host .receipt-date{font-size:11px!important;margin-top:-18px!important;margin-bottom:22px!important}
 .system-card-row{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid #f2f4f7;font-size:12px}.system-card-row:last-child{border-bottom:0}
+.version-chip{display:inline-flex;align-items:center;margin-left:7px;padding:2px 6px;border:1px solid var(--line);border-radius:999px;font-size:9px;font-weight:850;color:var(--muted);vertical-align:middle;background:#fff}
 @media(max-width:520px){.payment-row-grid{grid-template-columns:1fr 1fr}.payment-row-grid .pm-condition-wrap{grid-column:1/-1}.payment-row-extra{grid-template-columns:1fr 1fr}.payment-row-extra .pm-due-wrap{grid-column:1/-1}.payment-split-summary{grid-template-columns:1fr 1fr}.payment-split-summary .mini:last-child{grid-column:1/-1}.sale-fixed-summary .mini b{font-size:10px}.sale-fixed-summary .mini span{font-size:6px}}
 
 </style>
@@ -306,7 +308,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias<small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.5</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -321,7 +323,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div class="metric"><div class="label">Vendas no mês</div><div class="value" id="hSales">R$ 0</div><div class="sub">faturamento</div></div>
     <div class="metric"><div class="label">A receber</div><div class="value" id="hOpen">R$ 0</div><div class="sub">parcelas abertas</div></div>
     <div class="metric"><div class="label">Vencido</div><div class="value" id="hOver">R$ 0</div><div class="sub">cobrar</div></div>
-    <div class="metric"><div class="label">Garantias urgentes</div><div class="value" id="hWar">0</div><div class="sub">próximas do limite</div></div>
+    <div class="metric"><div class="label">Garantias 90 dias</div><div class="value" id="hWar">0</div><div class="sub">ocorrências registradas</div></div>
   </div>
 
   <div class="quick">
@@ -1183,18 +1185,32 @@ function renderHomeFinanceChart(){
  homeFinanceChart.innerHTML=`<div class="finance-chart"><div class="chart-legend"><div class="legend-item"><span class="legend-swatch"></span>Faturamento</div><div class="legend-item"><span class="legend-swatch cost"></span>Custos totais</div></div><div class="grouped-chart">${rows.map(r=>{const rh=Math.max(r.revenue?4:2,Math.round(r.revenue/max*h)),ch=Math.max(r.costs?4:2,Math.round(r.costs/max*h)),cls=rentabilityClass(r.rentability);return `<div class="chart-month"><div class="chart-bars"><div class="chart-bar" style="height:${rh}px"><span class="chart-bar-label">${brl(r.revenue)}</span></div><div class="chart-bar cost" style="height:${ch}px"><span class="chart-bar-label">${brl(r.costs)}</span></div></div><div class="chart-month-name">${r.label}${r.isCurrent?"*":""}<small>${r.isCurrent?"mês parcial":"mês fechado"}</small></div><div class="chart-rent"><span class="badge ${cls}">Rent. ${r.rentability.toFixed(1)}%</span></div></div>`}).join("")}</div><div class="muted" style="margin-top:11px">* O mês atual é parcial. Custos totais incluem produtos, taxas, impostos estimados e custos adicionais registrados.</div></div>`
 }
 function renderHome(){
- const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),monthSales=month.reduce((a,s)=>a+Number(s.total),0),openValue=state.sales.reduce((a,s)=>a+saleOpen(s),0),overValue=state.sales.reduce((a,s)=>a+s.installments.filter(p=>!p.paid&&p.due<today()).reduce((x,p)=>x+Number(p.amount),0),0);
+ const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),
+ monthSales=month.reduce((a,s)=>a+Number(s.total),0),
+ openValue=state.sales.reduce((a,s)=>a+saleOpen(s),0),
+ overValue=state.sales.reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0);
  hSales.textContent=moneyPrivate(monthSales);hOpen.textContent=moneyPrivate(openValue);hOver.textContent=moneyPrivate(overValue);
  hSales.classList.toggle("money-mask",!homeFinanceVisible);hOpen.classList.toggle("money-mask",!homeFinanceVisible);hOver.classList.toggle("money-mask",!homeFinanceVisible);homeFinanceToggle.textContent=homeFinanceVisible?"🙈 Ocultar valores":"👁 Ver valores";
- const urgent=state.warranties.filter(w=>w.type==="Garantia"&&w.mfg&&!["Aprovada","Rejeitada","Substituída"].includes(w.status)&&days(today(),addMonths(w.mfg,9))<=30).length;hWar.textContent=urgent;
+
+ const warranty90Start=addDays(today(),-90),
+ warranty90=state.warranties.filter(w=>w.type!=="Sucata"&&(w.collect||"")>=warranty90Start),
+ recurringWarrantyClients=state.clients.map(c=>({c,ws:warrantyStats(c.id,365)})).filter(x=>x.ws.warrantyQty>=2&&x.ws.incidence>=10);
+ hWar.textContent=warranty90.reduce((a,w)=>a+Number(w.qty||1),0);
+
  const critical=criticalClients();
- if(smartRoutePlan?.routes?.length){const best=smartRoutePlan.routes[0];homeRoute.innerHTML=`<div class="routebox"><div class="routehead"><div><b>Rota sugerida</b><div class="muted">${best.order.length} cliente(s) • ${best.km.toFixed(0)} km</div></div><span class="badge ${best.result>0?"good":"warn"}">${best.result>0?"Recomendada":"Avaliar"}</span></div><div class="routekpis"><div>Faturamento potencial<b>${moneyPrivate(best.revenue)}</b></div><div>Lucro bruto potencial<b>${moneyPrivate(best.grossProfit)}</b></div><div>Resultado da rota<b>${moneyPrivate(best.result)}</b></div></div></div>`}
- else homeRoute.innerHTML=critical.length?`<div class="listitem"><div><div class="title">${critical.length} cliente(s) precisam de análise de rota</div><div class="meta">Abra Rotas e toque em “Analisar rotas”.</div></div><button class="btn secondary" onclick="go('routes')">Analisar</button></div>`:'<div class="empty">Nenhum cliente está crítico para visita agora.</div>';
+ if(smartRoutePlan?.routes?.length){
+   const best=smartRoutePlan.routes[0];
+   homeRoute.innerHTML=`<div class="routebox"><div class="routehead"><div><b>Rota sugerida</b><div class="muted">${best.order.length} cliente(s) • ${best.km.toFixed(0)} km</div></div><span class="badge ${best.result>0?"good":"warn"}">${best.result>0?"Recomendada":"Avaliar"}</span></div><div class="routekpis"><div>Faturamento potencial<b>${moneyPrivate(best.revenue)}</b></div><div>Retorno comercial potencial<b>${moneyPrivate(best.grossProfit)}</b></div><div>Resultado da rota<b>${moneyPrivate(best.result)}</b></div></div></div>`
+ }else{
+   homeRoute.innerHTML=critical.length?`<div class="listitem"><div><div class="title">${critical.length} cliente(s) precisam de análise de rota</div><div class="meta">Abra Rotas e toque em “Analisar rotas”.</div></div><button class="btn secondary" onclick="go('routes')">Analisar</button></div>`:'<div class="empty">Nenhum cliente está crítico para visita agora.</div>'
+ }
+
  const low=state.products.filter(p=>Number(p.qty)<=Number(p.min)).length,list=[];
  if(overValue)list.push(`<div class="listitem"><div><div class="title">${homeFinanceVisible?brl(overValue)+" vencidos":"Há valores vencidos"}</div><div class="meta">Prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);
  if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);
- if(urgent)list.push(`<div class="listitem"><div><div class="title">${urgent} garantia(s) próximas do limite</div><div class="meta">Verificar coleta/envio</div></div><span class="badge bad">Urgente</span></div>`);
- homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>';renderHomeFinanceChart()
+ if(recurringWarrantyClients.length)list.push(`<div class="listitem"><div><div class="title">${recurringWarrantyClients.length} cliente(s) com recorrência alta de garantia</div><div class="meta">Revisar incidência, idade do produto e giro do cliente</div></div><span class="badge warn">Garantia</span></div>`);
+ homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>';
+ renderHomeFinanceChart()
 }
 function renderSales(){
  if(!state.sales.length){salesList.innerHTML='<div class="empty">Nenhuma venda registrada.</div>';return}
@@ -1214,7 +1230,7 @@ function renderSmartRoutePlan(){
  p.routes.forEach((r,i)=>{
    const cls=r.result>0?"good":r.grossProfit>=r.travelCost*.75?"warn":"bad";
    h+=`<div class="card"><div class="cardhead"><div><h2>Rota ${i+1}</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${cls}">${r.result>0?"Recomendada":cls==="warn"?"Avaliar":"Baixo retorno"}</span></div>${routeSequenceHtml(r.order,p.candidates)}
-   <div class="smart-route-summary"><div class="mini"><b>${brl(r.revenue)}</b><span>Faturamento potencial</span></div><div class="mini"><b>${brl(r.grossProfit)}</b><span>Lucro bruto potencial</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado da viagem</span></div><div class="mini"><b>${brl(r.result)}</b><span>Resultado estimado da rota</span></div></div>
+   <div class="smart-route-summary"><div class="mini"><b>${brl(r.revenue)}</b><span>Faturamento potencial</span></div><div class="mini"><b>${brl(r.grossProfit)}</b><span>Retorno comercial potencial</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado da viagem</span></div><div class="mini"><b>${brl(r.result)}</b><span>Resultado estimado da rota</span></div></div>
    <div class="muted">Rodagem: ${brl(r.km*Number(state.config.costKm||0))} • Pedágios (${state.config.tollPass==="BR_SEM_PARAR"?"Sem Parar":"Google"}): ${r.tollAvailable?brl(r.toll):"não informado pelo Google"}</div>
    <div class="list" style="margin-top:10px">${r.order.map(idx=>{const x=p.candidates[idx-1];return `<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ticket ${brl(x.st.ticket)} • retorno médio líquido ${brl(x.st.netAvgMargin)}${x.st.warrantyStats?.incidence>=10?` • ⚠ garantia ${x.st.warrantyStats.incidence.toFixed(1)}%`:""}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">Confirmar visita</button></div>`}).join("")}</div></div>`
  });
@@ -1380,7 +1396,7 @@ warrantyForm.addEventListener("submit",e=>{
  e.preventDefault();ensureState();
  const c=state.clients.find(c=>c.id===wClient.value),prod=state.products.find(p=>p.id===wProduct.value),qty=Math.max(1,Number(wQty.value||1));if(!c||!prod){alert("Selecione cliente e produto.");return}
  const w=state.warranties.find(w=>w.id===wId.value);
- if(w&&warrantyApplications(w).some(a=>a.kind==="sale")){alert("Esta garantia já foi usada como crédito em um pedido e não pode ser alterada. Isso preserva o histórico financeiro.");return}
+ if(w&&warrantyApplications(w).length){alert("Esta garantia já possui crédito aplicado a um pedido e não pode ser alterada. Isso preserva o histórico financeiro.");return}
  const oldExchange=!!(w&&(w.solution==="exchange"||w.resolution==="exchange")),oldProduct=oldExchange?state.products.find(p=>p.id===w.productId):null,oldQty=oldExchange?Number(w.qty||1):0;
  const solution=wResolution.value,creditValue=solution==="credit"?Number(wCreditValue.value||0):0;
  const availableForExchange=Number(prod.qty||0)+(oldExchange&&oldProduct?.id===prod.id?oldQty:0);
