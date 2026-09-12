@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.6">
-<meta name="ax-build" content="2026-09-12-v5.6-ui-order">
+<meta name="ax-version" content="5.7">
+<meta name="ax-build" content="2026-09-12-v5.7-inline-warranty">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -415,6 +415,67 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   .sale-step-number{width:25px;height:25px;min-width:25px}
 }
 
+
+/* v5.7 — garantia rápida dentro do pedido */
+.quick-warranty-panel{
+  margin-top:9px;
+  border:1px solid #dfe3e8;
+  border-radius:13px;
+  background:#fff;
+  padding:10px;
+}
+.quick-warranty-title{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:9px;
+}
+.quick-warranty-title b{font-size:11px}
+.quick-warranty-grid{
+  display:grid;
+  grid-template-columns:1fr 82px;
+  gap:8px;
+}
+.quick-warranty-grid .field{margin:0}
+.quick-warranty-optional{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+}
+.quick-warranty-resolution{margin-top:9px}
+.quick-warranty-credit-grid{
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:8px;
+  margin-top:8px;
+}
+.quick-warranty-actions{
+  display:flex;gap:7px;justify-content:flex-end;flex-wrap:wrap;margin-top:9px
+}
+.quick-warranty-list{margin-top:9px}
+.quick-warranty-item{
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:8px 9px;
+  background:#fafafa;
+  margin-top:6px;
+}
+.quick-warranty-item-head{
+  display:flex;justify-content:space-between;gap:10px;align-items:flex-start
+}
+.quick-warranty-item b{font-size:10px}
+.quick-warranty-item small{display:block;font-size:8px;color:var(--muted);margin-top:2px;line-height:1.35}
+.quick-warranty-item .btn{padding:6px 8px;font-size:9px}
+.warranty-subsection-label{
+  font-size:9px;font-weight:850;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.04em;margin:10px 0 5px
+}
+.sale-section-card .btn.inline-wide{width:100%;justify-content:center}
+@media(max-width:520px){
+ .quick-warranty-grid{grid-template-columns:minmax(0,1fr) 72px}
+ .quick-warranty-credit-grid{grid-template-columns:1fr}
+ .quick-warranty-optional{grid-template-columns:1fr 1fr}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -440,7 +501,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.6</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.7</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -526,7 +587,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.6</div>
+  <div class="version-note">AX Baterias • v5.7</div>
 </section>
 
 <section id="clients" class="screen">
@@ -630,7 +691,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   </div>
   <div class="card">
     <div class="cardhead"><div><h2>Sobre o sistema</h2><div class="muted">Confirma se o celular já carregou a versão publicada.</div></div></div>
-    <div class="system-card-row"><span>Versão do sistema</span><b>5.6</b></div>
+    <div class="system-card-row"><span>Versão do sistema</span><b>5.7</b></div>
     <div class="system-card-row"><span>Data da versão</span><b>12/09/2026</b></div>
   </div>
   <div class="card">
@@ -755,8 +816,21 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 
 <!-- ETAPA 3 -->
 <div class="sale-step">
-  <div class="sale-step-head">
+  <div class="sale-step-head sale-items-head">
     <span class="sale-step-number">3</span>
+    <div class="sale-step-copy">
+      <div class="sale-step-title">Itens do pedido</div>
+      <div class="sale-step-helper">Os valores seguem a tabela selecionada acima.</div>
+    </div>
+    <button class="btn secondary sale-block-actions" type="button" onclick="addSaleItem()">＋ Item</button>
+  </div>
+  <div id="saleItems"></div>
+</div>
+
+<!-- ETAPA 4 -->
+<div class="sale-step">
+  <div class="sale-step-head">
+    <span class="sale-step-number">4</span>
     <div class="sale-step-copy">
       <div class="sale-step-title">Forma de pagamento</div>
       <div class="sale-step-helper">Use uma única forma ou divida o valor entre quantas forem necessárias.</div>
@@ -800,26 +874,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   </div>
 </div>
 
-<!-- ETAPA 4 -->
-<div class="sale-step">
-  <div class="sale-step-head sale-items-head">
-    <span class="sale-step-number">4</span>
-    <div class="sale-step-copy">
-      <div class="sale-step-title">Itens do pedido</div>
-      <div class="sale-step-helper">Os valores seguem a tabela selecionada acima.</div>
-    </div>
-    <button class="btn secondary sale-block-actions" type="button" onclick="addSaleItem()">＋ Item</button>
-  </div>
-  <div id="saleItems"></div>
-</div>
-
 <!-- ETAPA 5 -->
 <div class="sale-step">
   <div class="sale-step-head sale-benefits-head">
     <span class="sale-step-number">5</span>
     <div class="sale-step-copy">
       <div class="sale-step-title">Descontos e créditos</div>
-      <div class="sale-step-helper">Sucata e garantia reduzem o valor antes da distribuição do pagamento.</div>
+      <div class="sale-step-helper">Sucata e garantia ficam vinculadas a este pedido.</div>
     </div>
   </div>
 
@@ -837,7 +898,59 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   </div>
 
   <div class="sale-section-card">
-    <div class="sale-section-card-title"><span>🛡️ Crédito de garantia</span><small>Do cliente</small></div>
+    <div class="sale-section-card-title"><span>🛡️ Garantia</span><small>Vinculada ao cliente</small></div>
+    <button id="saleWarrantyNewBtn" class="btn secondary inline-wide" type="button" onclick="openSaleWarrantyQuickForm()">＋ Registrar garantia neste pedido</button>
+
+    <div id="saleWarrantyQuickForm" class="quick-warranty-panel hidden">
+      <div class="quick-warranty-title"><b>Nova garantia</b><span class="muted">Cliente do pedido</span></div>
+      <div class="quick-warranty-grid">
+        <div class="field">
+          <label>Produto em garantia</label>
+          <select id="swqProduct"></select>
+        </div>
+        <div class="field">
+          <label>Qtd.</label>
+          <input id="swqQty" type="number" min="1" step="1" value="1">
+        </div>
+      </div>
+
+      <div class="quick-warranty-optional">
+        <div class="field"><label>Fabricação <span class="muted">(opcional)</span></label><input id="swqMfg" type="date"></div>
+        <div class="field"><label>Código <span class="muted">(opcional)</span></label><input id="swqCode"></div>
+      </div>
+
+      <div class="quick-warranty-resolution">
+        <label>Como resolver?</label>
+        <div class="segmented">
+          <button id="swqExchangeBtn" class="segment-btn active" type="button" onclick="setSaleWarrantyQuickResolution('exchange')">Trocar bateria</button>
+          <button id="swqCreditBtn" class="segment-btn" type="button" onclick="setSaleWarrantyQuickResolution('credit')">Gerar crédito</button>
+        </div>
+        <input id="swqResolution" type="hidden" value="exchange">
+      </div>
+
+      <div id="swqExchangeHint" class="sale-step-note" style="margin-top:8px">Na troca, o sistema registra a garantia e retira do estoque a mesma quantidade do produto selecionado.</div>
+
+      <div id="swqCreditFields" class="quick-warranty-credit-grid hidden">
+        <div class="field"><label>Valor do crédito</label><input id="swqCreditValue" type="number" min="0" step=".01"></div>
+        <div class="field">
+          <label>Destino do crédito</label>
+          <select id="swqCreditUse">
+            <option value="current">Aplicar neste pedido</option>
+            <option value="later">Deixar disponível para outro pedido</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="quick-warranty-actions">
+        <button class="btn secondary" type="button" onclick="closeSaleWarrantyQuickForm()">Cancelar</button>
+        <button class="btn" type="button" onclick="addSaleWarrantyDraft()">Adicionar garantia</button>
+      </div>
+    </div>
+
+    <div id="saleWarrantyDrafts" class="quick-warranty-list"></div>
+    <div id="saleWarrantyLinked" class="quick-warranty-list"></div>
+
+    <div class="warranty-subsection-label">Créditos já disponíveis deste cliente</div>
     <div id="saleWarrantyCreditSection">
       <div id="saleWarrantyCredits"></div>
       <div id="saleWarrantyCreditHint" class="muted" style="margin-top:6px"></div>
@@ -995,7 +1108,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.6';
+const AX_APP_VERSION='5.7';
 const TEST_MODE=false;
 const KEY="ax_baterias_mobile_v5_cache";
 const defaults={
@@ -1179,9 +1292,77 @@ function renderSaleTablePricePreview(){
    return `<div class="sale-price-chip"><span>${esc(p.name)}</span><b>${value>0?brl(value):"—"}</b></div>`
  }).join("")
 }
+
+let pendingSaleWarrantyDrafts=[];
+
+function saleWarrantyProductOptions(){
+ return '<option value="">Selecione</option>'+state.products.map(p=>`<option value="${p.id}">${esc(p.name)} • estoque ${Number(p.qty||0)} un.</option>`).join("")
+}
+function setSaleWarrantyQuickResolution(mode){
+ swqResolution.value=mode;
+ swqExchangeBtn.classList.toggle("active",mode==="exchange");
+ swqCreditBtn.classList.toggle("active",mode==="credit");
+ swqExchangeHint.classList.toggle("hidden",mode!=="exchange");
+ swqCreditFields.classList.toggle("hidden",mode!=="credit")
+}
+function openSaleWarrantyQuickForm(){
+ if(!sClient.value){alert("Selecione o cliente do pedido antes de registrar a garantia.");sClientSearch.focus();return}
+ swqProduct.innerHTML=saleWarrantyProductOptions();
+ const selectedProducts=[...document.querySelectorAll(".saleRow .sp")].map(x=>x.value).filter(Boolean);
+ if(selectedProducts.length===1)swqProduct.value=selectedProducts[0];
+ swqQty.value=1;swqMfg.value="";swqCode.value="";swqCreditValue.value="";swqCreditUse.value="current";
+ setSaleWarrantyQuickResolution("exchange");
+ saleWarrantyQuickForm.classList.remove("hidden")
+}
+function closeSaleWarrantyQuickForm(){saleWarrantyQuickForm.classList.add("hidden")}
+function addSaleWarrantyDraft(){
+ const clientId=sClient.value;if(!clientId){alert("Selecione o cliente.");return}
+ const p=state.products.find(p=>p.id===swqProduct.value),qty=Math.max(1,Number(swqQty.value||1)),resolution=swqResolution.value;
+ if(!p){alert("Selecione o produto em garantia.");return}
+ if(resolution==="exchange"&&Number(p.qty||0)<qty){alert(`Estoque insuficiente de ${p.name} para registrar a troca.`);return}
+ const creditValue=resolution==="credit"?Number(swqCreditValue.value||0):0;
+ if(resolution==="credit"&&creditValue<=0){alert("Informe o valor do crédito da garantia.");return}
+ pendingSaleWarrantyDrafts.push({
+   id:uid(),clientId,productId:p.id,model:p.name,qty,
+   mfg:swqMfg.value||"",code:swqCode.value.trim(),
+   collect:sDate.value||today(),
+   solution:resolution,resolution,
+   creditValue,
+   creditDestination:resolution==="credit"?(swqCreditUse.value==="current"?"current":"next"):"",
+   applyCurrent:resolution==="credit"&&swqCreditUse.value==="current",
+   note:"Registrada durante o pedido",
+   unitCostSnapshot:Number(p.cost||0)
+ });
+ closeSaleWarrantyQuickForm();renderSaleWarrantyDrafts();updateSale()
+}
+function removeSaleWarrantyDraft(id){
+ pendingSaleWarrantyDrafts=pendingSaleWarrantyDrafts.filter(w=>w.id!==id);
+ renderSaleWarrantyDrafts();updateSale()
+}
+function renderSaleWarrantyDrafts(){
+ if(!pendingSaleWarrantyDrafts.length){
+   saleWarrantyDrafts.innerHTML="";
+ }else{
+   saleWarrantyDrafts.innerHTML='<div class="warranty-subsection-label">Garantias adicionadas agora</div>'+pendingSaleWarrantyDrafts.map(w=>{
+     const p=state.products.find(p=>p.id===w.productId),credit=w.solution==="credit";
+     return `<div class="quick-warranty-item"><div class="quick-warranty-item-head"><div><b>${esc(p?.name||w.model)} • ${Number(w.qty||1)} un.</b><small>${credit?`Crédito ${brl(w.creditValue)}${w.applyCurrent?" • aplicar neste pedido":" • deixar disponível"}`:"Troca por bateria nova"}${w.mfg?` • fab. ${fmt(w.mfg)}`:""}</small></div><button class="btn secondary" type="button" onclick="removeSaleWarrantyDraft('${w.id}')">Remover</button></div></div>`
+   }).join("")
+ }
+ const saleId=sId.value||"";
+ const linked=state.warranties.filter(w=>w.sourceSaleId===saleId);
+ saleWarrantyLinked.innerHTML=linked.length?'<div class="warranty-subsection-label">Já registradas neste pedido</div>'+linked.map(w=>`<div class="quick-warranty-item"><b>${esc(w.model||state.products.find(p=>p.id===w.productId)?.name||"Garantia")} • ${Number(w.qty||1)} un.</b><small>${(w.solution||w.resolution)==="credit"?`Crédito ${brl(w.creditValue)}`:"Troca por bateria nova"}</small></div>`).join(""):"";
+}
+function pendingSaleWarrantyCurrentCredit(maxAmount){
+ let remaining=Math.max(0,Number(maxAmount||0)),sum=0;
+ pendingSaleWarrantyDrafts.filter(w=>w.solution==="credit"&&w.applyCurrent).forEach(w=>{
+   if(remaining<=0)return;
+   const use=Math.min(remaining,Number(w.creditValue||0));sum+=use;remaining-=use
+ });
+ return Math.round(sum*100)/100
+}
 function recentClientIds(limit=8){return [...state.sales].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(s=>s.clientId).filter((id,i,a)=>id&&a.indexOf(id)===i).slice(0,limit)}
 function renderSaleClientOptions(query=""){const q=String(query||"").trim().toLowerCase();let list=state.clients.filter(c=>!q||[c.name,c.contact,c.city].some(v=>String(v||"").toLowerCase().includes(q)));if(!q){const recent=recentClientIds();list.sort((a,b)=>{const ia=recent.indexOf(a.id),ib=recent.indexOf(b.id);return (ia<0?999:ia)-(ib<0?999:ib)||a.name.localeCompare(b.name)})}list=list.slice(0,12);sClientOptions.innerHTML=list.length?list.map(c=>`<button type="button" class="autocomplete-option" onclick="selectSaleClient('${c.id}')"><b>${esc(c.name)}</b><small>${c.contact?esc(c.contact)+" • ":""}${esc(c.city||"")}</small></button>`).join(""):'<div class="empty" style="padding:12px">Nenhum cliente encontrado.</div>';sClientOptions.classList.remove("hidden")}
-function selectSaleClient(id){const c=state.clients.find(c=>c.id===id);if(!c)return;sClient.value=id;sClientSearch.value=c.name;sClientSelectedHint.textContent=`Selecionado: ${c.name}${c.contact?` • ${c.contact}`:""} • ${c.city||""}`;sClientOptions.classList.add("hidden");sTable.value=c.price||"0";renderSaleTablePricePreview();renderSaleWarrantyCredits();updateSale()}
+function selectSaleClient(id){const c=state.clients.find(c=>c.id===id);if(!c)return;if(sClient.value&&sClient.value!==id&&pendingSaleWarrantyDrafts.length){if(!confirm("Ao trocar o cliente, as garantias adicionadas neste pedido serão removidas. Continuar?"))return;pendingSaleWarrantyDrafts=[]}sClient.value=id;sClientSearch.value=c.name;sClientSelectedHint.textContent=`Selecionado: ${c.name}${c.contact?` • ${c.contact}`:""} • ${c.city||""}`;sClientOptions.classList.add("hidden");sTable.value=c.price||"0";renderSaleTablePricePreview();renderSaleWarrantyCredits();updateSale()}
 function clearSaleClientIfNeeded(){const c=state.clients.find(c=>c.id===sClient.value);if(!c||sClientSearch.value.trim()!==c.name)sClient.value=""}
 function setPaymentSplitMode(mode,silent=false){sPaymentSplitMode.value=mode;paymentSingleBtn.classList.toggle("active",mode==="single");paymentSplitBtn.classList.toggle("active",mode==="multiple");singlePaymentSection.classList.toggle("hidden",mode!=="single");multiPaymentSection.classList.toggle("hidden",mode!=="multiple");if(mode==="multiple"&&!paymentRows.children.length)addPaymentRow({amount:currentSalePayableTotal()});if(!silent)updateSale()}
 function paymentMethods(){return ["PIX","Dinheiro","Cheque","Boleto","Cartão"]}
@@ -1195,26 +1376,49 @@ function warrantyAvailableAmount(w,excludeSaleId=""){const used=warrantyApplicat
 function availableWarrantyCredits(clientId,excludeSaleId=""){return state.warranties.filter(w=>w.type!=="Sucata"&&w.clientId===clientId&&(w.solution==="credit"||w.resolution==="credit")&&warrantyAvailableAmount(w,excludeSaleId)>.009)}
 function renderSaleWarrantyCredits(){
  const clientId=sClient.value,saleId=sId.value||"",current=state.sales.find(s=>s.id===saleId);
- saleWarrantyCreditSection.classList.remove("hidden");
+ saleWarrantyNewBtn.disabled=!clientId;
  if(!clientId){
-   saleWarrantyCredits.innerHTML='<div class="sale-credit-empty"><b>Selecione o cliente</b><br>Os créditos de garantia disponíveis aparecerão aqui.</div>';
+   saleWarrantyCredits.innerHTML='<div class="sale-credit-empty"><b>Selecione o cliente</b><br>Depois você poderá registrar uma garantia ou usar créditos já existentes.</div>';
    saleWarrantyCreditHint.textContent="";
+   renderSaleWarrantyDrafts();
    return
  }
  const credits=availableWarrantyCredits(clientId,saleId),selectedIds=new Set((current?.warrantyCredits||[]).map(x=>x.warrantyId));
  if(!credits.length){
-   saleWarrantyCredits.innerHTML='<div class="sale-credit-empty"><b>Nenhum crédito de garantia disponível.</b><br>Se uma garantia deste cliente gerar crédito, ele ficará disponível para abatimento no pedido.</div>';
+   saleWarrantyCredits.innerHTML='<div class="sale-credit-empty"><b>Nenhum crédito anterior disponível.</b><br>Você ainda pode registrar uma nova garantia acima e escolher troca ou crédito.</div>';
    saleWarrantyCreditHint.textContent="";
-   return
+ }else{
+   saleWarrantyCredits.innerHTML=credits.map(w=>{
+     const avail=warrantyAvailableAmount(w,saleId),checked=selectedIds.has(w.id);
+     return `<div class="warranty-credit-row"><label><input class="swc" type="checkbox" value="${w.id}" ${checked?"checked":""} onchange="updateSale()"><span><b>${brl(avail)}</b> disponíveis<small>${esc(w.model||state.products.find(p=>p.id===w.productId)?.name||"Garantia")} • ${fmt(w.collect)}</small></span></label></div>`
+   }).join("");
+   saleWarrantyCreditHint.textContent="Marque o crédito anterior que deseja usar neste pedido."
  }
- saleWarrantyCredits.innerHTML=credits.map(w=>{
-   const avail=warrantyAvailableAmount(w,saleId),checked=selectedIds.has(w.id);
-   return `<div class="warranty-credit-row"><label><input class="swc" type="checkbox" value="${w.id}" ${checked?"checked":""} onchange="updateSale()"><span><b>${brl(avail)}</b> disponíveis<small>${esc(w.model||state.products.find(p=>p.id===w.productId)?.name||"Garantia")} • ${fmt(w.collect)}</small></span></label></div>`
- }).join("");
- saleWarrantyCreditHint.textContent="Marque o crédito que deseja usar. O sistema aplica somente até o valor necessário do pedido."
+ renderSaleWarrantyDrafts()
 }
-function previewSelectedWarrantyCredit(maxAmount){let remaining=Math.max(0,Number(maxAmount||0)),sum=0,saleId=sId.value||"";document.querySelectorAll(".swc:checked").forEach(ch=>{const w=state.warranties.find(w=>w.id===ch.value);if(!w||remaining<=0)return;const use=Math.min(remaining,warrantyAvailableAmount(w,saleId));sum+=use;remaining-=use});return Math.round(sum*100)/100}
-function buildWarrantyCreditsForSale(maxAmount){let remaining=Math.max(0,Number(maxAmount||0)),out=[],saleId=sId.value||"";document.querySelectorAll(".swc:checked").forEach(ch=>{const w=state.warranties.find(w=>w.id===ch.value);if(!w||remaining<=0)return;const amount=Math.min(remaining,warrantyAvailableAmount(w,saleId));if(amount>.009){out.push({warrantyId:w.id,amount});remaining-=amount}});return out}
+function previewSelectedWarrantyCredit(maxAmount){
+ let remaining=Math.max(0,Number(maxAmount||0)),sum=0,saleId=sId.value||"";
+ document.querySelectorAll(".swc:checked").forEach(ch=>{
+   const w=state.warranties.find(w=>w.id===ch.value);if(!w||remaining<=0)return;
+   const use=Math.min(remaining,warrantyAvailableAmount(w,saleId));sum+=use;remaining-=use
+ });
+ const draftUse=pendingSaleWarrantyCurrentCredit(remaining);sum+=draftUse;
+ return Math.round(sum*100)/100
+}
+function buildWarrantyCreditsForSale(maxAmount){
+ let remaining=Math.max(0,Number(maxAmount||0)),out=[],saleId=sId.value||"";
+ document.querySelectorAll(".swc:checked").forEach(ch=>{
+   const w=state.warranties.find(w=>w.id===ch.value);if(!w||remaining<=0)return;
+   const amount=Math.min(remaining,warrantyAvailableAmount(w,saleId));
+   if(amount>.009){out.push({warrantyId:w.id,amount});remaining-=amount}
+ });
+ pendingSaleWarrantyDrafts.filter(w=>w.solution==="credit"&&w.applyCurrent).forEach(w=>{
+   if(remaining<=0)return;
+   const amount=Math.min(remaining,Number(w.creditValue||0));
+   if(amount>.009){out.push({warrantyId:w.id,amount});remaining-=amount}
+ });
+ return out
+}
 function syncWarrantyCreditApplications(sale){state.warranties.forEach(w=>{w.applications=warrantyApplications(w).filter(a=>!(a.saleId===sale.id&&a.kind==="sale"))});(sale.warrantyCredits||[]).forEach(x=>{const w=state.warranties.find(w=>w.id===x.warrantyId);if(w)w.applications.push({id:uid(),saleId:sale.id,amount:Number(x.amount||0),kind:"sale",date:sale.date})})}
 function saleOpenWarrantyCredits(s,excludeWarrantyId=""){return state.warranties.filter(w=>w.id!==excludeWarrantyId).flatMap(w=>warrantyApplications(w).filter(a=>a.saleId===s.id&&a.kind==="open")).reduce((a,x)=>a+Number(x.amount||0),0)}
 function effectiveInstallments(s){let credit=saleOpenWarrantyCredits(s),rows=(s.installments||[]).map(p=>({...p,effectiveAmount:Number(p.amount||0)}));for(const p of rows){if(p.paid||credit<=0)continue;const use=Math.min(credit,p.effectiveAmount);p.effectiveAmount=Math.max(0,p.effectiveAmount-use);p.warrantyCreditApplied=use;credit-=use}return rows}
@@ -1224,7 +1428,7 @@ function saleOpenExcludingWarranty(s,warrantyId=""){const unpaid=(s.installments
 function updateWarrantyResolutionFields(){const credit=wResolution.value==="credit";wCreditFields.classList.toggle("hidden",!credit);if(credit)updateWarrantyOpenSales()}
 function updateWarrantyOpenSales(){const show=wResolution.value==="credit"&&wCreditDestination.value==="open";wOpenSaleField.classList.toggle("hidden",!show);if(!show)return;const currentWarrantyId=wId.value,rows=state.sales.filter(s=>s.clientId===wClient.value&&saleOpenExcludingWarranty(s,currentWarrantyId)>.009).sort((a,b)=>(b.date||"").localeCompare(a.date||""));wOpenSale.innerHTML='<option value="">Selecione</option>'+rows.map(s=>`<option value="${s.id}">Pedido ${esc(s.orderNumber||"—")} • saldo ${brl(saleOpenExcludingWarranty(s,currentWarrantyId))}</option>`).join("");wOpenSaleHint.textContent=rows.length?"O crédito reduz o saldo em aberto sem alterar o valor original do pedido.":"Este cliente não possui pedido em aberto."}
 function openSaleSheet(saleId=""){
- saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=Number(s?.routeCost||0);sOtherCost.value=Number(s?.otherCost||0);saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));renderSaleTablePricePreview();renderSaleWarrantyCredits();updateSale();openSheet("saleSheet")
+ pendingSaleWarrantyDrafts=[];saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=Number(s?.routeCost||0);sOtherCost.value=Number(s?.otherCost||0);saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));saleWarrantyQuickForm.classList.add("hidden");renderSaleTablePricePreview();renderSaleWarrantyCredits();renderSaleWarrantyDrafts();updateSale();openSheet("saleSheet")
 }
 function openWarrantySheet(warrantyId=""){
  warrantyForm.reset();wId.value=warrantyId;const w=state.warranties.find(w=>w.id===warrantyId);warrantySheetTitle.textContent=w?"Editar garantia":"Nova garantia";wClient.value=w?.clientId||"";wProduct.value=w?.productId||state.products.find(p=>p.name===w?.model)?.id||"";wQty.value=Number(w?.qty||1);wCode.value=w?.code||"";wMfg.value=w?.mfg||"";wCollect.value=w?.collect||today();wResolution.value=(w?.solution||w?.resolution)==="credit"?"credit":"exchange";wCreditValue.value=Number(w?.creditValue||0);wCreditDestination.value=w?.creditDestination||"next";wNote.value=w?.note||"";updateWarrantyResolutionFields();if(w?.applications?.some(a=>a.kind==="open")){const a=w.applications.find(a=>a.kind==="open");wCreditDestination.value="open";updateWarrantyOpenSales();wOpenSale.value=a.saleId||""}openSheet("warrantySheet")
@@ -1655,6 +1859,25 @@ sMethod.addEventListener("change",()=>{salePaidLabel.textContent=sMethod.value==
 clientForm.addEventListener("submit",e=>{e.preventDefault();let c=state.clients.find(c=>c.id===cId.value);const data={name:cName.value.trim(),contact:cContact.value.trim(),phone:cPhone.value.trim(),doc:cDoc.value.trim(),address:cAddress.value.trim(),city:cCity.value.trim(),routeId:c?.routeId||"",price:cPrice.value,interval:Number(cInterval.value),note:cNote.value.trim(),visitPriority:!!c?.visitPriority};if(c)Object.assign(c,data);else state.clients.push({id:uid(),...data});smartRoutePlan=null;closeSheet("clientSheet");save()});
 productForm.addEventListener("submit",e=>{e.preventDefault();let p=state.products.find(p=>p.id===pId.value);const data={name:pName.value.trim(),qty:Number(pQty.value),min:Number(pMin.value),cost:Number(pCost.value)};if(p)Object.assign(p,data);else state.products.push({id:uid(),...data,prices:[0,0,0,0,0,0]});closeSheet("productSheet");save()});
 routeForm.addEventListener("submit",e=>{e.preventDefault();let r=state.routes.find(r=>r.id===rId.value);const data={name:rName.value.trim(),km:Number(rKm.value),toll:Number(rToll.value),hotel:Number(rHotel.value)};if(r)Object.assign(r,data);else state.routes.push({id:uid(),...data});closeSheet("routeSheet");save()});
+
+function commitPendingSaleWarranties(savedSale){
+ for(const draft of pendingSaleWarrantyDrafts){
+   if(state.warranties.some(w=>w.id===draft.id))continue;
+   const p=state.products.find(p=>p.id===draft.productId);
+   if(draft.solution==="exchange"){
+     if(!p||Number(p.qty||0)<Number(draft.qty||1))throw new Error(`Estoque insuficiente de ${draft.model} para concluir a troca da garantia.`);
+     p.qty=Number(p.qty)-Number(draft.qty||1)
+   }
+   state.warranties.push({
+     ...draft,
+     type:"Garantia",
+     clientId:savedSale.clientId,
+     collect:savedSale.date,
+     sourceSaleId:savedSale.id,
+     applications:[]
+   })
+ }
+}
 saleForm.addEventListener("submit",e=>{
  e.preventDefault();ensureState();
  const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Digite e selecione um cliente cadastrado.");return}
@@ -1669,6 +1892,8 @@ saleForm.addEventListener("submit",e=>{
  const scrapItems=collectSaleScrapItems(),scrapDiscount=scrapItems.reduce((a,i)=>a+Number(i.discount||0),0);
  if(scrapDiscount>subtotal){alert("O desconto em sucata não pode ser maior que o subtotal dos produtos.");return}
  if(!canReplaceSaleScrap(original?.id||"",scrapItems)){alert("Não é possível reduzir essa sucata porque parte dela já foi revendida. Confira o estoque de sucata antes de editar a venda.");return}
+ const exchangeNeeds={};pendingSaleWarrantyDrafts.filter(w=>w.solution==="exchange").forEach(w=>exchangeNeeds[w.productId]=(exchangeNeeds[w.productId]||0)+Number(w.qty||1));
+ for(const [pid,q] of Object.entries(exchangeNeeds)){const p=state.products.find(p=>p.id===pid),saleQty=items.filter(i=>i.productId===pid).reduce((a,i)=>a+Number(i.qty||0),0),available=Number(p?.qty||0)+(restored[pid]||0)-saleQty;if(available<q){alert(`Estoque insuficiente de ${p?.name||"produto"} para atender a troca da garantia além dos itens vendidos.`);return}}
  const beforeWarranty=Math.max(0,subtotal-scrapDiscount),warrantyCredits=buildWarrantyCreditsForSale(beforeWarranty),warrantyCreditTotal=warrantyCredits.reduce((a,x)=>a+Number(x.amount||0),0),total=Math.max(0,Math.round((beforeWarranty-warrantyCreditTotal)*100)/100);
  let plan;try{plan=paymentPlanFromForm(total,original)}catch(err){alert(err.message);return}
  if(original&&(original.installments||[]).some(p=>p.paid)&&Math.abs(Number(original.total)-total)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor mudou. Deseja continuar e recalcular os pagamentos?"))return;
@@ -1683,7 +1908,8 @@ saleForm.addEventListener("submit",e=>{
    const sale={id:uid(),clientId:c.id,date:sDate.value,createdAt:new Date().toISOString(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,warrantyCredits,warrantyCreditTotal,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:null,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:plan.installments};
    state.sales.push(sale);items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale
  }
- syncSaleScrapTransactions(savedSale);syncWarrantyCreditApplications(savedSale);smartRoutePlan=null;closeSheet("saleSheet");save();setTimeout(()=>openReceipt(savedSale.id),60)
+ try{commitPendingSaleWarranties(savedSale)}catch(err){alert(err.message);return}
+ syncSaleScrapTransactions(savedSale);syncWarrantyCreditApplications(savedSale);pendingSaleWarrantyDrafts=[];smartRoutePlan=null;closeSheet("saleSheet");save();setTimeout(()=>openReceipt(savedSale.id),60)
 });
 
 wClient.addEventListener("change",updateWarrantyOpenSales);
