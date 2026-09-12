@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.10">
-<meta name="ax-build" content="2026-09-12-v5.10-order-rentability-thumb">
+<meta name="ax-version" content="5.11">
+<meta name="ax-build" content="2026-09-12-v5.11-business-health">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -535,6 +535,128 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   .sale-rentability-thumb{font-size:15px;min-width:16px}
 }
 
+
+/* v5.11 — Saúde da AX */
+.health-card{overflow:hidden}
+.health-question{
+  font-size:17px;
+  font-weight:900;
+  line-height:1.25;
+  margin:3px 0 11px;
+}
+.health-status-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+.health-status-title{
+  font-size:18px;
+  font-weight:950;
+  line-height:1.15;
+}
+.health-status-title.good{color:var(--good)}
+.health-status-title.warn{color:#a45a00}
+.health-status-title.bad{color:var(--bad)}
+.health-status-title.setup{color:var(--muted)}
+.health-kpis{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:11px 0;
+}
+.health-kpi{
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:10px;
+  background:#fff;
+}
+.health-kpi b{
+  display:block;
+  font-size:16px;
+  line-height:1.1;
+}
+.health-kpi span{
+  display:block;
+  color:var(--muted);
+  font-size:8px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  margin-top:5px;
+  line-height:1.3;
+}
+.health-explanation{
+  border-radius:13px;
+  padding:11px 12px;
+  font-size:11px;
+  line-height:1.48;
+  margin-top:9px;
+}
+.health-explanation.good{background:#eefbf4;border:1px solid #d7f3e3}
+.health-explanation.warn{background:#fff8e8;border:1px solid #f5e3b1}
+.health-explanation.bad{background:#fff2f0;border:1px solid #f6d0ca}
+.health-explanation.setup{background:#f7f8fa;border:1px solid var(--line)}
+.health-drivers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.health-driver{
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:10px;
+  background:#fff;
+}
+.health-driver h4{
+  margin:0 0 7px;
+  font-size:10px;
+}
+.health-driver-item{
+  font-size:9px;
+  line-height:1.42;
+  color:var(--muted);
+  padding:5px 0;
+  border-top:1px solid #f2f3f5;
+}
+.health-driver-item:first-of-type{border-top:0}
+.health-driver-item b{color:var(--text)}
+.health-meaning{
+  margin-top:10px;
+  border-top:1px solid #eef0f2;
+  padding-top:9px;
+  font-size:9px;
+  line-height:1.45;
+  color:var(--muted);
+}
+.health-meaning b{color:var(--text)}
+.health-setup-btn{margin-top:10px}
+.fixed-cost-total{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:#f8f9fb;
+  border:1px solid var(--line);
+  font-size:10px;
+}
+.fixed-cost-total b{font-size:14px}
+.sale-admin-separator{
+  grid-column:1/-1;
+  border-top:1px solid #eceef1;
+  margin:2px 0;
+}
+@media(max-width:520px){
+  .health-kpis{grid-template-columns:1fr 1fr}
+  .health-kpis .health-kpi:last-child{grid-column:1/-1}
+  .health-drivers{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -560,7 +682,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.10</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.11</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -585,17 +707,27 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button onclick="go('warranties')"><span>🛡️</span>Garantias</button>
   </div>
 
-  <div class="card">
-    <div class="cardhead"><h2>Melhor rota agora</h2><button class="btn secondary" onclick="go('routes')">Ver todas</button></div>
-    <div id="homeRoute"></div>
+  <div class="card health-card">
+    <div class="cardhead">
+      <div><h2>Saúde da AX</h2><div class="muted">Uma leitura simples do negócio, não só do faturamento.</div></div>
+      <span id="homeHealthBadge" class="badge">oculto</span>
+    </div>
+    <div id="homeHealthContent"></div>
   </div>
+
   <div class="card">
     <div class="cardhead">
-      <div><h2>Desempenho financeiro</h2><div class="muted">Faturamento x custos totais • últimos 3 meses</div></div>
+      <div><h2>Desempenho financeiro</h2><div class="muted">Faturamento comercial x custos variáveis • últimos 3 meses</div></div>
       <span id="homeChartPrivacyBadge" class="badge">oculto</span>
     </div>
     <div id="homeFinanceChart"></div>
   </div>
+
+  <div class="card">
+    <div class="cardhead"><h2>Melhor rota agora</h2><button class="btn secondary" onclick="go('routes')">Ver todas</button></div>
+    <div id="homeRoute"></div>
+  </div>
+
   <div class="card">
     <div class="cardhead"><h2>Atenção</h2></div>
     <div id="homeAlerts" class="list"></div>
@@ -646,7 +778,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.10</div>
+  <div class="version-note">AX Baterias • v5.11</div>
 </section>
 
 <section id="clients" class="screen">
@@ -728,19 +860,37 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Resultado financeiro</h2><div class="muted">Parâmetros administrativos usados na rentabilidade e no gráfico.</div></div></div>
+    <div class="cardhead"><div><h2>Resultado dos pedidos</h2><div class="muted">Custos variáveis usados para avaliar cada venda.</div></div></div>
     <div class="notice" style="margin-bottom:11px"><b>Custos totais</b> = produtos + taxa de pagamento + imposto estimado + rota atribuída + outros custos. O custo por km já deve contemplar combustível/manutenção para evitar dupla contagem.</div>
     <div class="formgrid">
       <div class="field"><label>Imposto estimado sobre vendas (%)</label><input id="cfgTaxRate" type="number" min="0" step=".01"></div>
-      <div class="field"><label>Alerta vermelho abaixo de (%)</label><input id="cfgMinRentability" type="number" min="0" step=".1"></div>
+      <div class="field"><label>Referência rápida do pedido (%)</label><input id="cfgMinRentability" type="number" min="0" step=".1"></div>
       <div class="field"><label>Taxa PIX (%)</label><input id="cfgFeePix" type="number" min="0" step=".01"></div>
       <div class="field"><label>Taxa Dinheiro (%)</label><input id="cfgFeeCash" type="number" min="0" step=".01"></div>
       <div class="field"><label>Taxa Cheque (%)</label><input id="cfgFeeCheque" type="number" min="0" step=".01"></div>
       <div class="field"><label>Taxa Boleto (%)</label><input id="cfgFeeBoleto" type="number" min="0" step=".01"></div>
       <div class="field"><label>Taxa Cartão (%)</label><input id="cfgFeeCard" type="number" min="0" step=".01"></div>
     </div>
-    <div class="muted" style="margin-top:9px">Régua: abaixo do limite = vermelho; entre o limite e 19,9% = atenção; 20% ou mais = saudável.</div>
+    <div class="notice" style="margin-top:9px"><b>Semáforo do pedido:</b> hoje a referência é 12%. 👍 acima ou igual à referência; 👎 abaixo. A <b>Saúde da AX</b> calcula uma margem mínima diferente, baseada na estrutura real da empresa.</div>
     <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar parâmetros</button></div>
+  </div>
+  <div class="card">
+    <div class="cardhead">
+      <div><h2>Estrutura mensal da empresa</h2><div class="muted">Use valores médios mensais. É isso que permite responder se a AX está ganhando dinheiro ou só girando caixa.</div></div>
+    </div>
+    <div class="formgrid">
+      <div class="field"><label>Pró-labore / retirada (R$)</label><input id="cfgFixedProLabore" type="number" min="0" step=".01" oninput="updateFixedCostsPreview()"></div>
+      <div class="field"><label>Contador (R$)</label><input id="cfgFixedAccountant" type="number" min="0" step=".01" oninput="updateFixedCostsPreview()"></div>
+      <div class="field"><label>Telefone / internet (R$)</label><input id="cfgFixedPhone" type="number" min="0" step=".01" oninput="updateFixedCostsPreview()"></div>
+      <div class="field"><label>Seguro (R$)</label><input id="cfgFixedInsurance" type="number" min="0" step=".01" oninput="updateFixedCostsPreview()"></div>
+      <div class="field"><label>Sistemas / serviços fixos (R$)</label><input id="cfgFixedSystems" type="number" min="0" step=".01" oninput="updateFixedCostsPreview()"></div>
+      <div class="field"><label>Aluguel / depósito (R$)</label><input id="cfgFixedRent" type="number" min="0" step=".01" oninput="updateFixedCostsPreview()"></div>
+      <div class="field"><label>Outros custos fixos (R$)</label><input id="cfgFixedOther" type="number" min="0" step=".01" oninput="updateFixedCostsPreview()"></div>
+      <div class="field"><label>Meta de resultado mensal (R$) <span class="muted">(opcional)</span></label><input id="cfgMonthlyProfitTarget" type="number" min="0" step=".01"></div>
+    </div>
+    <div class="fixed-cost-total"><span>Estrutura fixa mensal cadastrada</span><b id="cfgFixedCostsTotalPreview">R$ 0,00</b></div>
+    <div class="muted" style="margin-top:8px">O faturamento mensal esperado é estimado automaticamente pelo histórico recente. Garantias e revenda de sucata entram separadamente na análise.</div>
+    <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar estrutura</button></div>
   </div>
   <div class="card">
     <div class="cardhead"><div><h2>Integração de rotas</h2><div class="muted">Configuração técnica para distâncias e pedágios reais.</div></div><span id="mapsStatus" class="badge warn">não configurado</span></div>
@@ -750,7 +900,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   </div>
   <div class="card">
     <div class="cardhead"><div><h2>Sobre o sistema</h2><div class="muted">Confirma se o celular já carregou a versão publicada.</div></div></div>
-    <div class="system-card-row"><span>Versão do sistema</span><b>5.10</b></div>
+    <div class="system-card-row"><span>Versão do sistema</span><b>5.11</b></div>
     <div class="system-card-row"><span>Data da versão</span><b>12/09/2026</b></div>
   </div>
   <div class="card">
@@ -1017,7 +1167,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
       <button id="saleAdminToggle" class="btn secondary sale-admin-toggle" type="button" onclick="toggleSaleAdminResult()"><span>👁 Ver resultado da venda</span><span>Privado</span></button>
       <div id="saleAdminPanel" class="sale-admin-panel hidden" style="margin-top:8px">
         <div class="sale-admin-title">Resultado administrativo</div>
-        <div class="sale-admin-note">Informações privadas. Taxas e impostos vêm das Configurações. Informe abaixo apenas custos adicionais específicos deste pedido.</div>
+        <div class="sale-admin-note">Informações privadas. A rentabilidade do pedido mede a venda atual <b>antes do impacto da garantia</b>. A garantia aparece separada para mostrar quanto ela consumiu do resultado.</div>
         <div class="formgrid" style="margin-top:10px">
           <div class="field"><label>Custo de rota atribuído a este pedido (R$)</label><input id="sRouteCost" type="number" min="0" step=".01" value="0"></div>
           <div class="field"><label>Outros custos desta venda (R$)</label><input id="sOtherCost" type="number" min="0" step=".01" value="0"></div>
@@ -1027,10 +1177,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
           <div class="mini"><b id="salePaymentFeePreview">R$ 0,00</b><span>Taxa de pagamento</span></div>
           <div class="mini"><b id="saleTaxPreview">R$ 0,00</b><span>Impostos estimados</span></div>
           <div class="mini"><b id="saleExtraCostsPreview">R$ 0,00</b><span>Rota + outros</span></div>
-          <div class="mini"><b id="saleGrossProfitPreview">R$ 0,00</b><span>Lucro bruto</span></div>
-          <div class="mini"><b id="saleTotalCostsPreview">R$ 0,00</b><span>Custos totais</span></div>
-          <div id="saleOperationalResultBox" class="mini"><b id="saleProfitPreview">R$ 0,00</b><span>Resultado operacional</span></div>
-          <div id="saleRentabilityBox" class="mini"><b id="saleRentabilityPreview">0%</b><span>Rentabilidade operacional</span></div>
+          <div class="mini"><b id="saleGrossProfitPreview">R$ 0,00</b><span>Margem bruta comercial</span></div>
+          <div class="mini"><b id="saleTotalCostsPreview">R$ 0,00</b><span>Custos variáveis</span></div>
+          <div id="saleOperationalResultBox" class="mini"><b id="saleProfitPreview">R$ 0,00</b><span>Resultado comercial</span></div>
+          <div id="saleRentabilityBox" class="mini"><b id="saleRentabilityPreview">0%</b><span>Rentabilidade do pedido</span></div>
+          <div class="sale-admin-separator"></div>
+          <div class="mini"><b id="saleWarrantyImpactAdminPreview">- R$ 0,00</b><span>Impacto da garantia</span></div>
+          <div id="saleEconomicResultBox" class="mini"><b id="saleEconomicResultPreview">R$ 0,00</b><span>Resultado após garantia</span></div>
         </div>
         <div id="saleRentabilityAlert" class="notice" style="margin-top:9px"></div>
       </div>
@@ -1156,14 +1309,14 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.10';
-const SALE_RENTABILITY_THUMB_THRESHOLD=13;
+const AX_APP_VERSION='5.11';
+const SALE_RENTABILITY_THUMB_THRESHOLD=12;
 const TEST_MODE=false;
 const KEY="ax_baterias_mobile_v5_cache";
 const defaults={
  clients:[],routes:[],products:[],sales:[],visits:[],warranties:[],
  scrapTypes:[],scrapTransactions:[],
- config:{costKm:1.50,window:5,base:"Osasco, SP, Brasil",hotelCost:250,visitMinutes:35,maxDailyHours:9,companyPhone:"",sellerName:"Alex",googleMapsApiKey:"",tollPass:"BR_SEM_PARAR",taxRate:0,minRentability:10,paymentFees:{PIX:0,Dinheiro:0,Cheque:0,Boleto:0,"Cartão":0}},
+ config:{costKm:1.50,window:5,base:"Osasco, SP, Brasil",hotelCost:250,visitMinutes:35,maxDailyHours:9,companyPhone:"",sellerName:"Alex",googleMapsApiKey:"",tollPass:"BR_SEM_PARAR",taxRate:0,minRentability:12,orderRentabilityReference:12,monthlyProfitTarget:0,fixedCosts:{proLabore:0,accountant:0,phone:0,insurance:0,systems:0,rent:0,other:0},paymentFees:{PIX:0,Dinheiro:0,Cheque:0,Boleto:0,"Cartão":0}},
  collectionTemplates:{
    upcoming:"Oi, {contato_cliente}! Tudo bem? Passando só para lembrar que o pagamento de {valor}, do pedido {pedido}, vence em {vencimento}. Se precisar de alguma informação, me chama 👍",
    late:"Oi, {contato_cliente}! Tudo certo? Dei uma conferida aqui e ainda consta em aberto aquele {valor}, do pedido {pedido}. Consegue verificar para mim? Obrigado!"
@@ -1190,6 +1343,8 @@ function copy(o){return JSON.parse(JSON.stringify(o))}
 function ensureConfig(){
  state.config=Object.assign(copy(defaults.config),state.config||{});
  state.config.paymentFees=Object.assign(copy(defaults.config.paymentFees),state.config.paymentFees||{});
+ state.config.fixedCosts=Object.assign(copy(defaults.config.fixedCosts),state.config.fixedCosts||{});
+ if(state.config.orderRentabilityReference==null)state.config.orderRentabilityReference=12;
 }
 function ensureState(){
  ensureConfig();
@@ -1517,22 +1672,41 @@ function clientStats(id){
  return {ticket,avgMargin,netAvgMargin,warrantyImpactPerOrder:warrantyPerOrder,warrantyStats:ws,avgInterval,interval,last,next,open,orders:sales.length,visits:visits.length,conv}
 }
 function saleCostValue(s){return (s.items||[]).reduce((a,i)=>a+Number(i.cost||0),0)}
-function saleGrossProfit(s){return Number(s.marginValue!=null?s.marginValue:Number(s.total||0)-saleCostValue(s))}
-function saleRentability(s){return Number(s.total||0)>0?saleGrossProfit(s)/Number(s.total)*100:0}
+function saleGrossProfit(s){return saleOperationalBreakdown(s).commercialResult}
+function saleRentability(s){return saleOperationalBreakdown(s).rentability}
 function paymentFeeRate(method){return Number(state.config?.paymentFees?.[method]||0)}
 function saleOperationalBreakdown(s){
- const revenue=Number(s.total||0),productCost=saleCostValue(s);
+ const warrantyCredit=Number(s.warrantyCreditTotal||0);
+ const subtotal=Number(s.subtotal!=null?s.subtotal:(s.items||[]).reduce((a,i)=>a+Number(i.line||0),0));
+ const scrapDiscount=Number(s.scrapDiscount||0);
+ const commercialRevenue=Math.max(0,subtotal-scrapDiscount);
+ const productCost=saleCostValue(s);
  const feeRate=Number(s.paymentFeeRate!=null?s.paymentFeeRate:paymentFeeRate(s.method));
  const taxRate=Number(s.taxRate!=null?s.taxRate:state.config?.taxRate||0);
- const paymentFee=s.paymentFeeValue!=null?Number(s.paymentFeeValue):revenue*feeRate/100;
- const tax=s.taxValue!=null?Number(s.taxValue):revenue*taxRate/100;
+ const paidRevenue=Number(s.total||Math.max(0,commercialRevenue-warrantyCredit));
+ const paymentFee=s.paymentFeeValue!=null?Number(s.paymentFeeValue):paidRevenue*feeRate/100;
+ const tax=s.taxValue!=null?Number(s.taxValue):paidRevenue*taxRate/100;
  const routeCost=Number(s.routeCost||0),otherCost=Number(s.otherCost||0);
- const totalCosts=productCost+paymentFee+tax+routeCost+otherCost,result=revenue-totalCosts;
- const rentability=revenue>0?result/revenue*100:0;
- return {revenue,productCost,feeRate,paymentFee,taxRate,tax,routeCost,otherCost,totalCosts,result,rentability,grossProfit:revenue-productCost}
+ const totalCosts=productCost+paymentFee+tax+routeCost+otherCost;
+ const commercialResult=commercialRevenue-totalCosts;
+ const rentability=commercialRevenue>0?commercialResult/commercialRevenue*100:0;
+ const exchangeImpact=state.warranties.filter(w=>w.sourceSaleId===s.id&&(w.solution==="exchange"||w.resolution==="exchange")).reduce((a,w)=>a+warrantyImpact(w),0);
+ const warrantyImpactValue=warrantyCredit+exchangeImpact;
+ const economicResult=commercialResult-warrantyImpactValue;
+ return {
+   revenue:commercialRevenue,commercialRevenue,paidRevenue,productCost,feeRate,paymentFee,taxRate,tax,routeCost,otherCost,
+   totalCosts,result:commercialResult,commercialResult,rentability,grossProfit:commercialRevenue-productCost,
+   warrantyImpact:warrantyImpactValue,economicResult
+ }
 }
-function rentabilityClass(value){const min=Number(state.config?.minRentability??10);return value<min?"bad":value<20?"warn":"good"}
-function rentabilityText(value){const cls=rentabilityClass(value);return cls==="bad"?"Margem baixa — atenção":cls==="warn"?"Margem moderada":"Margem saudável"}
+function rentabilityClass(value){
+ const ref=Number(state.config?.orderRentabilityReference??12);
+ return value>=ref?"good":"bad"
+}
+function rentabilityText(value){
+ const ref=Number(state.config?.orderRentabilityReference??12);
+ return value>=ref?"Pedido acima da referência":"Pedido abaixo da referência"
+}
 function moneyPrivate(v){return homeFinanceVisible?brl(v):"R$ ••••••"}
 function toggleHomeFinance(){homeFinanceVisible=!homeFinanceVisible;renderHome()}
 function toggleSaleAdminResult(force){
@@ -1740,10 +1914,130 @@ function renderScrap(){
  const legacy=state.warranties.filter(w=>w.type==="Sucata");
  scrapHistoryList.innerHTML=(tx.length||legacy.length)?`<div class="list">${tx.map(t=>`<div class="listitem scrap-movement ${t.direction}"><div><div class="title">${t.direction==="in"?"Entrada":"Revenda"} • ${esc(t.typeName||state.scrapTypes.find(x=>x.id===t.typeId)?.name||"Sucata")}</div><div class="meta">${fmt(t.date)} • ${t.qty} un. • ${Number(t.weight||0).toFixed(2)} kg ${t.orderNumber?`• pedido ${t.orderNumber}`:""}</div></div><div style="text-align:right"><b>${t.direction==="out"?brl(t.resaleValue):brl(t.creditedValue)}</b><div class="meta">${t.direction==="out"?"valor revendido":"desconto concedido"}</div></div></div>`).join("")}${legacy.map(w=>`<div class="listitem"><div><div class="title">Registro antigo de sucata • ${esc(w.model||"")}</div><div class="meta">${fmt(w.collect)} • preservado do sistema anterior</div></div></div>`).join("")}</div>`:'<div class="empty">Nenhuma movimentação de sucata.</div>'
 }
+function fixedCostsMonthlyTotal(){
+ const f=state.config?.fixedCosts||{};
+ return ["proLabore","accountant","phone","insurance","systems","rent","other"].reduce((a,k)=>a+Number(f[k]||0),0)
+}
+function warrantyImpactEvents(){
+ const events=[];
+ (state.warranties||[]).filter(w=>w.type!=="Sucata").forEach(w=>{
+   const solution=w.solution||w.resolution;
+   if(solution==="exchange"){
+     events.push({date:w.collect||today(),amount:warrantyImpact(w),kind:"exchange"})
+   }else if(solution==="credit"){
+     const apps=warrantyApplications(w);
+     if(apps.length){
+       apps.forEach(a=>events.push({date:a.date||w.collect||today(),amount:Number(a.amount||0),kind:"credit"}))
+     }else if(Number(w.creditValue||0)>0){
+       events.push({date:w.collect||today(),amount:Number(w.creditValue||0),kind:"credit-legacy"})
+     }
+   }
+ });
+ return events
+}
+function scrapResaleForMonth(key){
+ return (state.scrapTransactions||[]).filter(t=>t.direction==="out"&&String(t.date||"").slice(0,7)===key).reduce((a,t)=>a+Number(t.resaleValue||0),0)
+}
+function businessHealthAnalysis(){
+ ensureConfig();
+ const rows=recentMonths().slice().reverse().map((m,idx)=>{
+   const sales=state.sales.filter(s=>String(s.date||"").slice(0,7)===m.key);
+   const ops=sales.map(s=>saleOperationalBreakdown(s));
+   const revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0);
+   const costs=ops.reduce((a,o)=>a+o.totalCosts,0);
+   const result=revenue-costs;
+   const warranty=warrantyImpactEvents().filter(e=>String(e.date||"").slice(0,7)===m.key).reduce((a,e)=>a+Number(e.amount||0),0);
+   const scrapResale=scrapResaleForMonth(m.key);
+   return {...m,sales,ops,revenue,costs,result,rentability:revenue>0?result/revenue*100:0,warranty,scrapResale,isCurrent:idx===2}
+ });
+ const activeRows=rows.filter(r=>r.revenue>0||r.warranty>0||r.scrapResale>0);
+ const totalRevenue=rows.reduce((a,r)=>a+r.revenue,0),totalResult=rows.reduce((a,r)=>a+r.result,0);
+ const avgMargin=totalRevenue>0?totalResult/totalRevenue*100:0;
+
+ const now=new Date(),daysInCurrent=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),day=Math.max(1,now.getDate());
+ const revenueEquivalents=rows.filter(r=>r.revenue>0).map(r=>r.isCurrent?r.revenue*daysInCurrent/day:r.revenue);
+ const expectedRevenue=revenueEquivalents.length?revenueEquivalents.reduce((a,v)=>a+v,0)/revenueEquivalents.length:0;
+ const divisor=Math.max(1,activeRows.length);
+ const avgWarranty=rows.reduce((a,r)=>a+r.warranty,0)/divisor;
+ const avgScrapResale=rows.reduce((a,r)=>a+r.scrapResale,0)/divisor;
+ const fixedCosts=fixedCostsMonthlyTotal();
+ const target=Number(state.config?.monthlyProfitTarget||0);
+ const requiredMargin=expectedRevenue>0?Math.max(0,(fixedCosts+avgWarranty+target-avgScrapResale)/expectedRevenue*100):0;
+ const gap=avgMargin-requiredMargin;
+ const estimatedMonthlyResult=expectedRevenue*avgMargin/100+avgScrapResale-avgWarranty-fixedCosts;
+
+ const sales=rows.flatMap(r=>r.sales),ops=sales.map(s=>saleOperationalBreakdown(s));
+ const lowRevenue=ops.filter(o=>o.rentability<Number(state.config?.orderRentabilityReference??12)).reduce((a,o)=>a+o.commercialRevenue,0);
+ const lowMarginShare=totalRevenue>0?lowRevenue/totalRevenue*100:0;
+ const routeOther=ops.reduce((a,o)=>a+o.routeCost+o.otherCost,0),routeRatio=totalRevenue>0?routeOther/totalRevenue*100:0;
+ const feesTax=ops.reduce((a,o)=>a+o.paymentFee+o.tax,0),feesTaxRatio=totalRevenue>0?feesTax/totalRevenue*100:0;
+ const warrantyRatio=expectedRevenue>0?avgWarranty/expectedRevenue*100:0;
+ const overdue=state.sales.reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0);
+ const overdueRatio=expectedRevenue>0?overdue/expectedRevenue*100:0;
+
+ const current=rows[rows.length-1],previous=[...rows].reverse().find(r=>!r.isCurrent&&r.revenue>0);
+ const projectedCurrent=current.revenue>0?current.revenue*daysInCurrent/day:0;
+ const revenueTrend=previous&&previous.revenue>0?(projectedCurrent-previous.revenue)/previous.revenue*100:null;
+
+ let status="setup",statusLabel="CONFIGURAR",statusEmoji="⚙️";
+ if(fixedCosts>0&&expectedRevenue>0){
+   if(gap>=2){status="good";statusLabel="BOA";statusEmoji="🟢"}
+   else if(gap>=-2){status="warn";statusLabel="ATENÇÃO";statusEmoji="🟡"}
+   else{status="bad";statusLabel="CRÍTICA";statusEmoji="🔴"}
+ }
+
+ const helping=[],hurting=[];
+ if(avgMargin>=Number(state.config?.orderRentabilityReference??12))helping.push(`A margem média dos pedidos está em <b>${avgMargin.toFixed(1)}%</b>, acima da referência rápida de ${Number(state.config?.orderRentabilityReference??12).toFixed(0)}%.`);
+ if(lowMarginShare<=25&&totalRevenue>0)helping.push(`A maior parte do faturamento está vindo de pedidos com margem adequada.`);
+ if(warrantyRatio<1&&expectedRevenue>0)helping.push(`O impacto médio das garantias está baixo em relação ao faturamento.`);
+ if(overdueRatio<5&&expectedRevenue>0)helping.push(`O valor vencido está controlado em relação ao faturamento mensal esperado.`);
+ if(avgScrapResale>0)helping.push(`A revenda de sucata está recuperando em média <b>${brl(avgScrapResale)}</b> por mês.`);
+ if(revenueTrend!=null&&revenueTrend>10)helping.push(`O faturamento projetado do mês está crescendo cerca de <b>${revenueTrend.toFixed(0)}%</b> contra o último mês com vendas.`);
+
+ if(lowMarginShare>25)hurting.push(`<b>${lowMarginShare.toFixed(0)}%</b> do faturamento recente veio de pedidos abaixo da referência de ${Number(state.config?.orderRentabilityReference??12).toFixed(0)}%.`);
+ if(routeRatio>3)hurting.push(`Rota e outros custos diretos estão consumindo <b>${routeRatio.toFixed(1)}%</b> do faturamento comercial.`);
+ if(feesTaxRatio>4)hurting.push(`Taxas de pagamento e impostos estimados estão consumindo <b>${feesTaxRatio.toFixed(1)}%</b> do faturamento.`);
+ if(warrantyRatio>=2)hurting.push(`Garantias estão consumindo em média <b>${warrantyRatio.toFixed(1)}%</b> do faturamento mensal esperado.`);
+ if(overdueRatio>=10)hurting.push(`O vencido equivale a cerca de <b>${overdueRatio.toFixed(1)}%</b> do faturamento mensal esperado.`);
+ if(revenueTrend!=null&&revenueTrend<-10)hurting.push(`O faturamento projetado do mês está abaixo do último mês com vendas.`);
+
+ return {rows,activeRows,totalRevenue,avgMargin,expectedRevenue,avgWarranty,avgScrapResale,fixedCosts,target,requiredMargin,gap,estimatedMonthlyResult,lowMarginShare,routeRatio,feesTaxRatio,warrantyRatio,overdue,overdueRatio,revenueTrend,status,statusLabel,statusEmoji,helping:helping.slice(0,3),hurting:hurting.slice(0,3),salesMonths:rows.filter(r=>r.revenue>0).length}
+}
+function renderHomeHealth(){
+ homeHealthBadge.textContent=homeFinanceVisible?"visível":"oculto";
+ homeHealthBadge.className="badge "+(homeFinanceVisible?"good":"");
+ if(!homeFinanceVisible){
+   homeHealthContent.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Saúde financeira oculta</b><span>Toque em “Ver valores” para responder: estou vendendo bem ou só girando dinheiro?</span></div>';
+   return
+ }
+ const h=businessHealthAnalysis();
+ if(h.fixedCosts<=0){
+   homeHealthBadge.textContent="configurar";homeHealthBadge.className="badge warn";
+   homeHealthContent.innerHTML=`<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-status-row"><div><div class="health-status-title setup">⚙️ Falta uma peça para responder</div></div></div><div class="health-kpis"><div class="health-kpi"><b>${h.totalRevenue?`${h.avgMargin.toFixed(1)}%`:"—"}</b><span>Margem média dos pedidos</span></div><div class="health-kpi"><b>—</b><span>Margem mínima necessária</span></div><div class="health-kpi"><b>—</b><span>Resultado estimado / mês</span></div></div><div class="health-explanation setup"><b>O app já sabe quanto as vendas estão deixando, mas ainda não sabe quanto custa manter a AX funcionando por mês.</b><br>Cadastre pró-labore, contador, telefone, seguro e demais custos fixos. A partir daí o sistema consegue dizer se o volume de vendas realmente gera resultado.</div><button class="btn secondary health-setup-btn" onclick="go('settings')">Configurar estrutura mensal</button>`;
+   return
+ }
+ if(h.expectedRevenue<=0){
+   homeHealthBadge.textContent="sem dados";homeHealthBadge.className="badge warn";
+   homeHealthContent.innerHTML='<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-explanation setup"><b>A estrutura mensal já está cadastrada.</b><br>Agora o sistema precisa de vendas para calcular a margem média e comparar com o ponto necessário para sustentar a empresa.</div>';
+   return
+ }
+ let sentence="";
+ if(h.status==="good")sentence=`<b>Você está vendendo bem.</b> A margem média está ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is) acima do necessário para sustentar a estrutura${h.target>0?" e a meta de resultado":""}.`;
+ else if(h.status==="warn"&&h.gap<0)sentence=`<b>As vendas estão gerando volume, mas a margem atual ainda não cobre a estrutura com folga.</b> Faltam aproximadamente ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is) para chegar à margem mínima necessária.`;
+ else if(h.status==="warn")sentence=`<b>A AX está cobrindo a estrutura, mas com pouca folga.</b> Pequenos aumentos de custo, descontos ou garantias podem consumir o resultado.`;
+ else sentence=`<b>Hoje a AX está mais perto de girar dinheiro do que de gerar resultado suficiente.</b> A margem média está ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is) abaixo do necessário.`;
+
+ const helping=h.helping.length?h.helping:['Ainda não há um destaque positivo forte o suficiente no período.'];
+ const hurting=h.hurting.length?h.hurting:['Nenhum ofensor relevante se destacou pelos dados disponíveis.'];
+ const confidence=h.salesMonths<2?'<div class="muted" style="margin-top:8px">Leitura provisória: ainda há pouco histórico mensal. A análise fica mais confiável conforme o app acumula vendas.</div>':"";
+
+ homeHealthContent.innerHTML=`<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-status-row"><div><div class="health-status-title ${h.status}">Saúde da AX: ${h.statusLabel} ${h.statusEmoji}</div></div></div><div class="health-kpis"><div class="health-kpi"><b>${h.avgMargin.toFixed(1)}%</b><span>Margem média</span></div><div class="health-kpi"><b>${h.requiredMargin.toFixed(1)}%</b><span>Margem mínima necessária</span></div><div class="health-kpi"><b>${brl(h.estimatedMonthlyResult)}</b><span>Resultado estimado / mês</span></div></div><div class="health-explanation ${h.status}">${sentence}</div><div class="health-drivers"><div class="health-driver"><h4>✅ O que está ajudando</h4>${helping.map(x=>`<div class="health-driver-item">${x}</div>`).join("")}</div><div class="health-driver"><h4>⚠️ O que está pesando</h4>${hurting.map(x=>`<div class="health-driver-item">${x}</div>`).join("")}</div></div><div class="health-meaning"><b>Como ler:</b> margem média = o que sobra dos pedidos depois dos custos variáveis, <b>antes</b> da estrutura mensal e das garantias. Margem mínima necessária = quanto essa margem precisa ser, em média, para pagar a estrutura + impacto médio de garantias + meta de resultado, considerando também a recuperação com revenda de sucata.</div>${confidence}`
+}
 function monthlyFinancialSummary(){
  const months=recentMonths().slice().reverse();
  return months.map((m,idx)=>{
-  const sales=state.sales.filter(s=>String(s.date||"").slice(0,7)===m.key),revenue=sales.reduce((a,s)=>a+Number(s.total||0),0),costs=sales.reduce((a,s)=>a+saleOperationalBreakdown(s).totalCosts,0);
+  const sales=state.sales.filter(s=>String(s.date||"").slice(0,7)===m.key),ops=sales.map(s=>saleOperationalBreakdown(s));
+  const revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0),costs=ops.reduce((a,o)=>a+o.totalCosts,0);
   return {...m,revenue,costs,rentability:revenue>0?(revenue-costs)/revenue*100:0,isCurrent:idx===months.length-1}
  })
 }
@@ -1751,7 +2045,7 @@ function renderHomeFinanceChart(){
  homeChartPrivacyBadge.textContent=homeFinanceVisible?"visível":"oculto";homeChartPrivacyBadge.className="badge "+(homeFinanceVisible?"good":"");
  if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para visualizar o desempenho.</span></div>';return}
  const rows=monthlyFinancialSummary(),max=Math.max(1,...rows.flatMap(r=>[r.revenue,r.costs])),h=145;
- homeFinanceChart.innerHTML=`<div class="finance-chart"><div class="chart-legend"><div class="legend-item"><span class="legend-swatch"></span>Faturamento</div><div class="legend-item"><span class="legend-swatch cost"></span>Custos totais</div></div><div class="grouped-chart">${rows.map(r=>{const rh=Math.max(r.revenue?4:2,Math.round(r.revenue/max*h)),ch=Math.max(r.costs?4:2,Math.round(r.costs/max*h)),cls=rentabilityClass(r.rentability);return `<div class="chart-month"><div class="chart-bars"><div class="chart-bar" style="height:${rh}px"><span class="chart-bar-label">${brl(r.revenue)}</span></div><div class="chart-bar cost" style="height:${ch}px"><span class="chart-bar-label">${brl(r.costs)}</span></div></div><div class="chart-month-name">${r.label}${r.isCurrent?"*":""}<small>${r.isCurrent?"mês parcial":"mês fechado"}</small></div><div class="chart-rent"><span class="badge ${cls}">Rent. ${r.rentability.toFixed(1)}%</span></div></div>`}).join("")}</div><div class="muted" style="margin-top:11px">* O mês atual é parcial. Custos totais incluem produtos, taxas, impostos estimados e custos adicionais registrados.</div></div>`
+ homeFinanceChart.innerHTML=`<div class="finance-chart"><div class="chart-legend"><div class="legend-item"><span class="legend-swatch"></span>Faturamento comercial</div><div class="legend-item"><span class="legend-swatch cost"></span>Custos variáveis</div></div><div class="grouped-chart">${rows.map(r=>{const rh=Math.max(r.revenue?4:2,Math.round(r.revenue/max*h)),ch=Math.max(r.costs?4:2,Math.round(r.costs/max*h)),cls=rentabilityClass(r.rentability);return `<div class="chart-month"><div class="chart-bars"><div class="chart-bar" style="height:${rh}px"><span class="chart-bar-label">${brl(r.revenue)}</span></div><div class="chart-bar cost" style="height:${ch}px"><span class="chart-bar-label">${brl(r.costs)}</span></div></div><div class="chart-month-name">${r.label}${r.isCurrent?"*":""}<small>${r.isCurrent?"mês parcial":"mês fechado"}</small></div><div class="chart-rent"><span class="badge ${cls}">Margem ${r.rentability.toFixed(1)}%</span></div></div>`}).join("")}</div><div class="muted" style="margin-top:11px">* O mês atual é parcial. Este gráfico mostra a eficiência comercial dos pedidos. Estrutura fixa, garantias e revenda de sucata são analisadas separadamente em “Saúde da AX”.</div></div>`
 }
 function renderHome(){
  const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),
@@ -1779,7 +2073,7 @@ function renderHome(){
  if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);
  if(recurringWarrantyClients.length)list.push(`<div class="listitem"><div><div class="title">${recurringWarrantyClients.length} cliente(s) com recorrência alta de garantia</div><div class="meta">Revisar incidência, idade do produto e giro do cliente</div></div><span class="badge warn">Garantia</span></div>`);
  homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>';
- renderHomeFinanceChart()
+ renderHomeHealth();renderHomeFinanceChart()
 }
 function renderSales(){
  if(!state.sales.length){salesList.innerHTML='<div class="empty">Nenhuma venda registrada.</div>';return}
@@ -1871,12 +2165,20 @@ function renderSettings(){ensureConfig();cfgKm.value=state.config.costKm;cfgWind
 
 
 function renderSales(){
- ensureState();const months=recentMonths(),keys=months.map(x=>x.key);salesMonthFilters.innerHTML=`<button class="filter-btn ${salesMonthFilter==="all"?"active":""}" onclick="setSalesMonthFilter('all')">Tudo</button>`+months.map(m=>`<button class="filter-btn ${salesMonthFilter===m.key?"active":""}" onclick="setSalesMonthFilter('${m.key}')">${m.label}</button>`).join("");
- salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");
- let list=state.sales.filter(s=>keys.includes(String(s.date||"").slice(0,7)));if(salesMonthFilter!=="all")list=list.filter(s=>String(s.date||"").slice(0,7)===salesMonthFilter);if(salesStatusFilter==="paid")list=list.filter(s=>salePaid(s));if(salesStatusFilter==="open")list=list.filter(s=>!salePaid(s));
- list.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||String(b.orderNumber||"").localeCompare(String(a.orderNumber||"")));
- if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda encontrada com esses filtros.</div>';return}
- salesList.innerHTML=list.map(s=>{const c=state.clients.find(c=>c.id===s.clientId),disc=Number(s.scrapDiscount||0),op=saleOperationalBreakdown(s),cls=rentabilityClass(op.rentability);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.paymentMode==="prazo"&&s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">${disc?`Subtotal ${brl(s.subtotal)} • Sucata -${brl(disc)} • `:""}Em aberto: ${brl(saleOpen(s))}</div><div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">Custos totais: ${brl(op.totalCosts)} • Resultado operacional: <b class="rent-${cls}">${brl(op.result)}</b> • Rentabilidade: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b></div></div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="toggleSaleCardResult('${s.id}',this)">👁 Resultado</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
+ ensureState();
+ salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");
+ salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");
+ let list=[...state.sales];
+ if(salesMonthFilter!=="all")list=list.filter(s=>String(s.date||"").slice(0,7)===salesMonthFilter);
+ if(salesStatusFilter==="open")list=list.filter(s=>!salePaid(s));
+ if(salesStatusFilter==="late")list=list.filter(s=>saleOverdue(s));
+ if(salesStatusFilter==="paid")list=list.filter(s=>salePaid(s));
+ list.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda nesse filtro.</div>';return}
+ salesList.innerHTML=list.map(s=>{
+   const c=state.clients.find(c=>c.id===s.clientId),disc=Number(s.scrapDiscount||0),op=saleOperationalBreakdown(s),cls=rentabilityClass(op.rentability);
+   return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.paymentMode==="prazo"&&s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${salePaid(s)?"good":saleOverdue(s)?"bad":"warn"}">${salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">${disc?`Subtotal ${brl(s.subtotal)} • Sucata -${brl(disc)} • `:""}${Number(s.warrantyCreditTotal||0)?`Garantia -${brl(s.warrantyCreditTotal)} • `:""}Em aberto: ${brl(saleOpen(s))}</div><div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">Custos variáveis: ${brl(op.totalCosts)} • Resultado comercial: <b class="rent-${cls}">${brl(op.commercialResult)}</b> • Rentabilidade do pedido: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b>${op.warrantyImpact>0?`<br>Impacto da garantia: <b>- ${brl(op.warrantyImpact)}</b> • Resultado após garantia: <b class="rent-${op.economicResult<0?"bad":"good"}">${brl(op.economicResult)}</b>`:""}</div></div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="toggleSaleCardResult('${s.id}',this)">👁 Resultado</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`
+ }).join("")
 }
 function renderCollections(){
  ensureState();collectionStatusFilters.innerHTML=[["all","Tudo"],["upcoming","A vencer"],["late","Atrasado"],["sent","Enviado"]].map(([k,l])=>`<button class="filter-btn ${collectionStatusFilter===k?"active":""}" onclick="setCollectionStatusFilter('${k}')">${l}</button>`).join("");
@@ -1901,27 +2203,68 @@ function renderWarranties(){
  warrantyList.innerHTML=list.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),p=state.products.find(p=>p.id===w.productId),ws=warrantyStats(w.clientId,365),age=w.mfg&&w.collect?Math.max(0,days(w.mfg,w.collect)):null,high=ws.warrantyQty>=2&&ws.incidence>=10,solution=(w.solution||w.resolution)==="credit"?"Crédito":"Troca por bateria",app=warrantyApplications(w).reduce((a,x)=>a+Number(x.amount||0),0),avail=Math.max(0,Number(w.creditValue||0)-app);return `<div class="card ${high?"warranty-critical":age!=null&&age>=240?"warranty-warning":""}"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} • ${esc(p?.name||w.model||"Produto")}</h3><div class="muted">${fmt(w.collect)} • ${Number(w.qty||1)} un. • ${solution}${age!=null?` • idade no retorno ${(age/30.4).toFixed(1)} meses`:""}</div></div><span class="badge ${high?"bad":age!=null&&age>=240?"warn":"good"}">${high?"Recorrência alta":solution}</span></div><div class="muted">12 meses: ${ws.warrantyQty} un. em garantia / ${ws.purchasedQty} un. compradas • incidência ${ws.incidence.toFixed(1)}% • impacto ${brl(ws.impact)}</div>${(w.solution||w.resolution)==="credit"?`<div class="muted" style="margin-top:5px">Crédito: ${brl(w.creditValue)} • usado ${brl(app)} • disponível ${brl(avail)}</div>`:""}${high?'<div class="notice" style="margin-top:8px"><b>Atenção ao giro:</b> frequência de garantia elevada em relação às unidades compradas. Vale revisar idade de estoque e perfil do cliente.</div>':""}<div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="openWarrantySheet('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWarranty('${w.id}')">Excluir</button></div></div>`}).join("")
 }
 function renderSettings(){
- ensureState();ensureConfig();cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgSellerName.value=state.config.sellerName||"Alex";
- cfgTaxRate.value=Number(state.config.taxRate||0);cfgMinRentability.value=Number(state.config.minRentability??10);cfgFeePix.value=Number(state.config.paymentFees?.PIX||0);cfgFeeCash.value=Number(state.config.paymentFees?.Dinheiro||0);cfgFeeCheque.value=Number(state.config.paymentFees?.Cheque||0);cfgFeeBoleto.value=Number(state.config.paymentFees?.Boleto||0);cfgFeeCard.value=Number(state.config.paymentFees?.["Cartão"]||0);cfgTollPass.value=state.config.tollPass??"BR_SEM_PARAR";
+ ensureState();ensureConfig();
+ cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgSellerName.value=state.config.sellerName||"Alex";
+ cfgTaxRate.value=Number(state.config.taxRate||0);cfgMinRentability.value=Number(state.config.orderRentabilityReference??12);
+ cfgFeePix.value=Number(state.config.paymentFees?.PIX||0);cfgFeeCash.value=Number(state.config.paymentFees?.Dinheiro||0);cfgFeeCheque.value=Number(state.config.paymentFees?.Cheque||0);cfgFeeBoleto.value=Number(state.config.paymentFees?.Boleto||0);cfgFeeCard.value=Number(state.config.paymentFees?.["Cartão"]||0);cfgTollPass.value=state.config.tollPass??"BR_SEM_PARAR";
+ const f=state.config.fixedCosts||{};
+ cfgFixedProLabore.value=Number(f.proLabore||0);cfgFixedAccountant.value=Number(f.accountant||0);cfgFixedPhone.value=Number(f.phone||0);cfgFixedInsurance.value=Number(f.insurance||0);cfgFixedSystems.value=Number(f.systems||0);cfgFixedRent.value=Number(f.rent||0);cfgFixedOther.value=Number(f.other||0);cfgMonthlyProfitTarget.value=Number(state.config.monthlyProfitTarget||0);updateFixedCostsPreview();
  cfgMapsKey.value=state.config.googleMapsApiKey||"";mapsStatus.textContent=mapsConfigured()?"configurado":"não configurado";mapsStatus.className="badge "+(mapsConfigured()?"good":"warn")
+}
+function updateFixedCostsPreview(){
+ if(!window.cfgFixedCostsTotalPreview)return;
+ const ids=["cfgFixedProLabore","cfgFixedAccountant","cfgFixedPhone","cfgFixedInsurance","cfgFixedSystems","cfgFixedRent","cfgFixedOther"];
+ const total=ids.reduce((a,id)=>a+Number(document.getElementById(id)?.value||0),0);
+ cfgFixedCostsTotalPreview.textContent=brl(total)
 }
 function renderAll(){ensureState();fillSelects();renderHome();renderSales();renderRoutes();renderCollections();renderClients();renderPriceTables();renderProducts();renderWarranties();renderScrap();renderMonth();renderSettings()}
 function updateSale(){
- let subtotal=0,cost=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);subtotal+=line;cost+=p?Number(p.cost||0)*q:0});
- let discount=0;document.querySelectorAll(".scrapRow").forEach(r=>{const t=state.scrapTypes.find(t=>t.id===r.querySelector(".sst").value),q=Number(r.querySelector(".ssq").value||0),d=t?Number(t.value||0)*q:0;r.querySelector(".scrapDiscount").textContent=`- ${brl(d)}`;discount+=d});
- const beforeWarranty=Math.max(0,subtotal-discount),warrantyCredit=previewSelectedWarrantyCredit(beforeWarranty),total=Math.max(0,Math.round((beforeWarranty-warrantyCredit)*100)/100),grossProfit=total-cost;let paymentFee=0;if(sPaymentSplitMode.value==="multiple"){paymentFee=[...paymentRows.querySelectorAll(".payment-row")].reduce((sum,row)=>sum+Number(row.querySelector(".pm-amount").value||0)*paymentFeeRate(row.querySelector(".pm-method").value)/100,0);updateMultiPaymentSummary(total)}else paymentFee=total*paymentFeeRate(sMethod.value)/100;
- const taxRate=Number(state.config?.taxRate||0),tax=total*taxRate/100,routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),totalCosts=cost+paymentFee+tax+routeCost+otherCost,result=total-totalCosts,rent=total>0?result/total*100:0,cls=rentabilityClass(rent);
+ let subtotal=0,cost=0;
+ document.querySelectorAll(".saleRow").forEach(r=>{
+   const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;
+   r.querySelector(".lineTotal").textContent=brl(line);subtotal+=line;cost+=p?Number(p.cost||0)*q:0
+ });
+ let discount=0;
+ document.querySelectorAll(".scrapRow").forEach(r=>{
+   const t=state.scrapTypes.find(t=>t.id===r.querySelector(".sst").value),q=Number(r.querySelector(".ssq").value||0),d=t?Number(t.value||0)*q:0;
+   r.querySelector(".scrapDiscount").textContent=`- ${brl(d)}`;discount+=d
+ });
+ const commercialRevenue=Math.max(0,subtotal-discount);
+ const warrantyCredit=previewSelectedWarrantyCredit(commercialRevenue);
+ const total=Math.max(0,Math.round((commercialRevenue-warrantyCredit)*100)/100);
+ let paymentFee=0;
+ if(sPaymentSplitMode.value==="multiple"){
+   paymentFee=[...paymentRows.querySelectorAll(".payment-row")].reduce((sum,row)=>sum+Number(row.querySelector(".pm-amount").value||0)*paymentFeeRate(row.querySelector(".pm-method").value)/100,0);
+   updateMultiPaymentSummary(total)
+ }else paymentFee=total*paymentFeeRate(sMethod.value)/100;
+
+ const taxRate=Number(state.config?.taxRate||0),tax=total*taxRate/100,routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0);
+ const variableCosts=cost+paymentFee+tax+routeCost+otherCost;
+ const commercialResult=commercialRevenue-variableCosts;
+ const commercialRent=commercialRevenue>0?commercialResult/commercialRevenue*100:0;
+ const cls=rentabilityClass(commercialRent);
+ const exchangeWarrantyImpact=pendingSaleWarrantyDrafts.filter(w=>w.solution==="exchange").reduce((a,w)=>a+Number(w.unitCostSnapshot||0)*Number(w.qty||1),0);
+ const warrantyImpactValue=warrantyCredit+exchangeWarrantyImpact;
+ const economicResult=commercialResult-warrantyImpactValue;
+
  saleSubtotalPreview.textContent=brl(subtotal);saleScrapDiscountPreview.textContent=`- ${brl(discount)}`;saleWarrantyCreditPreview.textContent=`- ${brl(warrantyCredit)}`;saleTotal.textContent=brl(total);
- if(total>0){
-   const goodQuickRentability=rent>=SALE_RENTABILITY_THUMB_THRESHOLD;
+ if(commercialRevenue>0){
+   const goodQuickRentability=commercialRent>=Number(state.config?.orderRentabilityReference??SALE_RENTABILITY_THUMB_THRESHOLD);
    saleRentabilityThumb.textContent=goodQuickRentability?"👍":"👎";
-   saleRentabilityThumb.setAttribute("aria-label",goodQuickRentability?"Rentabilidade igual ou acima de 13%":"Rentabilidade abaixo de 13%");
-   saleRentabilityThumb.title=goodQuickRentability?"Rentabilidade ≥ 13%":"Rentabilidade < 13%";
+   saleRentabilityThumb.setAttribute("aria-label",goodQuickRentability?"Rentabilidade do pedido igual ou acima de 12%":"Rentabilidade do pedido abaixo de 12%");
+   saleRentabilityThumb.title=goodQuickRentability?"Rentabilidade do pedido ≥ 12%":"Rentabilidade do pedido < 12%"
  }else{
-   saleRentabilityThumb.textContent="";
-   saleRentabilityThumb.removeAttribute("aria-label");
-   saleRentabilityThumb.removeAttribute("title")
- }saleCostPreview.textContent=brl(cost);salePaymentFeePreview.textContent=brl(paymentFee);saleTaxPreview.textContent=brl(tax);saleExtraCostsPreview.textContent=brl(routeCost+otherCost);saleGrossProfitPreview.textContent=brl(grossProfit);saleTotalCostsPreview.textContent=brl(totalCosts);saleProfitPreview.textContent=brl(result);saleRentabilityPreview.textContent=rent.toFixed(1)+"%";saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;saleRentabilityAlert.className=`notice rent-panel-${cls}`;saleRentabilityAlert.innerHTML=`<b>${rentabilityText(rent)}</b> • Rentabilidade operacional estimada ${rent.toFixed(1)}%.`;saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
+   saleRentabilityThumb.textContent="";saleRentabilityThumb.removeAttribute("aria-label");saleRentabilityThumb.removeAttribute("title")
+ }
+
+ saleCostPreview.textContent=brl(cost);salePaymentFeePreview.textContent=brl(paymentFee);saleTaxPreview.textContent=brl(tax);saleExtraCostsPreview.textContent=brl(routeCost+otherCost);
+ saleGrossProfitPreview.textContent=brl(commercialRevenue-cost);saleTotalCostsPreview.textContent=brl(variableCosts);saleProfitPreview.textContent=brl(commercialResult);saleRentabilityPreview.textContent=commercialRent.toFixed(1)+"%";
+ saleWarrantyImpactAdminPreview.textContent=`- ${brl(warrantyImpactValue)}`;saleEconomicResultPreview.textContent=brl(economicResult);
+ saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;
+ saleEconomicResultBox.className=`mini ${economicResult<0?"rent-panel-bad":"rent-panel-good"}`;saleEconomicResultPreview.className=`rent-value rent-${economicResult<0?"bad":"good"}`;
+ saleRentabilityAlert.className=`notice rent-panel-${cls}`;
+ saleRentabilityAlert.innerHTML=`<b>${rentabilityText(commercialRent)}</b> • Rentabilidade comercial ${commercialRent.toFixed(1)}%. ${warrantyImpactValue>0?`A garantia consome ${brl(warrantyImpactValue)} desta operação; resultado após garantia: <b>${brl(economicResult)}</b>.`:"Não há impacto de garantia nesta operação."}`;
+ saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
 }
 function addSaleItem(productId="",qty=1){
  const row=document.createElement("div");row.className="saleRow";
@@ -1958,15 +2301,15 @@ saleForm.addEventListener("submit",e=>{
  const beforeWarranty=Math.max(0,subtotal-scrapDiscount),warrantyCredits=buildWarrantyCreditsForSale(beforeWarranty),warrantyCreditTotal=warrantyCredits.reduce((a,x)=>a+Number(x.amount||0),0),total=Math.max(0,Math.round((beforeWarranty-warrantyCreditTotal)*100)/100);
  let plan;try{plan=paymentPlanFromForm(total,original)}catch(err){alert(err.message);return}
  if(original&&(original.installments||[]).some(p=>p.paid)&&Math.abs(Number(original.total)-total)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor mudou. Deseja continuar e recalcular os pagamentos?"))return;
- const routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),paymentFeeValue=paymentFeeFromPlan(plan),taxRateSnapshot=Number(state.config?.taxRate||0),taxValue=total*taxRateSnapshot/100,totalCosts=cost+paymentFeeValue+taxValue+routeCost+otherCost,operationalResult=total-totalCosts,operationalRentability=total>0?operationalResult/total*100:0;
+ const routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),paymentFeeValue=paymentFeeFromPlan(plan),taxRateSnapshot=Number(state.config?.taxRate||0),taxValue=total*taxRateSnapshot/100,totalCosts=cost+paymentFeeValue+taxValue+routeCost+otherCost,commercialRevenue=beforeWarranty,commercialResult=commercialRevenue-totalCosts,commercialRentability=commercialRevenue>0?commercialResult/commercialRevenue*100:0,operationalResult=commercialResult,operationalRentability=commercialRentability;
  let savedSale;
  if(original){
    (original.items||[]).forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)+Number(i.qty)});
    items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});
-   Object.assign(original,{clientId:c.id,date:sDate.value,method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,warrantyCredits,warrantyCreditTotal,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:null,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:plan.installments,sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});
+   Object.assign(original,{clientId:c.id,date:sDate.value,method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,warrantyCredits,warrantyCreditTotal,total,marginValue:commercialRevenue-cost,commercialRevenue,commercialResult,commercialRentability,routeCost,otherCost,paymentFeeRate:null,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:plan.installments,sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});
    const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id});savedSale=original
  }else{
-   const sale={id:uid(),clientId:c.id,date:sDate.value,createdAt:new Date().toISOString(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,warrantyCredits,warrantyCreditTotal,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:null,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:plan.installments};
+   const sale={id:uid(),clientId:c.id,date:sDate.value,createdAt:new Date().toISOString(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,warrantyCredits,warrantyCreditTotal,total,marginValue:commercialRevenue-cost,commercialRevenue,commercialResult,commercialRentability,routeCost,otherCost,paymentFeeRate:null,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:plan.installments};
    state.sales.push(sale);items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale
  }
  try{commitPendingSaleWarranties(savedSale)}catch(err){alert(err.message);return}
@@ -2016,7 +2359,16 @@ function deleteWarranty(id){
 
 function toggleVisitPriority(cid){const c=state.clients.find(c=>c.id===cid);if(!c)return;c.visitPriority=!c.visitPriority;smartRoutePlan=null;save();if(document.getElementById("clientDetail").classList.contains("active"))showClient(cid)}
 function saveSettings(){
- ensureState();ensureConfig();Object.assign(state.config,{costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim(),sellerName:cfgSellerName.value.trim()||"Alex",taxRate:Number(cfgTaxRate.value||0),minRentability:Number(cfgMinRentability.value||10),paymentFees:{PIX:Number(cfgFeePix.value||0),Dinheiro:Number(cfgFeeCash.value||0),Cheque:Number(cfgFeeCheque.value||0),Boleto:Number(cfgFeeBoleto.value||0),"Cartão":Number(cfgFeeCard.value||0)},tollPass:cfgTollPass.value});
+ ensureState();ensureConfig();
+ const ref=Number(cfgMinRentability.value||12);
+ Object.assign(state.config,{
+   costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim(),sellerName:cfgSellerName.value.trim()||"Alex",
+   taxRate:Number(cfgTaxRate.value||0),minRentability:ref,orderRentabilityReference:ref,
+   paymentFees:{PIX:Number(cfgFeePix.value||0),Dinheiro:Number(cfgFeeCash.value||0),Cheque:Number(cfgFeeCheque.value||0),Boleto:Number(cfgFeeBoleto.value||0),"Cartão":Number(cfgFeeCard.value||0)},
+   tollPass:cfgTollPass.value,
+   fixedCosts:{proLabore:Number(cfgFixedProLabore.value||0),accountant:Number(cfgFixedAccountant.value||0),phone:Number(cfgFixedPhone.value||0),insurance:Number(cfgFixedInsurance.value||0),systems:Number(cfgFixedSystems.value||0),rent:Number(cfgFixedRent.value||0),other:Number(cfgFixedOther.value||0)},
+   monthlyProfitTarget:Number(cfgMonthlyProfitTarget.value||0)
+ });
  smartRoutePlan=null;save();alert("Configurações salvas.")
 }
 function saveMapsKey(){ensureConfig();state.config.googleMapsApiKey=cfgMapsKey.value.trim();mapsLoaderPromise=null;smartRoutePlan=null;save();alert("Integração de rotas salva.")}
