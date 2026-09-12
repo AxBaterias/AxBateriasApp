@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.3">
+<meta name="ax-version" content="5.5">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -255,6 +255,32 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 @media(min-width:760px){.sale-fixed-summary{max-width:760px;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:16px 16px 0 0}}
 @media(max-width:520px){.sale-fixed-summary{gap:5px;padding-left:8px;padding-right:8px}.sale-fixed-summary .mini{padding:8px 6px}.sale-fixed-summary .mini b{font-size:12px}.sale-fixed-summary .mini span{font-size:7px}.sale-admin-grid{grid-template-columns:1fr 1fr}.chart-bar-label{font-size:7px}}
 
+
+/* v5.4 - segurança extra do recibo */
+.receipt-fix-btn{white-space:nowrap}
+.receipt-fix-btn:disabled{opacity:.55}
+
+
+/* v5.5 */
+.version-note{margin-top:18px;text-align:center;color:var(--muted);font-size:10px}
+.autocomplete{position:relative}.autocomplete input{width:100%}
+.autocomplete-menu{position:absolute;z-index:95;left:0;right:0;top:calc(100% + 5px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(16,24,40,.16);max-height:260px;overflow:auto}
+.autocomplete-option{display:block;width:100%;text-align:left;border:0;background:#fff;padding:11px 12px;border-bottom:1px solid #f2f4f7;color:var(--text)}
+.autocomplete-option:last-child{border-bottom:0}.autocomplete-option:hover,.autocomplete-option:focus{background:#f9fafb}
+.autocomplete-option b{display:block;font-size:12px}.autocomplete-option small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.payment-split-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+.payment-row{border:1px solid var(--line);border-radius:14px;padding:10px;background:#fcfcfd;margin-bottom:8px}
+.payment-row-grid{display:grid;grid-template-columns:1.05fr .9fr .85fr;gap:7px}.payment-row-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:7px}
+.payment-row .row-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:11px;font-weight:850}
+.payment-balance-ok{color:var(--good)}.payment-balance-bad{color:var(--bad)}
+.warranty-credit-row{border:1px solid var(--line);border-radius:12px;padding:9px 10px;display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:7px;background:#fff}
+.warranty-credit-row label{display:flex;gap:8px;align-items:flex-start;font-size:11px}.warranty-credit-row small{display:block;color:var(--muted);margin-top:2px}
+.warranty-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}.warranty-warning{border-left:4px solid var(--warn)}.warranty-critical{border-left:4px solid var(--bad)}
+.receipt-date{font-size:11px;color:#667085;font-weight:700;margin-top:-18px;margin-bottom:22px}.receipt-payline{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #f2f4f7;font-size:12px}.receipt-payline:last-child{border-bottom:0}
+.receipt-capture-host .receipt-date{font-size:11px!important;margin-top:-18px!important;margin-bottom:22px!important}
+.system-card-row{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid #f2f4f7;font-size:12px}.system-card-row:last-child{border-bottom:0}
+@media(max-width:520px){.payment-row-grid{grid-template-columns:1fr 1fr}.payment-row-grid .pm-condition-wrap{grid-column:1/-1}.payment-row-extra{grid-template-columns:1fr 1fr}.payment-row-extra .pm-due-wrap{grid-column:1/-1}.payment-split-summary{grid-template-columns:1fr 1fr}.payment-split-summary .mini:last-child{grid-column:1/-1}.sale-fixed-summary .mini b{font-size:10px}.sale-fixed-summary .mini span{font-size:6px}}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -336,7 +362,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div><h1>Rotas inteligentes</h1><div class="muted">Agrupa clientes críticos e compara bate-volta com hospedagem.</div></div>
     <button class="btn" onclick="analyzeSmartRoutes()">Analisar rotas</button>
   </div>
-  <div class="notice" style="margin-bottom:12px">A base é sempre a configurada em <b>Mais → Configurações</b>. O sistema usa endereço/cidade, distância rodoviária, tempo, pedágio quando disponível, faturamento potencial e lucro bruto.</div>
+  <div class="notice" style="margin-bottom:12px">A base é sempre a configurada em <b>Mais → Configurações</b>. O sistema busca automaticamente distância, tempo e pedágios pela Google Routes API. A tag padrão é <b>Sem Parar</b>. O cálculo também considera retorno comercial do cliente.</div>
   <div id="routeCandidates" class="card"></div>
   <div id="smartRoutesList"></div>
 </section>
@@ -361,11 +387,12 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="go('clients')"><span>👥</span>Clientes<small>Cadastro, busca e ficha individual</small></button>
     <button class="morecard" onclick="go('priceTables')"><span>🏷️</span>Tabelas de preço<small>Seis tabelas separadas do estoque</small></button>
     <button class="morecard" onclick="go('products')"><span>🔋</span>Produtos e estoque<small>Modelos, custo e saldo</small></button>
-    <button class="morecard" onclick="go('warranties')"><span>🛡️</span>Garantias<small>Prazo, coleta e status</small></button>
+    <button class="morecard" onclick="go('warranties')"><span>🛡️</span>Garantias<small>Ocorrências, trocas, créditos e recorrência</small></button>
     <button class="morecard" onclick="go('scrap')"><span>♻️</span>Sucata<small>Tabela, estoque e revendas</small></button>
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
+  <div class="version-note">AX Baterias • v5.5</div>
 </section>
 
 <section id="clients" class="screen">
@@ -398,7 +425,8 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 
 <section id="warranties" class="screen">
   <button class="back" onclick="go('more')">← Voltar</button>
-  <div class="cardhead"><div><h1>Garantias</h1><div class="muted">Prazo de garantia, coleta e acompanhamento.</div></div><button class="btn" onclick="openWarrantySheet()">＋ Registrar</button></div>
+  <div class="cardhead"><div><h1>Garantias</h1><div class="muted">Registro simples para enxergar recorrência, custo e possíveis problemas de giro.</div></div><button class="btn" onclick="openWarrantySheet()">＋ Registrar</button></div>
+  <div id="warrantySummary" class="warranty-kpis"></div>
   <div id="warrantyList"></div>
 </section>
 
@@ -441,6 +469,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
       <div class="field"><label>Máximo de horas por dia</label><input id="cfgMaxHours" type="number" step=".5"></div>
       <div class="field"><label>WhatsApp AX Baterias</label><input id="cfgCompanyPhone" placeholder="11999999999"></div>
       <div class="field"><label>Nome do vendedor</label><input id="cfgSellerName" placeholder="Alex"></div>
+      <div class="field"><label>Tag de pedágio</label><select id="cfgTollPass"><option value="BR_SEM_PARAR">Sem Parar</option><option value="">Nenhuma / preço padrão</option><option value="BR_CONECTCAR">ConectCar</option><option value="BR_VELOE">Veloe</option></select></div>
     </div>
     <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar</button></div>
   </div>
@@ -464,6 +493,11 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div class="field"><label>Google Maps API Key — NÃO MEXER</label><input id="cfgMapsKey" type="password" placeholder="Configuração técnica"></div>
     <div class="notice tech-lock" style="margin-top:9px"><b>Configuração técnica — NÃO MEXER no uso diário.</b> Essa chave é usada somente pelas Rotas Inteligentes.</div>
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><div><h2>Sobre o sistema</h2><div class="muted">Confirma se o celular já carregou a versão publicada.</div></div></div>
+    <div class="system-card-row"><span>Versão do sistema</span><b>5.5</b></div>
+    <div class="system-card-row"><span>Data da versão</span><b>12/09/2026</b></div>
   </div>
   <div class="card">
     <div class="cardhead"><h2>Dados</h2></div>
@@ -526,7 +560,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <input type="hidden" id="rId">
 <div class="field span2"><label>Nome da rota / região</label><input id="rName" required placeholder="Ex.: Sorocaba"></div>
 <div class="field"><label>Km total estimado</label><input id="rKm" type="number" value="0"></div>
-<div class="field"><label>Pedágios</label><input id="rToll" type="number" step=".01" value="0"></div>
+<div class="field"><label>Pedágio manual <span class="muted">(região salva/legado)</span></label><input id="rToll" type="number" step=".01" value="0"><div class="muted" style="margin-top:4px">Rotas Inteligentes buscam pedágio automaticamente.</div></div>
 <div class="field span2"><label>Hospedagem / outros</label><input id="rHotel" type="number" step=".01" value="0"></div>
 <div class="field span2"><button class="btn" type="submit">Salvar região</button></div>
 </form></div></div>
@@ -535,22 +569,15 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="sheet" id="saleSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2 id="saleSheetTitle">Nova venda</h2><div id="saleOrderHint" class="muted"></div></div><button class="btn secondary" onclick="closeSheet('saleSheet')">Fechar</button></div>
 <form id="saleForm" class="formgrid">
 <input type="hidden" id="sId">
+<input type="hidden" id="sClient" value="">
 <input type="hidden" id="sPaymentMode" value="ato">
-<div class="field span2"><label>Cliente</label><select id="sClient" required></select></div>
+<input type="hidden" id="sPaymentSplitMode" value="single">
+<div class="field span2"><label>Cliente</label><div class="autocomplete"><input id="sClientSearch" autocomplete="off" placeholder="Digite nome, contato ou cidade"><div id="sClientOptions" class="autocomplete-menu hidden"></div></div><div id="sClientSelectedHint" class="muted" style="margin-top:5px">Selecione um cliente cadastrado.</div></div>
 <div class="field"><label>Data</label><input id="sDate" type="date" required></div>
 <div class="field"><label>Tabela aplicada</label><select id="sTable"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
-
-<div class="field span2"><label>Condição de pagamento</label>
-  <div class="segmented"><button id="payModeAto" class="segment-btn active" type="button" onclick="setPaymentMode('ato')">No ato</button><button id="payModePrazo" class="segment-btn" type="button" onclick="setPaymentMode('prazo')">A prazo</button></div>
-</div>
-<div class="field"><label>Forma de pagamento</label><select id="sMethod"></select></div>
-<div id="salePaidField" class="field"><label id="salePaidLabel">Recebido no ato?</label><select id="sPaid"><option value="no">Não</option><option value="yes">Sim</option></select></div>
-<div id="saleTermsFields" class="span2 hidden">
-  <div class="formgrid">
-    <div class="field"><label>Parcelas</label><input id="sParts" type="number" min="1" max="24" value="1"></div>
-    <div class="field"><label>1º vencimento</label><input id="sDue" type="date"></div>
-  </div>
-</div>
+<div class="field span2"><label>Pagamento</label><div class="segmented"><button id="paymentSingleBtn" class="segment-btn active" type="button" onclick="setPaymentSplitMode('single')">Pagamento único</button><button id="paymentSplitBtn" class="segment-btn" type="button" onclick="setPaymentSplitMode('multiple')">Dividir pagamento</button></div></div>
+<div id="singlePaymentSection" class="span2"><div class="formgrid"><div class="field span2"><label>Condição de pagamento</label><div class="segmented"><button id="payModeAto" class="segment-btn active" type="button" onclick="setPaymentMode('ato')">No ato</button><button id="payModePrazo" class="segment-btn" type="button" onclick="setPaymentMode('prazo')">A prazo</button></div></div><div class="field"><label>Forma de pagamento</label><select id="sMethod"></select></div><div id="salePaidField" class="field"><label id="salePaidLabel">Recebido no ato?</label><select id="sPaid"><option value="no">Não</option><option value="yes">Sim</option></select></div><div id="saleTermsFields" class="span2 hidden"><div class="formgrid"><div class="field"><label>Parcelas</label><input id="sParts" type="number" min="1" max="24" value="1"></div><div class="field"><label>1º vencimento</label><input id="sDue" type="date"></div></div></div></div></div>
+<div id="multiPaymentSection" class="field span2 hidden"><div class="payment-split-summary"><div class="mini"><b id="multiPaymentTotal">R$ 0,00</b><span>Total do pedido</span></div><div class="mini"><b id="multiPaymentAllocated">R$ 0,00</b><span>Distribuído</span></div><div class="mini"><b id="multiPaymentRemaining">R$ 0,00</b><span>Falta distribuir</span></div></div><div id="paymentRows"></div><button class="btn secondary" type="button" onclick="addPaymentRow()">＋ Adicionar forma de pagamento</button></div>
 
 <div class="field span2"><label>Itens</label><div id="saleItems"></div><button class="btn secondary" type="button" onclick="addSaleItem()">＋ Adicionar item</button></div>
 
@@ -562,6 +589,8 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   <button class="btn secondary" type="button" onclick="addSaleScrapItem()">＋ Adicionar sucata</button>
   <div id="saleScrapNotice" class="muted" style="margin-top:6px"></div>
 </div>
+
+<div id="saleWarrantyCreditSection" class="field span2 hidden"><label>Crédito de garantia</label><div id="saleWarrantyCredits"></div><div id="saleWarrantyCreditHint" class="muted" style="margin-top:6px"></div></div>
 
 <div class="field span2">
   <button id="saleAdminToggle" class="btn secondary sale-admin-toggle" type="button" onclick="toggleSaleAdminResult()"><span>👁 Ver resultado da venda</span><span>Privado</span></button>
@@ -588,9 +617,10 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="field span2"><label>Observação</label><input id="sNote"></div>
 <div class="field span2"><button class="btn" type="submit">Finalizar venda</button></div>
 <div class="sale-sheet-summary-space span2"></div>
-<div id="saleFixedSummary" class="sale-fixed-summary">
-  <div class="mini"><b id="saleSubtotalPreview">R$ 0,00</b><span>Subtotal dos itens</span></div>
-  <div class="mini"><b id="saleScrapDiscountPreview">- R$ 0,00</b><span>Desconto em sucata</span></div>
+<div id="saleFixedSummary" class="sale-fixed-summary" style="grid-template-columns:repeat(4,1fr)">
+  <div class="mini"><b id="saleSubtotalPreview">R$ 0,00</b><span>Subtotal</span></div>
+  <div class="mini"><b id="saleScrapDiscountPreview">- R$ 0,00</b><span>Sucata</span></div>
+  <div class="mini"><b id="saleWarrantyCreditPreview">- R$ 0,00</b><span>Garantia</span></div>
   <div class="mini"><b id="saleTotal">R$ 0,00</b><span>Total a pagar</span></div>
 </div>
 </form></div></div>
@@ -610,7 +640,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div id="receiptCard" class="receipt-card">
       <div class="receipt-header">
         <div class="receipt-head-left">
-          <div id="rcOrder" class="receipt-order">Pedido ----</div>
+          <div id="rcOrder" class="receipt-order">Pedido ----</div><div id="rcDate" class="receipt-date">Data do pedido: --/--/----</div>
           <div class="receipt-label">CLIENTE</div>
           <div id="rcClient" class="receipt-client">Cliente</div>
           <div class="receipt-label">CIDADE</div>
@@ -633,6 +663,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
       <div class="receipt-totals">
         <div id="rcSubtotalLine" class="receipt-line"><span>Subtotal</span><b id="rcSubtotal"></b></div>
         <div id="rcScrapLine" class="receipt-line discount"><span>Desconto em sucata</span><b id="rcScrapDiscount"></b></div>
+        <div id="rcWarrantyCreditLine" class="receipt-line discount"><span>Crédito de garantia</span><b id="rcWarrantyCredit"></b></div>
         <div class="receipt-totalbox"><span>Total do pedido</span><span id="rcTotal">R$ 0,00</span></div>
       </div>
       <div class="receipt-footer">
@@ -647,21 +678,25 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
   <div class="receipt-actions">
     <button id="receiptShareBtn" class="btn blue" onclick="sendReceiptWhatsApp()" disabled>Enviar por WhatsApp</button>
     <button id="receiptSaveBtn" class="btn secondary" onclick="downloadReceipt()" disabled>Salvar imagem</button>
+    <button id="receiptFixBtn" class="btn secondary receipt-fix-btn" onclick="regenerateReceiptImage()">↻ Corrigir recibo</button>
   </div>
   <div id="receiptShareStatus" class="receipt-share-status">Aguarde a imagem ficar pronta.</div>
-  <div class="notice" style="margin-top:10px"><b>Envio rápido:</b> no celular, o sistema tenta compartilhar o PNG já com a mensagem. Se o navegador não permitir enviar o arquivo diretamente, ele abre a conversa do cliente com a mensagem pronta e deixa a imagem disponível para colar/anexar.</div>
+  <div class="notice" style="margin-top:10px"><b>Envio rápido:</b> no celular, o sistema tenta compartilhar o PNG já com a mensagem. Se a imagem parecer incorreta, toque em <b>↻ Corrigir recibo</b>: o sistema descarta a imagem atual e gera outra usando somente os dados deste pedido, sem recarregar o site.</div>
 </div></div>
 
 <!-- Warranty sheet -->
-<div class="sheet" id="warrantySheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><h2 id="warrantySheetTitle">Nova garantia</h2><button class="btn secondary" onclick="closeSheet('warrantySheet')">Fechar</button></div>
+<div class="sheet" id="warrantySheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2 id="warrantySheetTitle">Nova garantia</h2><div class="muted">Registro rápido para enxergar recorrência e impacto.</div></div><button class="btn secondary" onclick="closeSheet('warrantySheet')">Fechar</button></div>
 <form id="warrantyForm" class="formgrid">
 <input type="hidden" id="wId">
 <div class="field span2"><label>Cliente</label><select id="wClient" required></select></div>
-<div class="field"><label>Modelo</label><input id="wModel" required></div>
-<div class="field"><label>Código fabricação</label><input id="wCode"></div>
-<div class="field"><label>Data fabricação</label><input id="wMfg" type="date" required></div>
-<div class="field"><label>Data coleta</label><input id="wCollect" type="date" required></div>
-<div class="field"><label>Status</label><select id="wStatus"><option>Coletada</option><option>Enviada à fábrica</option><option>Aprovada</option><option>Rejeitada</option><option>Substituída</option></select></div>
+<div class="field span2"><label>Produto</label><select id="wProduct" required></select></div>
+<div class="field"><label>Quantidade</label><input id="wQty" type="number" min="1" step="1" value="1" required></div>
+<div class="field"><label>Data da ocorrência</label><input id="wCollect" type="date" required></div>
+<div class="field"><label>Data de fabricação <span class="muted">(se tiver)</span></label><input id="wMfg" type="date"></div>
+<div class="field"><label>Código fabricação <span class="muted">(opcional)</span></label><input id="wCode"></div>
+<div class="field span2"><label>Como foi resolvida?</label><select id="wResolution"><option value="exchange">Troca por bateria nova</option><option value="credit">Crédito para o cliente</option></select></div>
+<div id="wCreditFields" class="span2 hidden"><div class="formgrid"><div class="field"><label>Valor do crédito</label><input id="wCreditValue" type="number" min="0" step=".01"></div><div class="field"><label>Onde usar?</label><select id="wCreditDestination"><option value="next">Próximo pedido</option><option value="open">Pedido em aberto</option></select></div><div id="wOpenSaleField" class="field span2 hidden"><label>Pedido em aberto</label><select id="wOpenSale"></select><div id="wOpenSaleHint" class="muted" style="margin-top:5px"></div></div></div></div>
+<div class="field span2"><label>Observação <span class="muted">(opcional)</span></label><textarea id="wNote"></textarea></div>
 <div class="field span2"><button class="btn" type="submit">Salvar garantia</button></div>
 </form></div></div>
 
@@ -692,12 +727,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
+const AX_APP_VERSION='5.5';
 const TEST_MODE=false;
 const KEY="ax_baterias_mobile_v5_cache";
 const defaults={
  clients:[],routes:[],products:[],sales:[],visits:[],warranties:[],
  scrapTypes:[],scrapTransactions:[],
- config:{costKm:1.50,window:5,base:"Osasco, SP, Brasil",hotelCost:250,visitMinutes:35,maxDailyHours:9,companyPhone:"",sellerName:"Alex",googleMapsApiKey:"",taxRate:0,minRentability:10,paymentFees:{PIX:0,Dinheiro:0,Cheque:0,Boleto:0,"Cartão":0}},
+ config:{costKm:1.50,window:5,base:"Osasco, SP, Brasil",hotelCost:250,visitMinutes:35,maxDailyHours:9,companyPhone:"",sellerName:"Alex",googleMapsApiKey:"",tollPass:"BR_SEM_PARAR",taxRate:0,minRentability:10,paymentFees:{PIX:0,Dinheiro:0,Cheque:0,Boleto:0,"Cartão":0}},
  collectionTemplates:{
    upcoming:"Oi, {contato_cliente}! Tudo bem? Passando só para lembrar que o pagamento de {valor}, do pedido {pedido}, vence em {vencimento}. Se precisar de alguma informação, me chama 👍",
    late:"Oi, {contato_cliente}! Tudo certo? Dei uma conferida aqui e ainda consta em aberto aquele {valor}, do pedido {pedido}. Consegue verificar para mim? Obrigado!"
@@ -710,10 +746,12 @@ let smartRoutePlan=null;
 let homeFinanceVisible=false;
 let saleAdminResultVisible=false;
 let activeReceiptSaleId=null;
+let activeReceiptImageSaleId=null;
 let activeReceiptBlob=null;
 let activeReceiptFile=null;
 let activeReceiptObjectUrl=null;
 let receiptGenerationPromise=null;
+let receiptGenerationSaleId=null;
 let receiptGenerationToken=0;
 let mapsLoaderPromise=null;
 let sb=null,currentUser=null,remoteTimer=null;
@@ -860,31 +898,42 @@ function openRouteSheet(routeId=""){
  routeSheetTitle.textContent=r?"Editar região":"Nova região";
  rName.value=r?.name||"";rKm.value=r?.km??0;rToll.value=r?.toll??0;rHotel.value=r?.hotel??0;openSheet("routeSheet")
 }
+
+function recentClientIds(limit=8){return [...state.sales].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(s=>s.clientId).filter((id,i,a)=>id&&a.indexOf(id)===i).slice(0,limit)}
+function renderSaleClientOptions(query=""){const q=String(query||"").trim().toLowerCase();let list=state.clients.filter(c=>!q||[c.name,c.contact,c.city].some(v=>String(v||"").toLowerCase().includes(q)));if(!q){const recent=recentClientIds();list.sort((a,b)=>{const ia=recent.indexOf(a.id),ib=recent.indexOf(b.id);return (ia<0?999:ia)-(ib<0?999:ib)||a.name.localeCompare(b.name)})}list=list.slice(0,12);sClientOptions.innerHTML=list.length?list.map(c=>`<button type="button" class="autocomplete-option" onclick="selectSaleClient('${c.id}')"><b>${esc(c.name)}</b><small>${c.contact?esc(c.contact)+" • ":""}${esc(c.city||"")}</small></button>`).join(""):'<div class="empty" style="padding:12px">Nenhum cliente encontrado.</div>';sClientOptions.classList.remove("hidden")}
+function selectSaleClient(id){const c=state.clients.find(c=>c.id===id);if(!c)return;sClient.value=id;sClientSearch.value=c.name;sClientSelectedHint.textContent=`Selecionado: ${c.name}${c.contact?` • ${c.contact}`:""} • ${c.city||""}`;sClientOptions.classList.add("hidden");sTable.value=c.price||"0";renderSaleWarrantyCredits();updateSale()}
+function clearSaleClientIfNeeded(){const c=state.clients.find(c=>c.id===sClient.value);if(!c||sClientSearch.value.trim()!==c.name)sClient.value=""}
+function setPaymentSplitMode(mode,silent=false){sPaymentSplitMode.value=mode;paymentSingleBtn.classList.toggle("active",mode==="single");paymentSplitBtn.classList.toggle("active",mode==="multiple");singlePaymentSection.classList.toggle("hidden",mode!=="single");multiPaymentSection.classList.toggle("hidden",mode!=="multiple");if(mode==="multiple"&&!paymentRows.children.length)addPaymentRow({amount:currentSalePayableTotal()});if(!silent)updateSale()}
+function paymentMethods(){return ["PIX","Dinheiro","Cheque","Boleto","Cartão"]}
+function addPaymentRow(data={}){const row=document.createElement("div");row.className="payment-row";row.dataset.paymentId=data.id||uid();const method=data.method||"PIX",mode=data.mode||"ato",amount=Number(data.amount||0),parts=Math.max(1,Number(data.parts||data.installments?.length||1)),due=data.due||data.installments?.[0]?.due||today(),paid=data.paid!=null?!!data.paid:!!(data.installments?.length&&data.installments.every(p=>p.paid));row.innerHTML=`<div class="row-title"><span>Forma de pagamento</span><button type="button" class="btn secondary pm-remove">Remover</button></div><div class="payment-row-grid"><div><label>Forma</label><select class="pm-method">${paymentMethods().map(m=>`<option ${m===method?"selected":""}>${m}</option>`).join("")}</select></div><div><label>Valor</label><input class="pm-amount" type="number" min="0" step=".01" value="${amount||""}"></div><div class="pm-condition-wrap"><label>Condição</label><select class="pm-mode"><option value="ato" ${mode==="ato"?"selected":""}>No ato</option><option value="prazo" ${mode==="prazo"?"selected":""}>A prazo</option></select></div></div><div class="payment-row-extra"><div class="pm-paid-wrap"><label>Recebido?</label><select class="pm-paid"><option value="no" ${!paid?"selected":""}>Não</option><option value="yes" ${paid?"selected":""}>Sim</option></select></div><div class="pm-parts-wrap"><label>Parcelas</label><input class="pm-parts" type="number" min="1" max="24" value="${parts}"></div><div class="pm-due-wrap"><label>1º vencimento</label><input class="pm-due" type="date" value="${due}"></div></div>`;const sync=()=>{const prazo=row.querySelector(".pm-mode").value==="prazo";row.querySelector(".pm-paid-wrap").classList.toggle("hidden",prazo);row.querySelector(".pm-parts-wrap").classList.toggle("hidden",!prazo);row.querySelector(".pm-due-wrap").classList.toggle("hidden",!prazo);if(prazo)row.querySelector(".pm-paid").value="no";updateSale()};row.querySelectorAll("select,input").forEach(el=>el.addEventListener(el.tagName==="INPUT"?"input":"change",sync));row.querySelector(".pm-remove").onclick=()=>{row.remove();updateSale()};paymentRows.appendChild(row);sync()}
+function currentSalePayableTotal(){let subtotal=0,discount=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(p)subtotal+=Number((p.prices||[])[Number(sTable.value)]||0)*q});document.querySelectorAll(".scrapRow").forEach(r=>{const t=state.scrapTypes.find(t=>t.id===r.querySelector(".sst").value),q=Number(r.querySelector(".ssq").value||0);if(t)discount+=Number(t.value||0)*q});const warrantyCredit=previewSelectedWarrantyCredit(Math.max(0,subtotal-discount));return Math.max(0,Math.round((subtotal-discount-warrantyCredit)*100)/100)}
+function paymentPlanFromForm(total,original=null){if(Number(total)<=.009)return {paymentSplitMode:sPaymentSplitMode.value||"single",method:"Sem valor a pagar",paymentMode:"ato",payments:[],installments:[]};if(sPaymentSplitMode.value!=="multiple"){const mode=sPaymentMode.value||"ato",method=sMethod.value,n=mode==="prazo"?Math.max(1,Number(sParts.value||1)):1,first=mode==="prazo"?(sDue.value||sDate.value):sDate.value,oldPayment=original?.payments?.[0],parts=[],base=Math.floor((total/n)*100)/100;let acc=0;for(let i=0;i<n;i++){const amount=i===n-1?Math.round((total-acc)*100)/100:base;acc+=amount;const old=oldPayment?.installments?.[i]||original?.installments?.[i];parts.push({id:old?.id||uid(),number:i+1,groupNumber:i+1,groupTotal:n,paymentMethod:method,due:addDays(first,i*30),amount,paid:mode==="ato"&&sPaid.value==="yes"?true:!!old?.paid,sent:!!old?.sent})}if(mode==="prazo")parts.forEach((p,i)=>{if(!(oldPayment?.installments?.[i]||original?.installments?.[i])?.paid)p.paid=false});return {paymentSplitMode:"single",method,paymentMode:mode,payments:[{id:oldPayment?.id||uid(),method,amount:total,mode,installments:parts}],installments:parts}}const rows=[...paymentRows.querySelectorAll(".payment-row")],payments=[],flat=[];let allocated=0;for(const row of rows){const amount=Math.round(Number(row.querySelector(".pm-amount").value||0)*100)/100;if(amount<=0)continue;const method=row.querySelector(".pm-method").value,mode=row.querySelector(".pm-mode").value,n=mode==="prazo"?Math.max(1,Number(row.querySelector(".pm-parts").value||1)):1,first=mode==="prazo"?(row.querySelector(".pm-due").value||sDate.value):sDate.value,pid=row.dataset.paymentId||uid(),oldPayment=original?.payments?.find(p=>p.id===pid),parts=[],base=Math.floor((amount/n)*100)/100;let acc=0;for(let i=0;i<n;i++){const val=i===n-1?Math.round((amount-acc)*100)/100:base;acc+=val;const old=oldPayment?.installments?.[i];parts.push({id:old?.id||uid(),number:flat.length+i+1,groupNumber:i+1,groupTotal:n,paymentMethod:method,paymentId:pid,due:addDays(first,i*30),amount:val,paid:mode==="ato"&&row.querySelector(".pm-paid").value==="yes"?true:!!old?.paid,sent:!!old?.sent})}if(mode==="prazo")parts.forEach((p,i)=>{if(!oldPayment?.installments?.[i]?.paid)p.paid=false});payments.push({id:pid,method,amount,mode,installments:parts});flat.push(...parts);allocated+=amount}if(!payments.length)throw new Error("Adicione pelo menos uma forma de pagamento.");if(Math.abs(allocated-total)>.009)throw new Error(`Distribua exatamente o total do pedido. Ajuste ${brl(Math.abs(total-allocated))}.`);return {paymentSplitMode:"multiple",method:"Múltiplas formas",paymentMode:"multiple",payments,installments:flat}}
+function paymentFeeFromPlan(plan){return (plan.payments||[]).reduce((sum,p)=>sum+Number(p.amount||0)*paymentFeeRate(p.method)/100,0)}
+function updateMultiPaymentSummary(total){const allocated=[...paymentRows.querySelectorAll(".pm-amount")].reduce((a,i)=>a+Number(i.value||0),0),remaining=Math.round((total-allocated)*100)/100;multiPaymentTotal.textContent=brl(total);multiPaymentAllocated.textContent=brl(allocated);multiPaymentRemaining.textContent=brl(Math.abs(remaining));multiPaymentRemaining.className=remaining===0?"payment-balance-ok":"payment-balance-bad";multiPaymentRemaining.parentElement.querySelector("span").textContent=remaining>0?"Falta distribuir":remaining<0?"Distribuído a mais":"Distribuição completa"}
+function warrantyApplications(w){return Array.isArray(w.applications)?w.applications:[]}
+function warrantyAvailableAmount(w,excludeSaleId=""){const used=warrantyApplications(w).filter(a=>!(excludeSaleId&&a.saleId===excludeSaleId&&a.kind==="sale")).reduce((a,x)=>a+Number(x.amount||0),0);return Math.max(0,Number(w.creditValue||0)-used)}
+function availableWarrantyCredits(clientId,excludeSaleId=""){return state.warranties.filter(w=>w.type!=="Sucata"&&w.clientId===clientId&&(w.solution==="credit"||w.resolution==="credit")&&warrantyAvailableAmount(w,excludeSaleId)>.009)}
+function renderSaleWarrantyCredits(){const clientId=sClient.value,saleId=sId.value||"",credits=availableWarrantyCredits(clientId,saleId),current=state.sales.find(s=>s.id===saleId),selectedIds=new Set((current?.warrantyCredits||[]).map(x=>x.warrantyId));saleWarrantyCreditSection.classList.toggle("hidden",!clientId||!credits.length);if(!clientId||!credits.length){saleWarrantyCredits.innerHTML="";saleWarrantyCreditHint.textContent="";return}saleWarrantyCredits.innerHTML=credits.map(w=>{const avail=warrantyAvailableAmount(w,saleId),checked=selectedIds.has(w.id);return `<div class="warranty-credit-row"><label><input class="swc" type="checkbox" value="${w.id}" ${checked?"checked":""} onchange="updateSale()"><span><b>${brl(avail)}</b> disponíveis<small>${esc(w.model||state.products.find(p=>p.id===w.productId)?.name||"Garantia")} • ${fmt(w.collect)}</small></span></label></div>`}).join("");saleWarrantyCreditHint.textContent="Marque o crédito que deseja usar. O sistema aplica somente até o valor necessário do pedido."}
+function previewSelectedWarrantyCredit(maxAmount){let remaining=Math.max(0,Number(maxAmount||0)),sum=0,saleId=sId.value||"";document.querySelectorAll(".swc:checked").forEach(ch=>{const w=state.warranties.find(w=>w.id===ch.value);if(!w||remaining<=0)return;const use=Math.min(remaining,warrantyAvailableAmount(w,saleId));sum+=use;remaining-=use});return Math.round(sum*100)/100}
+function buildWarrantyCreditsForSale(maxAmount){let remaining=Math.max(0,Number(maxAmount||0)),out=[],saleId=sId.value||"";document.querySelectorAll(".swc:checked").forEach(ch=>{const w=state.warranties.find(w=>w.id===ch.value);if(!w||remaining<=0)return;const amount=Math.min(remaining,warrantyAvailableAmount(w,saleId));if(amount>.009){out.push({warrantyId:w.id,amount});remaining-=amount}});return out}
+function syncWarrantyCreditApplications(sale){state.warranties.forEach(w=>{w.applications=warrantyApplications(w).filter(a=>!(a.saleId===sale.id&&a.kind==="sale"))});(sale.warrantyCredits||[]).forEach(x=>{const w=state.warranties.find(w=>w.id===x.warrantyId);if(w)w.applications.push({id:uid(),saleId:sale.id,amount:Number(x.amount||0),kind:"sale",date:sale.date})})}
+function saleOpenWarrantyCredits(s,excludeWarrantyId=""){return state.warranties.filter(w=>w.id!==excludeWarrantyId).flatMap(w=>warrantyApplications(w).filter(a=>a.saleId===s.id&&a.kind==="open")).reduce((a,x)=>a+Number(x.amount||0),0)}
+function effectiveInstallments(s){let credit=saleOpenWarrantyCredits(s),rows=(s.installments||[]).map(p=>({...p,effectiveAmount:Number(p.amount||0)}));for(const p of rows){if(p.paid||credit<=0)continue;const use=Math.min(credit,p.effectiveAmount);p.effectiveAmount=Math.max(0,p.effectiveAmount-use);p.warrantyCreditApplied=use;credit-=use}return rows}
+function warrantyImpact(w){if(w.solution==="exchange"||w.resolution==="exchange"){const p=state.products.find(p=>p.id===w.productId);return Number(w.unitCostSnapshot!=null?w.unitCostSnapshot:p?.cost||0)*Number(w.qty||1)}if(w.solution==="credit"||w.resolution==="credit")return Number(w.creditValue||0);return 0}
+function warrantyStats(clientId,lookbackDays=365){const start=addDays(today(),-lookbackDays),wars=state.warranties.filter(w=>w.type!=="Sucata"&&w.clientId===clientId&&(w.collect||"")>=start),sales=state.sales.filter(s=>s.clientId===clientId&&(s.date||"")>=start),warrantyQty=wars.reduce((a,w)=>a+Number(w.qty||1),0),purchasedQty=sales.reduce((a,s)=>a+(s.items||[]).reduce((x,i)=>x+Number(i.qty||0),0),0),impact=wars.reduce((a,w)=>a+warrantyImpact(w),0),reflectedCredit=wars.reduce((a,w)=>a+warrantyApplications(w).filter(x=>x.kind==="sale").reduce((y,x)=>y+Number(x.amount||0),0),0),routeImpact=Math.max(0,impact-reflectedCredit);return {count:wars.length,warrantyQty,purchasedQty,incidence:purchasedQty>0?warrantyQty/purchasedQty*100:0,impact,routeImpact,salesCount:sales.length}}
+function saleOpenExcludingWarranty(s,warrantyId=""){const unpaid=(s.installments||[]).reduce((a,p)=>a+(!p.paid?Number(p.amount||0):0),0);return Math.max(0,unpaid-saleOpenWarrantyCredits(s,warrantyId))}
+function updateWarrantyResolutionFields(){const credit=wResolution.value==="credit";wCreditFields.classList.toggle("hidden",!credit);if(credit)updateWarrantyOpenSales()}
+function updateWarrantyOpenSales(){const show=wResolution.value==="credit"&&wCreditDestination.value==="open";wOpenSaleField.classList.toggle("hidden",!show);if(!show)return;const currentWarrantyId=wId.value,rows=state.sales.filter(s=>s.clientId===wClient.value&&saleOpenExcludingWarranty(s,currentWarrantyId)>.009).sort((a,b)=>(b.date||"").localeCompare(a.date||""));wOpenSale.innerHTML='<option value="">Selecione</option>'+rows.map(s=>`<option value="${s.id}">Pedido ${esc(s.orderNumber||"—")} • saldo ${brl(saleOpenExcludingWarranty(s,currentWarrantyId))}</option>`).join("");wOpenSaleHint.textContent=rows.length?"O crédito reduz o saldo em aberto sem alterar o valor original do pedido.":"Este cliente não possui pedido em aberto."}
 function openSaleSheet(saleId=""){
- saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);
- saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=Number(s?.routeCost||0);sOtherCost.value=Number(s?.otherCost||0);
- saleSheetTitle.textContent=s?"Editar venda":"Nova venda";
- saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";
- sDate.value=s?.date||today();sClient.value=s?.clientId||"";sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";
- const mode=s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato");
- setPaymentMode(mode,s?.method||"PIX",true);
- sParts.value=s?.installments?.length||1;sDue.value=s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";
- saleItems.innerHTML="";if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();
- saleScrapItems.innerHTML="";
- const scraps=s?.scrapItems||[];
- setSaleScrapMode(scraps.length>0,true);
- scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));
- updateSale();openSheet("saleSheet")
+ saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=Number(s?.routeCost||0);sOtherCost.value=Number(s?.otherCost||0);saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));renderSaleWarrantyCredits();updateSale();openSheet("saleSheet")
 }
 function openWarrantySheet(warrantyId=""){
- warrantyForm.reset();wId.value=warrantyId;const w=state.warranties.find(w=>w.id===warrantyId);
- warrantySheetTitle.textContent=w?"Editar garantia":"Nova garantia";
- wClient.value=w?.clientId||"";wModel.value=w?.model||"";wCode.value=w?.code||"";wMfg.value=w?.mfg||"";wCollect.value=w?.collect||today();wStatus.value=w?.status||"Coletada";openSheet("warrantySheet")
+ warrantyForm.reset();wId.value=warrantyId;const w=state.warranties.find(w=>w.id===warrantyId);warrantySheetTitle.textContent=w?"Editar garantia":"Nova garantia";wClient.value=w?.clientId||"";wProduct.value=w?.productId||state.products.find(p=>p.name===w?.model)?.id||"";wQty.value=Number(w?.qty||1);wCode.value=w?.code||"";wMfg.value=w?.mfg||"";wCollect.value=w?.collect||today();wResolution.value=(w?.solution||w?.resolution)==="credit"?"credit":"exchange";wCreditValue.value=Number(w?.creditValue||0);wCreditDestination.value=w?.creditDestination||"next";wNote.value=w?.note||"";updateWarrantyResolutionFields();if(w?.applications?.some(a=>a.kind==="open")){const a=w.applications.find(a=>a.kind==="open");wCreditDestination.value="open";updateWarrantyOpenSales();wOpenSale.value=a.saleId||""}openSheet("warrantySheet")
 }
 
-function saleOpen(s){return s.installments.reduce((a,p)=>a+(!p.paid?Number(p.amount):0),0)}
-function salePaid(s){return s.installments.every(p=>p.paid)}
-function saleOverdue(s){return s.installments.some(p=>!p.paid&&p.due&&p.due<today())}
+function saleOpen(s){return Math.max(0,effectiveInstallments(s).reduce((a,p)=>a+(!p.paid?Number(p.effectiveAmount||0):0),0))}
+function salePaid(s){return saleOpen(s)<=.009}
+function saleOverdue(s){return effectiveInstallments(s).some(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due&&p.due<today())}
 function clientStats(id){
  const sales=state.sales.filter(s=>s.clientId===id).sort((a,b)=>a.date.localeCompare(b.date));
  const ticket=sales.length?sales.reduce((a,s)=>a+Number(s.total),0)/sales.length:0;
@@ -893,7 +942,8 @@ function clientStats(id){
  if(dates.length>=2){const gaps=[];for(let i=1;i<dates.length;i++)gaps.push(days(dates[i-1],dates[i]));avgInterval=Math.round(gaps.reduce((a,b)=>a+b,0)/gaps.length)}
  const c=state.clients.find(c=>c.id===id);const interval=avgInterval||Number(c?.interval||30);const last=dates.at(-1)||null;const next=last?addDays(last,interval):null;
  const open=sales.reduce((a,s)=>a+saleOpen(s),0);const visits=state.visits.filter(v=>v.clientId===id);const conv=visits.length?visits.filter(v=>v.result==="Venda").length/visits.length:1;
- return {ticket,avgMargin,avgInterval,interval,last,next,open,orders:sales.length,visits:visits.length,conv}
+ const ws=warrantyStats(id,365),warrantyPerOrder=ws.salesCount?Number(ws.routeImpact??ws.impact)/ws.salesCount:0,netAvgMargin=Math.max(0,avgMargin-warrantyPerOrder);
+ return {ticket,avgMargin,netAvgMargin,warrantyImpactPerOrder:warrantyPerOrder,warrantyStats:ws,avgInterval,interval,last,next,open,orders:sales.length,visits:visits.length,conv}
 }
 function saleCostValue(s){return (s.items||[]).reduce((a,i)=>a+Number(i.cost||0),0)}
 function saleGrossProfit(s){return Number(s.marginValue!=null?s.marginValue:Number(s.total||0)-saleCostValue(s))}
@@ -927,7 +977,7 @@ function criticalClients(){
    const address=[c.address,c.city,"SP","Brasil"].filter(Boolean).join(", ");
    const readiness=manual?1:(delta==null?0:delta<=0?1:Math.max(.55,1-(delta/(windowDays+1))*.35));
    const conv=Math.max(.25,st.conv||1);
-   return {c,st,delta,automatic,manual,address,readiness,conv,revenue:st.orders?st.ticket*readiness*conv:0,grossProfit:st.orders?st.avgMargin*readiness*conv:0};
+   return {c,st,delta,automatic,manual,address,readiness,conv,revenue:st.orders?st.ticket*readiness*conv:0,grossProfit:st.orders?st.netAvgMargin*readiness*conv:0};
  }).filter(x=>(x.manual||x.automatic)&&x.address)
 }
 function mapsKey(){return String(state.config.googleMapsApiKey||"").trim()}
@@ -942,7 +992,7 @@ async function loadGoogleMaps(){
 function moneyValue(m){if(!m)return 0;return Number(m.units||0)+Number(m.nanos||0)/1e9}
 function matrixCell(matrix,i,j){const item=matrix?.rows?.[i]?.items?.[j];if(!item||item.condition==="ROUTE_NOT_FOUND")return {km:Infinity,minutes:Infinity,toll:0};return {km:Number(item.distanceMeters||0)/1000,minutes:Number(item.durationMillis||0)/60000,toll:0}}
 const ROUTE_MATRIX_CACHE_KEY="ax_route_matrix_essentials_v1";
-const ROUTE_DETAIL_CACHE_KEY="ax_route_detail_tolls_v1";
+const ROUTE_DETAIL_CACHE_KEY="ax_route_detail_tolls_v2";
 function routeAnalysisKey(candidates){return JSON.stringify({base:state.config.base||"Osasco, SP, Brasil",addresses:candidates.map(x=>x.address)})}
 function readTimedCache(key,signature,maxAgeMs){
  try{const v=JSON.parse(localStorage.getItem(key)||"null");if(v&&v.signature===signature&&Date.now()-Number(v.at||0)<maxAgeMs)return v.data}catch{}return null
@@ -961,14 +1011,14 @@ async function buildRouteMatrix(candidates){
  const matrix=plainMatrix(result.matrix);writeTimedCache(ROUTE_MATRIX_CACHE_KEY,signature,{matrix});
  return {matrix,points,fromCache:false}
 }
-function routeDetailSignature(origin,destination,intermediates){return JSON.stringify({origin,destination,intermediates})}
+function routeDetailSignature(origin,destination,intermediates){return JSON.stringify({origin,destination,intermediates,tollPass:state.config.tollPass||"BR_SEM_PARAR"})}
 async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
  const signature=routeDetailSignature(origin,destination,intermediates),cached=readTimedCache(ROUTE_DETAIL_CACHE_KEY+":"+btoa(unescape(encodeURIComponent(signature))).slice(0,50),signature,24*60*60*1000);
  if(cached)return {...cached,fromCache:true};
  await loadGoogleMaps();const {Route}=await google.maps.importLibrary("routes");
  try{
    // Tolls are requested only for routes the optimizer actually selected, not for every pair in the matrix.
-   const request={origin,destination,travelMode:"DRIVING",extraComputations:["TOLLS"],routeModifiers:{vehicleInfo:{emissionType:"GASOLINE"}},fields:["distanceMeters","durationMillis","travelAdvisory"]};
+   const modifiers={vehicleInfo:{emissionType:"GASOLINE"}};if(state.config.tollPass)modifiers.tollPasses=[state.config.tollPass];const request={origin,destination,travelMode:"DRIVING",extraComputations:["TOLLS"],routeModifiers:modifiers,fields:["distanceMeters","durationMillis","travelAdvisory"]};
    if(intermediates.length)request.intermediates=intermediates.map(location=>({location}));
    const {routes}=await Route.computeRoutes(request);const r=routes?.[0];
    if(!r)throw new Error("Rota final não encontrada.");
@@ -1032,7 +1082,7 @@ async function enrichOvernight(alt,candidates,routes){
 
 function fillSelects(){
  const opts='<option value="">Selecione</option>'+state.clients.map(c=>`<option value="${c.id}">${esc(c.name)} — ${esc(c.city)}</option>`).join("");
- sClient.innerHTML=opts;wClient.innerHTML=opts
+ wClient.innerHTML=opts;wProduct.innerHTML='<option value="">Selecione</option>'+state.products.map(p=>`<option value="${p.id}">${esc(p.name)} • estoque ${Number(p.qty||0)} un.</option>`).join("")
 }
 
 
@@ -1044,7 +1094,7 @@ function isoWeekInfo(dateStr){
 function migrateOrderNumbers(){
  const missing=(state.sales||[]).filter(s=>!s.orderNumber).sort((a,b)=>(a.date||"").localeCompare(b.date||"")||String(a.id).localeCompare(String(b.id)));
  missing.forEach(s=>s.orderNumber=nextOrderNumber(s.date,s.id));
- state.sales.forEach(s=>{if(s.subtotal==null)s.subtotal=(s.items||[]).reduce((a,i)=>a+Number(i.line||0),0);if(s.scrapDiscount==null)s.scrapDiscount=0;if(!s.scrapItems)s.scrapItems=[];if(!s.paymentMode)s.paymentMode=(s.installments?.length>1||["Boleto","Cartão"].includes(s.method))?"prazo":"ato";if(!s.sellerName)s.sellerName=state.config?.sellerName||"Alex";if(s.routeCost==null)s.routeCost=0;if(s.otherCost==null)s.otherCost=0})
+ state.sales.forEach(s=>{if(s.subtotal==null)s.subtotal=(s.items||[]).reduce((a,i)=>a+Number(i.line||0),0);if(s.scrapDiscount==null)s.scrapDiscount=0;if(!s.scrapItems)s.scrapItems=[];if(!s.warrantyCredits)s.warrantyCredits=[];if(!s.paymentMode)s.paymentMode=(s.installments?.length>1||["Boleto","Cartão"].includes(s.method))?"prazo":"ato";if(!s.paymentSplitMode)s.paymentSplitMode=s.payments?.length>1?"multiple":"single";if(!s.payments?.length)s.payments=[{id:uid(),method:s.method||"PIX",amount:Number(s.total||0),mode:s.paymentMode||"ato",installments:(s.installments||[]).map(p=>({...p,paymentMethod:s.method||"PIX"}))}];if(!s.sellerName)s.sellerName=state.config?.sellerName||"Alex";if(s.routeCost==null)s.routeCost=0;if(s.otherCost==null)s.otherCost=0});state.warranties.forEach(w=>{if(w.type==="Sucata")return;if(w.qty==null)w.qty=1;if(!w.collect)w.collect=today();if(!w.solution){w.solution=w.status==="Substituída"?"exchange":"legacy";w.resolution=w.solution}if(!w.applications)w.applications=[];if(w.creditValue==null)w.creditValue=0;if(!w.productId&&w.model){const p=state.products.find(p=>String(p.name).toLowerCase()===String(w.model).toLowerCase());if(p)w.productId=p.id}})
 }
 function nextOrderNumber(dateStr,excludeId=""){
  const {year,week}=isoWeekInfo(dateStr),prefix=String(week).padStart(2,"0");
@@ -1165,14 +1215,14 @@ function renderSmartRoutePlan(){
    const cls=r.result>0?"good":r.grossProfit>=r.travelCost*.75?"warn":"bad";
    h+=`<div class="card"><div class="cardhead"><div><h2>Rota ${i+1}</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${cls}">${r.result>0?"Recomendada":cls==="warn"?"Avaliar":"Baixo retorno"}</span></div>${routeSequenceHtml(r.order,p.candidates)}
    <div class="smart-route-summary"><div class="mini"><b>${brl(r.revenue)}</b><span>Faturamento potencial</span></div><div class="mini"><b>${brl(r.grossProfit)}</b><span>Lucro bruto potencial</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado da viagem</span></div><div class="mini"><b>${brl(r.result)}</b><span>Resultado estimado da rota</span></div></div>
-   <div class="muted">Rodagem: ${brl(r.km*Number(state.config.costKm||0))} • Pedágios: ${r.tollAvailable?brl(r.toll):"não informado pelo Google"}</div>
-   <div class="list" style="margin-top:10px">${r.order.map(idx=>{const x=p.candidates[idx-1];return `<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ticket ${brl(x.st.ticket)} • lucro médio ${brl(x.st.avgMargin)}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">Confirmar visita</button></div>`}).join("")}</div></div>`
+   <div class="muted">Rodagem: ${brl(r.km*Number(state.config.costKm||0))} • Pedágios (${state.config.tollPass==="BR_SEM_PARAR"?"Sem Parar":"Google"}): ${r.tollAvailable?brl(r.toll):"não informado pelo Google"}</div>
+   <div class="list" style="margin-top:10px">${r.order.map(idx=>{const x=p.candidates[idx-1];return `<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ticket ${brl(x.st.ticket)} • retorno médio líquido ${brl(x.st.netAvgMargin)}${x.st.warrantyStats?.incidence>=10?` • ⚠ garantia ${x.st.warrantyStats.incidence.toFixed(1)}%`:""}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">Confirmar visita</button></div>`}).join("")}</div></div>`
  });
  if(p.overnight){
    const o=p.overnight,good=o.savings>0;
    h+=`<div class="card"><div class="cardhead"><div><h2>Alternativa com 1 hospedagem</h2><div class="muted">Comparação com as rotas separadas, incluindo pedágio quando disponível.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode compensar":"Não economiza"}</span></div>
    <div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div>
-   <div class="muted">Pedágios da viagem: ${o.tollAvailable?brl(o.toll):"não informado pelo Google"}</div>
+   <div class="muted">Pedágios da viagem (${state.config.tollPass==="BR_SEM_PARAR"?"Sem Parar":"Google"}): ${o.tollAvailable?brl(o.toll):"não informado pelo Google"}</div>
    <div class="explain">${good?`Dormir fora reduz o custo total estimado em ${brl(o.savings)}. O cálculo inclui uma noite de ${brl(state.config.hotelCost)}.`:`A economia de deslocamento não paga a hospedagem de ${brl(state.config.hotelCost)}. As rotas separadas ficam mais econômicas.`}</div></div>`
  }
  smartRoutesList.innerHTML=h
@@ -1209,7 +1259,7 @@ function renderClients(){
 
 function showClient(id){
  const c=state.clients.find(c=>c.id===id);if(!c)return;const st=clientStats(id);
- clientDetailContent.innerHTML=`<div class="detailtop"><div><div class="detailname">${esc(c.name)}</div><div class="muted">${esc(c.city)} • tabela ${c.price}</div></div><div class="actions"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}',true)">Excluir</button></div></div><div class="kpis3"><div class="mini"><b>${st.orders?brl(st.ticket):"—"}</b><span>Ticket médio</span></div><div class="mini"><b>${st.orders?brl(st.avgMargin):"—"}</b><span>Lucro médio/venda</span></div><div class="mini"><b>${brl(st.open)}</b><span>Em aberto</span></div></div><div class="card" style="margin-top:12px"><div class="cardhead"><h2>Momento de visita</h2><span class="badge ${c.visitPriority?"bad":"good"}">${c.visitPriority?"Prioridade manual":"Automático"}</span></div><div style="font-size:22px;font-weight:850">${fmt(st.next)}</div><div class="muted" style="margin-top:4px">Última compra: ${fmt(st.last)} • frequência: ${st.orders?st.interval+" dias":"sem histórico"}</div><div class="actions" style="margin-top:10px"><button class="btn ${c.visitPriority?"secondary":"danger"}" onclick="toggleVisitPriority('${c.id}')">${c.visitPriority?"Retirar prioridade":"Priorizar próxima visita"}</button></div></div><div class="card"><div class="cardhead"><h2>Contato e endereço</h2></div><div class="muted">${esc(c.phone||"sem WhatsApp")}<br>${esc(c.address||"")} ${esc(c.city||"")}</div><div class="actions" style="margin-top:10px"><button class="btn blue" onclick="openPreVisit('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="logNoSaleVisit('${c.id}')">Registrar visita sem venda</button></div></div>`;go("clientDetail")
+ clientDetailContent.innerHTML=`<div class="detailtop"><div><div class="detailname">${esc(c.name)}</div><div class="muted">${esc(c.city)} • tabela ${c.price}</div></div><div class="actions"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}',true)">Excluir</button></div></div><div class="kpis3"><div class="mini"><b>${st.orders?brl(st.ticket):"—"}</b><span>Ticket médio</span></div><div class="mini"><b>${st.orders?brl(st.avgMargin):"—"}</b><span>Lucro médio/venda</span></div><div class="mini"><b>${brl(st.open)}</b><span>Em aberto</span></div></div><div class="card" style="margin-top:12px"><div class="cardhead"><h2>Momento de visita</h2><span class="badge ${c.visitPriority?"bad":"good"}">${c.visitPriority?"Prioridade manual":"Automático"}</span></div><div style="font-size:22px;font-weight:850">${fmt(st.next)}</div><div class="muted" style="margin-top:4px">Última compra: ${fmt(st.last)} • frequência: ${st.orders?st.interval+" dias":"sem histórico"}</div><div class="actions" style="margin-top:10px"><button class="btn ${c.visitPriority?"secondary":"danger"}" onclick="toggleVisitPriority('${c.id}')">${c.visitPriority?"Retirar prioridade":"Priorizar próxima visita"}</button></div></div><div class="card"><div class="cardhead"><h2>Garantias • últimos 12 meses</h2></div>${(()=>{const ws=warrantyStats(c.id,365),high=ws.warrantyQty>=2&&ws.incidence>=10;return `<div class="kpis3"><div class="mini"><b>${ws.warrantyQty}</b><span>Unidades em garantia</span></div><div class="mini"><b class="${high?"rent-bad":""}">${ws.incidence.toFixed(1)}%</b><span>Incidência</span></div><div class="mini"><b>${brl(ws.impact)}</b><span>Impacto estimado</span></div></div>${high?'<div class="notice" style="margin-top:9px"><b>Atenção ao giro:</b> este cliente apresenta recorrência elevada de garantia em relação às unidades compradas.</div>':""}`})()}</div><div class="card"><div class="cardhead"><h2>Contato e endereço</h2></div><div class="muted">${esc(c.phone||"sem WhatsApp")}<br>${esc(c.address||"")} ${esc(c.city||"")}</div><div class="actions" style="margin-top:10px"><button class="btn blue" onclick="openPreVisit('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="logNoSaleVisit('${c.id}')">Registrar visita sem venda</button></div></div>`;go("clientDetail")
 }
 
 function renderPriceTables(){
@@ -1245,10 +1295,9 @@ function renderSales(){
 }
 function renderCollections(){
  ensureState();collectionStatusFilters.innerHTML=[["all","Tudo"],["upcoming","A vencer"],["late","Atrasado"],["sent","Enviado"]].map(([k,l])=>`<button class="filter-btn ${collectionStatusFilter===k?"active":""}" onclick="setCollectionStatusFilter('${k}')">${l}</button>`).join("");
- const rows=[];state.sales.forEach(s=>(s.installments||[]).forEach(p=>{if(!p.paid)rows.push({s,p})}));
- let filtered=rows;if(collectionStatusFilter==="upcoming")filtered=rows.filter(x=>collectionStatus(x.p)==="upcoming");if(collectionStatusFilter==="late")filtered=rows.filter(x=>collectionStatus(x.p)==="late");if(collectionStatusFilter==="sent")filtered=rows.filter(x=>x.p.sent);
- filtered.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));
- if(!filtered.length)collectionsList.innerHTML='<div class="empty">Nenhuma cobrança nesse filtro.</div>';else collectionsList.innerHTML=filtered.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c),late=collectionStatus(p)==="late";return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${c?.contact?`${esc(c.contact)} • `:""}Parcela ${p.number}/${s.installments.length} • ${fmt(p.due)}</div></div><div class="actions"><span class="badge ${late?"bad":"warn"}">${late?"Atrasado":"A vencer"}</span>${p.sent?'<span class="badge good">Enviado</span>':""}</div></div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div><div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar venda</button></div></div>`}).join("");
+ const rows=[];state.sales.forEach(s=>effectiveInstallments(s).forEach(p=>{if(!p.paid&&Number(p.effectiveAmount||0)>.009)rows.push({s,p:{...p,amount:p.effectiveAmount}})}));
+ let filtered=rows;if(collectionStatusFilter==="upcoming")filtered=rows.filter(x=>collectionStatus(x.p)==="upcoming");if(collectionStatusFilter==="late")filtered=rows.filter(x=>collectionStatus(x.p)==="late");if(collectionStatusFilter==="sent")filtered=rows.filter(x=>x.p.sent);filtered.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));
+ if(!filtered.length)collectionsList.innerHTML='<div class="empty">Nenhuma cobrança nesse filtro.</div>';else collectionsList.innerHTML=filtered.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c),late=collectionStatus(p)==="late",grp=p.groupTotal||s.installments.length;return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${c?.contact?`${esc(c.contact)} • `:""}${p.paymentMethod?esc(p.paymentMethod)+" • ":""}Parcela ${p.groupNumber||p.number}/${grp} • ${fmt(p.due)}</div></div><div class="actions"><span class="badge ${late?"bad":"warn"}">${late?"Atrasado":"A vencer"}</span>${p.sent?'<span class="badge good">Enviado</span>':""}</div></div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div>${p.warrantyCreditApplied?`<div class="muted">Crédito de garantia aplicado: ${brl(p.warrantyCreditApplied)}</div>`:""}<div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar venda</button></div></div>`}).join("");
  collectionUpcomingTemplate.value=state.collectionTemplates.upcoming;collectionLateTemplate.value=state.collectionTemplates.late
 }
 function renderClients(){
@@ -1261,37 +1310,33 @@ function showClient(id){
  clientDetailContent.innerHTML=`<div class="detailtop"><div><div class="detailname">${esc(c.name)}</div><div class="muted">${c.contact?`Contato: ${esc(c.contact)} • `:""}${esc(c.city)} • tabela ${c.price}</div></div><div class="actions"><button class="btn secondary" onclick="openClientSheet('${c.id}')">Editar</button><button class="btn danger" onclick="deleteClient('${c.id}',true)">Excluir</button></div></div><div class="kpis3"><div class="mini"><b>${st.orders?brl(st.ticket):"—"}</b><span>Ticket médio</span></div><div class="mini"><b>${st.orders?brl(st.avgMargin):"—"}</b><span>Lucro médio/venda</span></div><div class="mini"><b>${brl(st.open)}</b><span>Em aberto</span></div></div><div class="card" style="margin-top:12px"><div class="cardhead"><h2>Momento de visita</h2><span class="badge ${c.visitPriority?"bad":"good"}">${c.visitPriority?"Prioridade manual":"Automático"}</span></div><div style="font-size:22px;font-weight:850">${fmt(st.next)}</div><div class="muted" style="margin-top:4px">Última compra: ${fmt(st.last)} • frequência: ${st.orders?st.interval+" dias":"sem histórico"}</div><div class="actions" style="margin-top:10px"><button class="btn ${c.visitPriority?"secondary":"danger"}" onclick="toggleVisitPriority('${c.id}')">${c.visitPriority?"Retirar prioridade":"Priorizar próxima visita"}</button></div></div><div class="card"><div class="cardhead"><h2>Contato e endereço</h2></div><div class="muted">${c.contact?`Contato principal: ${esc(c.contact)}<br>`:""}${esc(c.phone||"sem WhatsApp")}<br>${esc(c.address||"")} ${esc(c.city||"")}</div><div class="actions" style="margin-top:10px"><button class="btn blue" onclick="openPreVisit('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="logNoSaleVisit('${c.id}')">Registrar visita sem venda</button></div></div>`;go("clientDetail")
 }
 function renderWarranties(){
- const list=state.warranties.filter(w=>w.type!=="Sucata");if(!list.length){warrantyList.innerHTML='<div class="empty">Nenhuma garantia registrada.</div>';return}
- warrantyList.innerHTML=list.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),limit=w.mfg?addMonths(w.mfg,9):null,left=limit?days(today(),limit):null;return `<div class="listitem"><div><div class="title">${esc(c?.name||"Cliente")} • ${esc(w.model)}</div><div class="meta">coleta ${fmt(w.collect)} ${limit?`• limite ${fmt(limit)}`:""}</div></div><div style="text-align:right"><span class="badge ${left!=null&&left<=30?"warn":"good"}">${esc(w.status)}</span><div class="actions" style="justify-content:flex-end;margin-top:6px"><button class="btn secondary" onclick="openWarrantySheet('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWarranty('${w.id}')">Excluir</button></div></div></div>`}).join("")
+ const list=state.warranties.filter(w=>w.type!=="Sucata").sort((a,b)=>(b.collect||"").localeCompare(a.collect||""));
+ const last90=addDays(today(),-90),recent=list.filter(w=>(w.collect||"")>=last90),impact90=recent.reduce((a,w)=>a+warrantyImpact(w),0);
+ const rows=state.clients.map(c=>({c,ws:warrantyStats(c.id,365)})).filter(x=>x.ws.count).sort((a,b)=>b.ws.incidence-a.ws.incidence),recurring=rows.filter(x=>x.ws.warrantyQty>=2&&x.ws.incidence>=10),critical=rows[0];
+ warrantySummary.innerHTML=`<div class="mini"><b>${recent.length}</b><span>Garantias últimos 90 dias</span></div><div class="mini"><b>${brl(impact90)}</b><span>Impacto estimado 90 dias</span></div><div class="mini"><b>${recurring.length}</b><span>Clientes com recorrência alta</span></div><div class="mini"><b>${critical?esc(critical.c.name):"—"}</b><span>${critical?critical.ws.incidence.toFixed(1)+"% de incidência":"Cliente mais crítico"}</span></div>`;
+ if(!list.length){warrantyList.innerHTML='<div class="empty">Nenhuma garantia registrada.</div>';return}
+ warrantyList.innerHTML=list.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),p=state.products.find(p=>p.id===w.productId),ws=warrantyStats(w.clientId,365),age=w.mfg&&w.collect?Math.max(0,days(w.mfg,w.collect)):null,high=ws.warrantyQty>=2&&ws.incidence>=10,solution=(w.solution||w.resolution)==="credit"?"Crédito":"Troca por bateria",app=warrantyApplications(w).reduce((a,x)=>a+Number(x.amount||0),0),avail=Math.max(0,Number(w.creditValue||0)-app);return `<div class="card ${high?"warranty-critical":age!=null&&age>=240?"warranty-warning":""}"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} • ${esc(p?.name||w.model||"Produto")}</h3><div class="muted">${fmt(w.collect)} • ${Number(w.qty||1)} un. • ${solution}${age!=null?` • idade no retorno ${(age/30.4).toFixed(1)} meses`:""}</div></div><span class="badge ${high?"bad":age!=null&&age>=240?"warn":"good"}">${high?"Recorrência alta":solution}</span></div><div class="muted">12 meses: ${ws.warrantyQty} un. em garantia / ${ws.purchasedQty} un. compradas • incidência ${ws.incidence.toFixed(1)}% • impacto ${brl(ws.impact)}</div>${(w.solution||w.resolution)==="credit"?`<div class="muted" style="margin-top:5px">Crédito: ${brl(w.creditValue)} • usado ${brl(app)} • disponível ${brl(avail)}</div>`:""}${high?'<div class="notice" style="margin-top:8px"><b>Atenção ao giro:</b> frequência de garantia elevada em relação às unidades compradas. Vale revisar idade de estoque e perfil do cliente.</div>':""}<div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="openWarrantySheet('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWarranty('${w.id}')">Excluir</button></div></div>`}).join("")
 }
 function renderSettings(){
  ensureState();ensureConfig();cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgSellerName.value=state.config.sellerName||"Alex";
- cfgTaxRate.value=Number(state.config.taxRate||0);cfgMinRentability.value=Number(state.config.minRentability??10);cfgFeePix.value=Number(state.config.paymentFees?.PIX||0);cfgFeeCash.value=Number(state.config.paymentFees?.Dinheiro||0);cfgFeeCheque.value=Number(state.config.paymentFees?.Cheque||0);cfgFeeBoleto.value=Number(state.config.paymentFees?.Boleto||0);cfgFeeCard.value=Number(state.config.paymentFees?.["Cartão"]||0);
+ cfgTaxRate.value=Number(state.config.taxRate||0);cfgMinRentability.value=Number(state.config.minRentability??10);cfgFeePix.value=Number(state.config.paymentFees?.PIX||0);cfgFeeCash.value=Number(state.config.paymentFees?.Dinheiro||0);cfgFeeCheque.value=Number(state.config.paymentFees?.Cheque||0);cfgFeeBoleto.value=Number(state.config.paymentFees?.Boleto||0);cfgFeeCard.value=Number(state.config.paymentFees?.["Cartão"]||0);cfgTollPass.value=state.config.tollPass??"BR_SEM_PARAR";
  cfgMapsKey.value=state.config.googleMapsApiKey||"";mapsStatus.textContent=mapsConfigured()?"configurado":"não configurado";mapsStatus.className="badge "+(mapsConfigured()?"good":"warn")
 }
 function renderAll(){ensureState();fillSelects();renderHome();renderSales();renderRoutes();renderCollections();renderClients();renderPriceTables();renderProducts();renderWarranties();renderScrap();renderMonth();renderSettings()}
 function updateSale(){
  let subtotal=0,cost=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);subtotal+=line;cost+=p?Number(p.cost||0)*q:0});
  let discount=0;document.querySelectorAll(".scrapRow").forEach(r=>{const t=state.scrapTypes.find(t=>t.id===r.querySelector(".sst").value),q=Number(r.querySelector(".ssq").value||0),d=t?Number(t.value||0)*q:0;r.querySelector(".scrapDiscount").textContent=`- ${brl(d)}`;discount+=d});
- const total=Math.max(0,subtotal-discount),grossProfit=total-cost;
- const feeRate=paymentFeeRate(sMethod.value),paymentFee=total*feeRate/100,taxRate=Number(state.config?.taxRate||0),tax=total*taxRate/100;
- const routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),totalCosts=cost+paymentFee+tax+routeCost+otherCost,result=total-totalCosts,rent=total>0?result/total*100:0,cls=rentabilityClass(rent);
- saleSubtotalPreview.textContent=brl(subtotal);saleScrapDiscountPreview.textContent=`- ${brl(discount)}`;saleTotal.textContent=brl(total);
- saleCostPreview.textContent=brl(cost);salePaymentFeePreview.textContent=brl(paymentFee);saleTaxPreview.textContent=brl(tax);saleExtraCostsPreview.textContent=brl(routeCost+otherCost);
- saleGrossProfitPreview.textContent=brl(grossProfit);saleTotalCostsPreview.textContent=brl(totalCosts);saleProfitPreview.textContent=brl(result);saleRentabilityPreview.textContent=rent.toFixed(1)+"%";
- saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;
- saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;
- saleRentabilityAlert.className=`notice rent-panel-${cls}`;saleRentabilityAlert.innerHTML=`<b>${rentabilityText(rent)}</b> • Rentabilidade operacional estimada ${rent.toFixed(1)}%.`;
- saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
+ const beforeWarranty=Math.max(0,subtotal-discount),warrantyCredit=previewSelectedWarrantyCredit(beforeWarranty),total=Math.max(0,Math.round((beforeWarranty-warrantyCredit)*100)/100),grossProfit=total-cost;let paymentFee=0;if(sPaymentSplitMode.value==="multiple"){paymentFee=[...paymentRows.querySelectorAll(".payment-row")].reduce((sum,row)=>sum+Number(row.querySelector(".pm-amount").value||0)*paymentFeeRate(row.querySelector(".pm-method").value)/100,0);updateMultiPaymentSummary(total)}else paymentFee=total*paymentFeeRate(sMethod.value)/100;
+ const taxRate=Number(state.config?.taxRate||0),tax=total*taxRate/100,routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),totalCosts=cost+paymentFee+tax+routeCost+otherCost,result=total-totalCosts,rent=total>0?result/total*100:0,cls=rentabilityClass(rent);
+ saleSubtotalPreview.textContent=brl(subtotal);saleScrapDiscountPreview.textContent=`- ${brl(discount)}`;saleWarrantyCreditPreview.textContent=`- ${brl(warrantyCredit)}`;saleTotal.textContent=brl(total);saleCostPreview.textContent=brl(cost);salePaymentFeePreview.textContent=brl(paymentFee);saleTaxPreview.textContent=brl(tax);saleExtraCostsPreview.textContent=brl(routeCost+otherCost);saleGrossProfitPreview.textContent=brl(grossProfit);saleTotalCostsPreview.textContent=brl(totalCosts);saleProfitPreview.textContent=brl(result);saleRentabilityPreview.textContent=rent.toFixed(1)+"%";saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;saleRentabilityAlert.className=`notice rent-panel-${cls}`;saleRentabilityAlert.innerHTML=`<b>${rentabilityText(rent)}</b> • Rentabilidade operacional estimada ${rent.toFixed(1)}%.`;saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
 }
-
 function addSaleItem(productId="",qty=1){
  const row=document.createElement("div");row.className="saleRow";
  row.innerHTML=`<select class="sp"><option value="">Produto</option>${state.products.map(p=>`<option value="${p.id}" ${p.id===productId?"selected":""}>${esc(p.name)} • ${p.qty} un.</option>`).join("")}</select><input class="sq" type="number" min="1" value="${Number(qty)||1}"><div class="lineTotal">R$ 0,00</div><button class="btn secondary" type="button">×</button>`;
  row.querySelector(".sp").onchange=updateSale;row.querySelector(".sq").oninput=updateSale;row.querySelector("button").onclick=()=>{row.remove();updateSale()};saleItems.appendChild(row);updateSale()
 }
 
-sClient.addEventListener("change",()=>{const c=state.clients.find(c=>c.id===sClient.value);if(c)sTable.value=c.price||"0";updateSale()});sTable.addEventListener("change",updateSale);
+sClientSearch.addEventListener("focus",()=>renderSaleClientOptions(sClientSearch.value));sClientSearch.addEventListener("input",()=>{clearSaleClientIfNeeded();renderSaleClientOptions(sClientSearch.value);renderSaleWarrantyCredits();updateSale()});document.addEventListener("click",e=>{if(!e.target.closest(".autocomplete"))sClientOptions.classList.add("hidden")});sTable.addEventListener("change",updateSale);
 sMethod.addEventListener("change",()=>{salePaidLabel.textContent=sMethod.value==="Cheque"?"Recebido / compensado?":"Recebido no ato?";updateSale()});sRouteCost.addEventListener("input",updateSale);sOtherCost.addEventListener("input",updateSale);
 
 clientForm.addEventListener("submit",e=>{e.preventDefault();let c=state.clients.find(c=>c.id===cId.value);const data={name:cName.value.trim(),contact:cContact.value.trim(),phone:cPhone.value.trim(),doc:cDoc.value.trim(),address:cAddress.value.trim(),city:cCity.value.trim(),routeId:c?.routeId||"",price:cPrice.value,interval:Number(cInterval.value),note:cNote.value.trim(),visitPriority:!!c?.visitPriority};if(c)Object.assign(c,data);else state.clients.push({id:uid(),...data});smartRoutePlan=null;closeSheet("clientSheet");save()});
@@ -1299,48 +1344,60 @@ productForm.addEventListener("submit",e=>{e.preventDefault();let p=state.product
 routeForm.addEventListener("submit",e=>{e.preventDefault();let r=state.routes.find(r=>r.id===rId.value);const data={name:rName.value.trim(),km:Number(rKm.value),toll:Number(rToll.value),hotel:Number(rHotel.value)};if(r)Object.assign(r,data);else state.routes.push({id:uid(),...data});closeSheet("routeSheet");save()});
 saleForm.addEventListener("submit",e=>{
  e.preventDefault();ensureState();
- const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Selecione o cliente.");return}
+ const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Digite e selecione um cliente cadastrado.");return}
  const original=state.sales.find(s=>s.id===sId.value),restored={};if(original)(original.items||[]).forEach(i=>restored[i.productId]=(restored[i.productId]||0)+Number(i.qty));
  const items=[];let subtotal=0,cost=0;
  for(const r of document.querySelectorAll(".saleRow")){
-   const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(!p||q<=0)continue;
-   const available=Number(p.qty)+(restored[p.id]||0);if(available<q){alert(`Estoque insuficiente de ${p.name}. Disponível para esta edição: ${available}.`);return}
-   const unit=Number((p.prices||[])[Number(sTable.value)]||0);items.push({productId:p.id,name:p.name,qty:q,unit,line:unit*q,cost:Number(p.cost||0)*q});subtotal+=unit*q;cost+=Number(p.cost||0)*q
+   const prod=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(!prod||q<=0)continue;
+   const available=Number(prod.qty)+(restored[prod.id]||0);if(available<q){alert(`Estoque insuficiente de ${prod.name}. Disponível para esta edição: ${available}.`);return}
+   const unit=Number((prod.prices||[])[Number(sTable.value)]||0);items.push({productId:prod.id,name:prod.name,qty:q,unit,line:unit*q,cost:Number(prod.cost||0)*q});subtotal+=unit*q;cost+=Number(prod.cost||0)*q
  }
  if(!items.length){alert("Adicione pelo menos um item.");return}
- const scrapItems=collectSaleScrapItems();
- const scrapDiscount=scrapItems.reduce((a,i)=>a+Number(i.discount||0),0);
- const total=Math.max(0,Math.round((subtotal-scrapDiscount)*100)/100);
+ const scrapItems=collectSaleScrapItems(),scrapDiscount=scrapItems.reduce((a,i)=>a+Number(i.discount||0),0);
  if(scrapDiscount>subtotal){alert("O desconto em sucata não pode ser maior que o subtotal dos produtos.");return}
  if(!canReplaceSaleScrap(original?.id||"",scrapItems)){alert("Não é possível reduzir essa sucata porque parte dela já foi revendida. Confira o estoque de sucata antes de editar a venda.");return}
- const mode=sPaymentMode.value||"ato";
- let n=mode==="prazo"?Math.max(1,Number(sParts.value||1)):1,first=mode==="prazo"?(sDue.value||sDate.value):sDate.value;
- const parts=[],base=Math.floor((total/n)*100)/100;let acc=0;
- for(let i=0;i<n;i++){
-   const amount=i===n-1?Math.round((total-acc)*100)/100:base;acc+=amount;const oldPart=original?.installments?.[i];
-   parts.push({id:oldPart?.id||uid(),number:i+1,due:addDays(first,i*30),amount,paid:mode==="ato"&&sPaid.value==="yes"?true:!!oldPart?.paid,sent:!!oldPart?.sent})
- }
- if(mode==="prazo")parts.forEach((p,i)=>{if(!original?.installments?.[i]?.paid)p.paid=false});
- if(original&&original.installments.some(p=>p.paid)&&Math.abs(Number(original.total)-total)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor mudou. Deseja continuar e recalcular as parcelas?"))return;
- const method=sMethod.value;
- const routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0);
- const paymentFeeRateSnapshot=paymentFeeRate(method),taxRateSnapshot=Number(state.config?.taxRate||0);
- const paymentFeeValue=total*paymentFeeRateSnapshot/100,taxValue=total*taxRateSnapshot/100;
- const totalCosts=cost+paymentFeeValue+taxValue+routeCost+otherCost,operationalResult=total-totalCosts,operationalRentability=total>0?operationalResult/total*100:0;
+ const beforeWarranty=Math.max(0,subtotal-scrapDiscount),warrantyCredits=buildWarrantyCreditsForSale(beforeWarranty),warrantyCreditTotal=warrantyCredits.reduce((a,x)=>a+Number(x.amount||0),0),total=Math.max(0,Math.round((beforeWarranty-warrantyCreditTotal)*100)/100);
+ let plan;try{plan=paymentPlanFromForm(total,original)}catch(err){alert(err.message);return}
+ if(original&&(original.installments||[]).some(p=>p.paid)&&Math.abs(Number(original.total)-total)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor mudou. Deseja continuar e recalcular os pagamentos?"))return;
+ const routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),paymentFeeValue=paymentFeeFromPlan(plan),taxRateSnapshot=Number(state.config?.taxRate||0),taxValue=total*taxRateSnapshot/100,totalCosts=cost+paymentFeeValue+taxValue+routeCost+otherCost,operationalResult=total-totalCosts,operationalRentability=total>0?operationalResult/total*100:0;
  let savedSale;
  if(original){
-   (original.items||[]).forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)+Number(i.qty)});
-   items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});
-   Object.assign(original,{clientId:c.id,date:sDate.value,method,paymentMode:mode,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:paymentFeeRateSnapshot,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:parts,sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});
+   (original.items||[]).forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)+Number(i.qty)});
+   items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});
+   Object.assign(original,{clientId:c.id,date:sDate.value,method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,warrantyCredits,warrantyCreditTotal,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:null,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:plan.installments,sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});
    const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id});savedSale=original
  }else{
-   const sale={id:uid(),clientId:c.id,date:sDate.value,createdAt:new Date().toISOString(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),method,paymentMode:mode,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:paymentFeeRateSnapshot,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:parts};
-   state.sales.push(sale);items.forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale
+   const sale={id:uid(),clientId:c.id,date:sDate.value,createdAt:new Date().toISOString(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,warrantyCredits,warrantyCreditTotal,total,marginValue:total-cost,routeCost,otherCost,paymentFeeRate:null,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:plan.installments};
+   state.sales.push(sale);items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale
  }
- syncSaleScrapTransactions(savedSale);smartRoutePlan=null;closeSheet("saleSheet");save();setTimeout(()=>openReceipt(savedSale.id),60)
+ syncSaleScrapTransactions(savedSale);syncWarrantyCreditApplications(savedSale);smartRoutePlan=null;closeSheet("saleSheet");save();setTimeout(()=>openReceipt(savedSale.id),60)
 });
 
-warrantyForm.addEventListener("submit",e=>{e.preventDefault();if(!wMfg.value){alert("Informe a data de fabricação.");return}let w=state.warranties.find(w=>w.id===wId.value);const data={clientId:wClient.value,type:"Garantia",model:wModel.value.trim(),code:wCode.value.trim(),mfg:wMfg.value,collect:wCollect.value,status:wStatus.value};if(w)Object.assign(w,data);else state.warranties.push({id:uid(),...data});closeSheet("warrantySheet");save()});
+wClient.addEventListener("change",updateWarrantyOpenSales);
+wResolution.addEventListener("change",updateWarrantyResolutionFields);
+wCreditDestination.addEventListener("change",updateWarrantyOpenSales);
+warrantyForm.addEventListener("submit",e=>{
+ e.preventDefault();ensureState();
+ const c=state.clients.find(c=>c.id===wClient.value),prod=state.products.find(p=>p.id===wProduct.value),qty=Math.max(1,Number(wQty.value||1));if(!c||!prod){alert("Selecione cliente e produto.");return}
+ const w=state.warranties.find(w=>w.id===wId.value);
+ if(w&&warrantyApplications(w).some(a=>a.kind==="sale")){alert("Esta garantia já foi usada como crédito em um pedido e não pode ser alterada. Isso preserva o histórico financeiro.");return}
+ const oldExchange=!!(w&&(w.solution==="exchange"||w.resolution==="exchange")),oldProduct=oldExchange?state.products.find(p=>p.id===w.productId):null,oldQty=oldExchange?Number(w.qty||1):0;
+ const solution=wResolution.value,creditValue=solution==="credit"?Number(wCreditValue.value||0):0;
+ const availableForExchange=Number(prod.qty||0)+(oldExchange&&oldProduct?.id===prod.id?oldQty:0);
+ if(solution==="exchange"&&availableForExchange<qty){alert(`Estoque insuficiente de ${prod.name} para registrar a troca.`);return}
+ if(solution==="credit"&&creditValue<=0){alert("Informe o valor do crédito.");return}
+ let applications=[];
+ if(solution==="credit"&&wCreditDestination.value==="open"){
+   const sale=state.sales.find(s=>s.id===wOpenSale.value);if(!sale){alert("Selecione o pedido em aberto.");return}
+   const open=saleOpenExcludingWarranty(sale,w?.id||""),amount=Math.min(creditValue,open);if(amount<=0){alert("Esse pedido não possui saldo disponível para abatimento.");return}
+   applications=[{id:uid(),saleId:sale.id,amount,kind:"open",date:wCollect.value||today()}]
+ }
+ if(oldExchange&&oldProduct)oldProduct.qty=Number(oldProduct.qty)+oldQty;
+ if(solution==="exchange")prod.qty=Number(prod.qty)-qty;
+ const data={clientId:c.id,type:"Garantia",productId:prod.id,model:prod.name,qty,code:wCode.value.trim(),mfg:wMfg.value||"",collect:wCollect.value||today(),solution,resolution:solution,creditValue,creditDestination:solution==="credit"?wCreditDestination.value:"",applications,note:wNote.value.trim(),unitCostSnapshot:Number(prod.cost||0)};
+ if(w)Object.assign(w,data);else state.warranties.push({id:uid(),...data});
+ closeSheet("warrantySheet");smartRoutePlan=null;save()
+});
 
 
 scrapTypeForm.addEventListener("submit",e=>{e.preventDefault();let t=state.scrapTypes.find(t=>t.id===stId.value);const data={name:stName.value.trim(),weight:Number(stWeight.value||0),value:Number(stValue.value||0)};if(!data.name){return}if(t)Object.assign(t,data);else{if(state.scrapTypes.length>=11){alert("A tabela já possui os 11 tipos de sucata.");return}state.scrapTypes.push({id:uid(),...data})}closeSheet("scrapTypeSheet");save()});
@@ -1362,16 +1419,20 @@ function deleteSale(id){
  if(!canDeleteSaleScrap(s)){alert("Esta venda gerou sucata que já foi parcialmente revendida. Para preservar o estoque, ajuste a revenda antes de excluir a venda.");return}
  if(confirm(`Excluir o pedido ${s.orderNumber||""} de ${c?.name||"cliente"} no valor de ${brl(s.total)}? O estoque será devolvido, as cobranças serão removidas e a sucata recebida neste pedido também será estornada.${warning}`)){
    (s.items||[]).forEach(i=>{const p=state.products.find(p=>p.id===i.productId);if(p)p.qty=Number(p.qty)+Number(i.qty)});
-   state.scrapTransactions=state.scrapTransactions.filter(t=>t.saleId!==id);state.sales=state.sales.filter(x=>x.id!==id);state.visits=state.visits.filter(v=>v.saleId!==id);save()
+   state.scrapTransactions=state.scrapTransactions.filter(t=>t.saleId!==id);state.warranties.forEach(w=>{w.applications=warrantyApplications(w).filter(a=>!(a.saleId===id&&a.kind==="sale"))});state.sales=state.sales.filter(x=>x.id!==id);state.visits=state.visits.filter(v=>v.saleId!==id);save()
  }
 }
 function deleteWarranty(id){
- const w=state.warranties.find(w=>w.id===id);if(!w)return;if(confirm(`Excluir este registro de ${w.type.toLowerCase()} (${w.model})?`)){state.warranties=state.warranties.filter(x=>x.id!==id);save()}
+ const w=state.warranties.find(w=>w.id===id);if(!w)return;
+ if(warrantyApplications(w).length){alert("Esta garantia já possui crédito aplicado a um pedido e não pode ser excluída. Isso preserva o histórico financeiro.");return}
+ if(!confirm("Excluir esta garantia?"))return;
+ if((w.solution==="exchange"||w.resolution==="exchange")&&w.productId){const prod=state.products.find(p=>p.id===w.productId);if(prod)prod.qty=Number(prod.qty)+Number(w.qty||1)}
+ state.warranties=state.warranties.filter(x=>x.id!==id);smartRoutePlan=null;save()
 }
 
 function toggleVisitPriority(cid){const c=state.clients.find(c=>c.id===cid);if(!c)return;c.visitPriority=!c.visitPriority;smartRoutePlan=null;save();if(document.getElementById("clientDetail").classList.contains("active"))showClient(cid)}
 function saveSettings(){
- ensureState();ensureConfig();Object.assign(state.config,{costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim(),sellerName:cfgSellerName.value.trim()||"Alex",taxRate:Number(cfgTaxRate.value||0),minRentability:Number(cfgMinRentability.value||10),paymentFees:{PIX:Number(cfgFeePix.value||0),Dinheiro:Number(cfgFeeCash.value||0),Cheque:Number(cfgFeeCheque.value||0),Boleto:Number(cfgFeeBoleto.value||0),"Cartão":Number(cfgFeeCard.value||0)}});
+ ensureState();ensureConfig();Object.assign(state.config,{costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim(),sellerName:cfgSellerName.value.trim()||"Alex",taxRate:Number(cfgTaxRate.value||0),minRentability:Number(cfgMinRentability.value||10),paymentFees:{PIX:Number(cfgFeePix.value||0),Dinheiro:Number(cfgFeeCash.value||0),Cheque:Number(cfgFeeCheque.value||0),Boleto:Number(cfgFeeBoleto.value||0),"Cartão":Number(cfgFeeCard.value||0)},tollPass:cfgTollPass.value});
  smartRoutePlan=null;save();alert("Configurações salvas.")
 }
 function saveMapsKey(){ensureConfig();state.config.googleMapsApiKey=cfgMapsKey.value.trim();mapsLoaderPromise=null;smartRoutePlan=null;save();alert("Integração de rotas salva.")}
@@ -1379,100 +1440,238 @@ function receiptFileName(s){return `AX-Baterias-Pedido-${s.orderNumber||"sem-num
 function formatPhone(v){let d=String(v||"").replace(/\D/g,"");if(d.startsWith("55")&&d.length>=12)d=d.slice(2);if(d.length===11)return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;if(d.length===10)return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;return v||""}
 function currentSellerName(){return (state.config.sellerName||currentUser?.user_metadata?.full_name||currentUser?.email?.split("@")[0]||"Alex").trim()}
 function renderReceiptHtml(s,c){
- rcOrder.textContent=`Pedido ${s.orderNumber||"----"}`;rcClient.textContent=c?.name||"Cliente";rcCity.textContent=c?.city||"—";
+ rcOrder.textContent=`Pedido ${s.orderNumber||"----"}`;rcDate.textContent=`Data do pedido: ${fmt(s.date)}`;rcClient.textContent=c?.name||"Cliente";rcCity.textContent=c?.city||"—";
  rcItems.innerHTML=(s.items||[]).map(i=>`<tr><td>${esc(i.name)}</td><td>${Number(i.qty)}</td><td>${brl(i.unit)}</td><td>${brl(i.line)}</td></tr>`).join("");
- rcPayment.textContent=s.method||"—";
- const showInstall=s.paymentMode==="prazo"||(s.installments||[]).length>1;
- rcInstallmentsWrap.classList.toggle("hidden",!showInstall);
- rcInstallments.innerHTML=showInstall?(s.installments||[]).map(p=>`<div class="receipt-installment"><span>${p.number}/${s.installments.length}</span><span>${fmt(p.due)}</span><span>${brl(p.amount)}</span></div>`).join(""):"";
- const subtotal=Number(s.subtotal!=null?s.subtotal:(s.items||[]).reduce((a,i)=>a+Number(i.line||0),0)),disc=Number(s.scrapDiscount||0);
- rcSubtotal.textContent=brl(subtotal);rcSubtotalLine.classList.toggle("hidden",disc<=0);rcScrapLine.classList.toggle("hidden",disc<=0);rcScrapDiscount.textContent=`- ${brl(disc)}`;rcTotal.textContent=brl(s.total);
+ const payments=s.payments?.length?s.payments:(Number(s.total||0)<=.009?[]:[{method:s.method||"—",amount:s.total,mode:s.paymentMode,installments:s.installments||[]}]);
+ rcPayment.innerHTML=payments.length?payments.map(p=>`<div class="receipt-payline"><span>${esc(p.method)}${p.mode==="prazo"&&p.installments?.length>1?` • ${p.installments.length}x`:""}</span><b>${brl(p.amount)}</b></div>`).join(""):'<div class="receipt-payline"><span>Sem valor a pagar</span><b>R$ 0,00</b></div>';
+ const showInstall=payments.some(p=>p.mode==="prazo"||(p.installments||[]).length>1);rcInstallmentsWrap.classList.toggle("hidden",!showInstall);
+ const allParts=payments.flatMap(p=>(p.installments||[]).map(x=>({...x,paymentMethod:p.method})));
+ rcInstallments.innerHTML=showInstall?allParts.filter(p=>p.due).map(p=>`<div class="receipt-installment"><span>${esc(p.paymentMethod||"")} ${p.groupNumber||p.number}/${p.groupTotal||allParts.length}</span><span>${fmt(p.due)}</span><span>${brl(p.amount)}</span></div>`).join(""):"";
+ const subtotal=Number(s.subtotal!=null?s.subtotal:(s.items||[]).reduce((a,i)=>a+Number(i.line||0),0)),disc=Number(s.scrapDiscount||0),wcredit=Number(s.warrantyCreditTotal||0);
+ rcSubtotal.textContent=brl(subtotal);rcSubtotalLine.classList.toggle("hidden",disc<=0&&wcredit<=0);rcScrapLine.classList.toggle("hidden",disc<=0);rcScrapDiscount.textContent=`- ${brl(disc)}`;rcWarrantyCreditLine.classList.toggle("hidden",wcredit<=0);rcWarrantyCredit.textContent=`- ${brl(wcredit)}`;rcTotal.textContent=brl(s.total);
  rcSeller.textContent=`Pedido feito por: ${s.sellerName||"Alex"}`;rcPhone.textContent=state.config.companyPhone?`WhatsApp: ${formatPhone(state.config.companyPhone)}`:"";
 }
-function clearPreparedReceipt(){
- activeReceiptBlob=null;activeReceiptFile=null;receiptGenerationPromise=null;
- if(activeReceiptObjectUrl){try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}activeReceiptObjectUrl=null}
- if(window.receiptImagePreview){receiptImagePreview.removeAttribute("src");receiptImagePreview.classList.add("hidden")}
- if(window.receiptPreparing)receiptPreparing.classList.remove("hidden");
+function resetReceiptPreparingUi(){
+ if(window.receiptPreparing){
+   receiptPreparing.innerHTML='<span class="spinner"></span><b>Preparando imagem do pedido…</b><span>Isso acontece automaticamente.</span>';
+   receiptPreparing.classList.remove("hidden");
+ }
+ if(window.receiptImagePreview){
+   receiptImagePreview.removeAttribute("src");
+   receiptImagePreview.classList.add("hidden");
+ }
  if(window.receiptReadyLine)receiptReadyLine.classList.add("hidden");
  if(window.receiptShareBtn)receiptShareBtn.disabled=true;
  if(window.receiptSaveBtn)receiptSaveBtn.disabled=true;
  if(window.receiptShareStatus)receiptShareStatus.textContent="Aguarde a imagem ficar pronta.";
 }
-function setReceiptReady(blob,file){
- activeReceiptBlob=blob;activeReceiptFile=file;
+function clearPreparedReceipt(invalidateGeneration=true){
+ if(invalidateGeneration)receiptGenerationToken++;
+ activeReceiptImageSaleId=null;
+ activeReceiptBlob=null;
+ activeReceiptFile=null;
+ receiptGenerationPromise=null;
+ receiptGenerationSaleId=null;
+ if(activeReceiptObjectUrl){
+   try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}
+   activeReceiptObjectUrl=null
+ }
+ resetReceiptPreparingUi()
+}
+function setReceiptReady(blob,file,sid,token){
+ // Segurança: uma geração antiga nunca pode substituir o recibo atualmente aberto.
+ if(token!==receiptGenerationToken||sid!==activeReceiptSaleId)return false;
+ activeReceiptImageSaleId=sid;
+ activeReceiptBlob=blob;
+ activeReceiptFile=file;
  if(activeReceiptObjectUrl){try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}}
  activeReceiptObjectUrl=URL.createObjectURL(blob);
  receiptImagePreview.src=activeReceiptObjectUrl;
  receiptImagePreview.classList.remove("hidden");
  receiptPreparing.classList.add("hidden");
  receiptReadyLine.classList.remove("hidden");
- receiptShareBtn.disabled=false;receiptSaveBtn.disabled=false;
+ receiptShareBtn.disabled=false;
+ receiptSaveBtn.disabled=false;
  receiptShareStatus.textContent="Imagem pronta. Toque em Enviar por WhatsApp.";
+ return true
 }
 async function waitReceiptRender(){
  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
  try{if(document.fonts?.ready)await document.fonts.ready}catch{}
  const imgs=[...receiptCard.querySelectorAll("img")].filter(i=>!i.complete);
- if(imgs.length)await Promise.all(imgs.map(i=>new Promise(r=>{i.addEventListener("load",r,{once:true});i.addEventListener("error",r,{once:true})})));
+ if(imgs.length)await Promise.all(imgs.map(i=>new Promise(r=>{
+   i.addEventListener("load",r,{once:true});
+   i.addEventListener("error",r,{once:true})
+ })));
+ // Safari às vezes precisa de um quadro extra depois das imagens/fontes.
+ await new Promise(resolve=>requestAnimationFrame(resolve))
 }
-async function prepareReceiptImage(sid=activeReceiptSaleId){
- const s=state.sales.find(s=>s.id===sid);if(!s)throw new Error("Pedido não encontrado.");
- if(activeReceiptSaleId===sid&&activeReceiptFile&&activeReceiptBlob)return activeReceiptFile;
- if(activeReceiptSaleId===sid&&receiptGenerationPromise)return receiptGenerationPromise;
+async function prepareReceiptImage(sid=activeReceiptSaleId,{force=false}={}){
+ const s=state.sales.find(s=>s.id===sid);
+ if(!s)throw new Error("Pedido não encontrado.");
+
+ // Só reutiliza uma imagem quando ela foi explicitamente gerada para ESTE pedido.
+ if(!force&&activeReceiptImageSaleId===sid&&activeReceiptFile&&activeReceiptBlob)return activeReceiptFile;
+ if(!force&&receiptGenerationPromise&&receiptGenerationSaleId===sid)return receiptGenerationPromise;
+
+ // Cancela logicamente qualquer geração anterior.
  const token=++receiptGenerationToken;
- clearPreparedReceipt();
+ activeReceiptImageSaleId=null;
+ activeReceiptBlob=null;
+ activeReceiptFile=null;
+ receiptGenerationSaleId=sid;
+ if(activeReceiptObjectUrl){
+   try{URL.revokeObjectURL(activeReceiptObjectUrl)}catch{}
+   activeReceiptObjectUrl=null
+ }
+ resetReceiptPreparingUi();
+
+ // Reconstroi o HTML-fonte a partir do próprio pedido antes da captura.
+ const c=state.clients.find(c=>c.id===s.clientId);
+ renderReceiptHtml(s,c);
+
  receiptGenerationPromise=(async()=>{
    await waitReceiptRender();
+
+   if(token!==receiptGenerationToken||sid!==activeReceiptSaleId){
+     throw new Error("Geração substituída por outro pedido.")
+   }
+
    const blob=await receiptBlob();
-   if(token!==receiptGenerationToken)throw new Error("Geração substituída por outro pedido.");
-   const file=new File([blob],receiptFileName(s),{type:"image/png",lastModified:Date.now()});
-   setReceiptReady(blob,file);
+
+   if(token!==receiptGenerationToken||sid!==activeReceiptSaleId){
+     throw new Error("Geração substituída por outro pedido.")
+   }
+
+   const file=new File([blob],receiptFileName(s),{
+     type:"image/png",
+     lastModified:Date.now()
+   });
+
+   if(!setReceiptReady(blob,file,sid,token)){
+     throw new Error("Imagem descartada porque outro pedido foi aberto.")
+   }
    return file
  })().catch(e=>{
+   if(e?.message?.includes("substituída")||e?.message?.includes("descartada")){
+     console.warn(e.message);
+     throw e
+   }
    console.error(e);
-   if(token===receiptGenerationToken){
-     receiptPreparing.innerHTML='<b>Não foi possível preparar a imagem.</b><span>Feche e abra o recibo novamente.</span>';
+   if(token===receiptGenerationToken&&sid===activeReceiptSaleId){
+     receiptPreparing.innerHTML='<b>Não foi possível preparar a imagem.</b><span>Toque em “Corrigir recibo” para tentar novamente.</span>';
      receiptShareStatus.textContent="Falha ao gerar a imagem.";
    }
    throw e
- }).finally(()=>{if(token===receiptGenerationToken)receiptGenerationPromise=null});
+ }).finally(()=>{
+   if(token===receiptGenerationToken){
+     receiptGenerationPromise=null;
+     receiptGenerationSaleId=null
+   }
+ });
+
  return receiptGenerationPromise
 }
 function openReceipt(sid){
  const s=state.sales.find(s=>s.id===sid);if(!s)return;
- const c=state.clients.find(c=>c.id===s.clientId);
+
+ // Primeiro invalida completamente qualquer imagem/promessa do pedido anterior.
+ clearPreparedReceipt(true);
+
  activeReceiptSaleId=sid;
+ const c=state.clients.find(c=>c.id===s.clientId);
  renderReceiptHtml(s,c);
  openSheet("receiptSheet");
- prepareReceiptImage(sid).catch(()=>{})
+
+ // Sempre gera um PNG novo ao abrir um recibo.
+ prepareReceiptImage(sid,{force:true}).catch(()=>{})
+}
+async function regenerateReceiptImage(){
+ const sid=activeReceiptSaleId;
+ const s=state.sales.find(s=>s.id===sid);
+ if(!s)return;
+
+ const oldText=receiptFixBtn.textContent;
+ receiptFixBtn.disabled=true;
+ receiptFixBtn.textContent="↻ Corrigindo…";
+ receiptShareStatus.textContent="Descartando a imagem anterior e gerando novamente…";
+
+ try{
+   // Invalida o PNG e qualquer html2canvas que ainda esteja terminando em paralelo.
+   clearPreparedReceipt(true);
+
+   // Mantém o mesmo pedido aberto e reconstroi o conteúdo dele do zero.
+   activeReceiptSaleId=sid;
+   const c=state.clients.find(c=>c.id===s.clientId);
+   renderReceiptHtml(s,c);
+
+   await prepareReceiptImage(sid,{force:true});
+
+   if(activeReceiptImageSaleId===sid){
+     receiptShareStatus.textContent=`Recibo do pedido ${s.orderNumber||""} corrigido e gerado novamente.`;
+   }
+ }catch(e){
+   if(!String(e?.message||"").includes("substituída")&&!String(e?.message||"").includes("descartada")){
+     console.error(e);
+     alert("Não foi possível corrigir o recibo. Tente novamente.")
+   }
+ }finally{
+   receiptFixBtn.disabled=false;
+   receiptFixBtn.textContent=oldText
+ }
 }
 async function receiptBlob(){
  if(!window.html2canvas)throw new Error("Gerador de imagem não carregado.");
  const canvas=await html2canvas(receiptCard,{
-   scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false,
-   windowWidth:680,windowHeight:receiptCard.scrollHeight,
-   scrollX:0,scrollY:0
+   scale:2,
+   backgroundColor:"#ffffff",
+   useCORS:true,
+   logging:false,
+   windowWidth:680,
+   windowHeight:receiptCard.scrollHeight,
+   scrollX:0,
+   scrollY:0
  });
- return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Falha ao criar PNG.")),"image/png",.96))
+ return await new Promise((resolve,reject)=>
+   canvas.toBlob(
+     b=>b?resolve(b):reject(new Error("Falha ao criar PNG.")),
+     "image/png",
+     .96
+   )
+ )
 }
 function triggerBlobDownload(blob,name){
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;
- document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download=name;
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1500)
 }
 async function downloadReceipt(){
  const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;
  receiptSaveBtn.disabled=true;
  try{
    const file=await prepareReceiptImage(s.id);
+
+   // Confere de novo antes de salvar.
+   if(activeReceiptImageSaleId!==s.id)throw new Error("Imagem não pertence ao pedido aberto.");
+
    triggerBlobDownload(file,receiptFileName(s));
    receiptShareStatus.textContent="Imagem salva."
- }catch(e){console.error(e);alert("Não foi possível salvar a imagem do pedido.")}
- finally{if(activeReceiptFile)receiptSaveBtn.disabled=false}
+ }catch(e){
+   console.error(e);
+   alert("Não foi possível salvar a imagem do pedido.")
+ }finally{
+   if(activeReceiptFile&&activeReceiptImageSaleId===activeReceiptSaleId)receiptSaveBtn.disabled=false
+ }
 }
 function normalizedWhats(phone){
  let d=String(phone||"").replace(/\D/g,"").replace(/^0+/,"");
- if(!d)return"";if(!d.startsWith("55"))d="55"+d;return d
+ if(!d)return"";
+ if(!d.startsWith("55"))d="55"+d;
+ return d
 }
 async function copyReceiptImageToClipboard(blob){
  try{
@@ -1486,15 +1685,29 @@ async function copyReceiptImageToClipboard(blob){
 async function sendReceiptWhatsApp(){
  const s=state.sales.find(s=>s.id===activeReceiptSaleId);if(!s)return;
  const c=state.clients.find(c=>c.id===s.clientId),phone=normalizedWhats(c?.phone);
- if(!phone){alert("Este cliente não tem WhatsApp cadastrado. Atualize o cadastro antes de enviar.");return}
+ if(!phone){
+   alert("Este cliente não tem WhatsApp cadastrado. Atualize o cadastro antes de enviar.");
+   return
+ }
  const hello=c?.contact?`Olá, ${c.contact}!`:"Olá!";
  const text=`${hello} Segue o resumo do seu pedido nº ${s.orderNumber}.`;
- receiptShareBtn.disabled=true;receiptShareStatus.textContent="Preparando envio…";
+ receiptShareBtn.disabled=true;
+ receiptShareStatus.textContent="Preparando envio…";
+
  try{
    const file=await prepareReceiptImage(s.id);
-   // Melhor caminho disponível em celular: compartilha o PNG real + mensagem.
+
+   // Trava final: nunca compartilha um PNG produzido para outro pedido.
+   if(activeReceiptSaleId!==s.id||activeReceiptImageSaleId!==s.id){
+     throw new Error("A imagem pronta não corresponde ao pedido aberto.")
+   }
+
    if(navigator.share){
-     const payload={title:`Pedido ${s.orderNumber} • AX Baterias`,text,files:[file]};
+     const payload={
+       title:`Pedido ${s.orderNumber} • AX Baterias`,
+       text,
+       files:[file]
+     };
      const canShareFiles=!navigator.canShare||navigator.canShare({files:[file]});
      if(canShareFiles){
        try{
@@ -1502,27 +1715,37 @@ async function sendReceiptWhatsApp(){
          receiptShareStatus.textContent="Compartilhamento concluído.";
          return
        }catch(e){
-         if(e?.name==="AbortError"){receiptShareStatus.textContent="Envio cancelado.";return}
+         if(e?.name==="AbortError"){
+           receiptShareStatus.textContent="Envio cancelado.";
+           return
+         }
          console.warn("Compartilhamento nativo falhou; usando conversa direta.",e)
        }
      }
    }
-   // Fallback: preserva a exigência de abrir exatamente o cliente.
+
    const copied=await copyReceiptImageToClipboard(activeReceiptBlob);
    if(!copied)triggerBlobDownload(activeReceiptBlob,receiptFileName(s));
+
    receiptShareStatus.textContent=copied
      ?"Imagem copiada. Abrindo a conversa do cliente — se necessário, cole a imagem no WhatsApp."
      :"Imagem salva. Abrindo a conversa do cliente para anexar o arquivo.";
+
    const url=`https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
    const popup=window.open(url,"_blank");
    if(!popup)window.location.href=url
  }catch(e){
-   console.error(e);receiptShareStatus.textContent="Não foi possível preparar o envio.";
-   alert("Não foi possível gerar a imagem do pedido.")
+   console.error(e);
+   receiptShareStatus.textContent="Não foi possível preparar o envio.";
+   alert("Não foi possível gerar a imagem correta deste pedido. Toque em “Corrigir recibo” e tente novamente.")
  }finally{
-   if(activeReceiptFile)receiptShareBtn.disabled=false
+   if(activeReceiptFile&&activeReceiptImageSaleId===activeReceiptSaleId)receiptShareBtn.disabled=false
  }
 }
+function findInstallment(s,id){return (s.installments||[]).find(p=>p.id===id)}
+function toggleSent(saleId,partId){const s=state.sales.find(s=>s.id===saleId),p=s&&findInstallment(s,partId);if(!p)return;p.sent=!p.sent;save()}
+function markPaid(saleId,partId){const s=state.sales.find(s=>s.id===saleId),p=s&&findInstallment(s,partId);if(!p)return;p.paid=true;save()}
+function openCollectionWhats(saleId,partId){const s=state.sales.find(s=>s.id===saleId),p=s&&effectiveInstallments(s).find(p=>p.id===partId),c=s&&state.clients.find(c=>c.id===s.clientId);if(!s||!p||!c)return;const phone=normalizedWhats(c.phone);if(!phone){alert("Este cliente não tem WhatsApp cadastrado.");return}const msg=collectionMsg(s,{...p,amount:p.effectiveAmount},c),url=`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;const win=window.open(url,"_blank");if(!win)window.location.href=url;const p0=findInstallment(s,partId);if(p0)p0.sent=true;save()}
 function contactClientLabel(c){return c?.contact?`${c.contact} - ${c.name}`:(c?.name||"")}
 function collectionStatus(p){return p.due&&p.due<today()?"late":"upcoming"}
 function collectionMsg(s,p,c){
