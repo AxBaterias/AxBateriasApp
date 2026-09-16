@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.14.3">
-<meta name="ax-build" content="2026-09-15-v5.14.3-route-calc-delete">
+<meta name="ax-version" content="5.15">
+<meta name="ax-build" content="2026-09-16-v5.15-sales-client-filter-duplicates">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -901,6 +901,62 @@ html,body{max-width:100%;overflow-x:hidden}
   .route-run-actions .btn.danger{margin-left:0;width:100%}
 }
 
+
+/* v5.15 — filtro de vendas por cliente e duplicidade */
+.sales-client-filter{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:11px;
+  margin-bottom:10px;
+}
+.sales-client-filter>label{
+  display:block;
+  font-size:9px;
+  font-weight:900;
+  color:#475467;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  margin-bottom:6px;
+}
+.sales-client-search-row{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:6px;
+}
+.sales-client-search-icon{
+  font-size:18px;
+  color:var(--muted);
+  padding:0 2px;
+}
+.sales-client-search-row input{min-width:0}
+.sales-clear-search{white-space:nowrap}
+.sales-filter-summary{font-size:9px;margin-top:6px;line-height:1.35}
+.sales-card-badges{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end}
+.sale-duplicate-card{border-color:#fda29b}
+.sale-duplicate-warning{
+  background:#fff4ed;
+  border:1px solid #ffd6ae;
+  color:#9c2a10;
+  border-radius:11px;
+  padding:8px 10px;
+  font-size:9px;
+  line-height:1.4;
+  margin-bottom:9px;
+}
+@media(max-width:520px){
+  .sales-client-search-row{
+    grid-template-columns:auto minmax(0,1fr);
+  }
+  .sales-clear-search{
+    grid-column:2;
+    justify-self:start;
+    padding:7px 10px;
+  }
+  .sales-card-badges{max-width:46%}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -926,7 +982,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.14.3</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.15</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -980,6 +1036,15 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <section id="sales" class="screen">
   <div class="cardhead"><div><h1>Vendas</h1><div class="muted">Pedidos e recebimentos dos últimos 3 meses.</div></div><button class="btn" onclick="openSaleSheet()">＋ Nova venda</button></div>
+  <div class="sales-client-filter">
+    <label for="salesClientSearch">Cliente / Razão social</label>
+    <div class="sales-client-search-row">
+      <span class="sales-client-search-icon">⌕</span>
+      <input id="salesClientSearch" type="search" autocomplete="off" placeholder="Digite o nome ou razão social" oninput="renderSales()">
+      <button class="btn secondary sales-clear-search" type="button" onclick="clearSalesClientFilter()" aria-label="Limpar filtro">Limpar</button>
+    </div>
+    <div id="salesFilterSummary" class="muted sales-filter-summary"></div>
+  </div>
   <div class="filter-stack">
     <div><div class="filter-caption">Mês da venda</div><div id="salesMonthFilters" class="filter-row"></div></div>
     <div><div class="filter-caption">Status</div><div id="salesStatusFilters" class="filter-row"></div></div>
@@ -1034,7 +1099,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.14.3</div>
+  <div class="version-note">AX Baterias • v5.15</div>
 </section>
 
 <section id="clients" class="screen">
@@ -1173,8 +1238,8 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.14.3</span></div>
-    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.14.3</b></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.15</span></div>
+    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.15</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">15/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
     <div id="systemUpdateMessage" class="muted" style="margin-top:8px">O botão busca o index.html publicado sem usar o cache.</div>
@@ -1608,7 +1673,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.14.3';
+const AX_APP_VERSION='5.15';
 const AX_RELEASE_DATE='2026-09-15';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
@@ -2235,6 +2300,51 @@ function nextOrderNumber(dateStr,excludeId=""){
 function recentMonths(){
  const now=new Date(),arr=[];for(let i=0;i<3;i++){const d=new Date(now.getFullYear(),now.getMonth()-i,1);arr.push({key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,label:d.toLocaleDateString("pt-BR",{month:"short"}).replace(".","").toLowerCase()})}return arr
 }
+function normalizeSaleSearch(v){
+ return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()
+}
+function clearSalesClientFilter(){
+ if(window.salesClientSearch)salesClientSearch.value="";
+ renderSales()
+}
+function saleItemsFingerprint(items){
+ return (items||[]).map(i=>({productId:String(i.productId||""),qty:Number(i.qty||0)}))
+   .filter(i=>i.productId&&i.qty>0)
+   .sort((a,b)=>a.productId.localeCompare(b.productId))
+   .map(i=>`${i.productId}:${i.qty}`)
+   .join("|")
+}
+function saleDuplicateFingerprint(s){
+ const commercial=Number(s.currentOrderTotal??s.total??0);
+ return [
+   String(s.clientId||""),
+   String(s.date||""),
+   saleItemsFingerprint(s.items),
+   commercial.toFixed(2)
+ ].join("§")
+}
+function possibleDuplicateSales(){
+ const groups=new Map();
+ (state.sales||[]).forEach(s=>{
+   const key=saleDuplicateFingerprint(s);
+   if(!key||key.startsWith("§"))return;
+   if(!groups.has(key))groups.set(key,[]);
+   groups.get(key).push(s)
+ });
+ const ids=new Set();
+ groups.forEach(rows=>{if(rows.length>1)rows.forEach(s=>ids.add(s.id))});
+ return ids
+}
+function findPotentialDuplicateSale(clientId,date,items,total,excludeId=""){
+ const fingerprint=[
+   String(clientId||""),
+   String(date||""),
+   saleItemsFingerprint(items),
+   Number(total||0).toFixed(2)
+ ].join("§");
+ return (state.sales||[]).find(s=>s.id!==excludeId&&saleDuplicateFingerprint(s)===fingerprint)||null
+}
+
 function setSalesMonthFilter(v){salesMonthFilter=v;renderSales()}
 function setSalesStatusFilter(v){salesStatusFilter=v;renderSales()}
 function setCollectionStatusFilter(v){collectionStatusFilter=v;renderCollections()}
@@ -2710,8 +2820,55 @@ function renderSettings(){ensureConfig();cfgKm.value=state.config.costKm;cfgWind
 
 
 function renderSales(){
- ensureState();salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");let list=[...state.sales];if(salesMonthFilter!=="all")list=list.filter(s=>String(s.date||"").slice(0,7)===salesMonthFilter);if(salesStatusFilter==="open")list=list.filter(s=>saleOpen(s)>.009);if(salesStatusFilter==="late")list=list.filter(s=>saleOverdue(s));if(salesStatusFilter==="paid")list=list.filter(s=>salePaid(s));list.sort((a,b)=>(b.date||"").localeCompare(a.date||""));if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda nesse filtro.</div>';return}
- salesList.innerHTML=list.map(s=>{const c=state.clients.find(c=>c.id===s.clientId),disc=Number(s.scrapDiscount||0)+Number(s.freeAdjustmentValue||0),op=saleOperationalBreakdown(s),cls=rentabilityClass(op.rentability),ren=saleRenegotiated(s),status=salePaid(s)?["good","Recebido"]:ren?["warn","Renegociado"]:saleOverdue(s)?["bad","Vencido"]:["warn","A receber"],collectionTotal=Number(s.collectionTotal??s.total??0);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.paymentMode==="prazo"&&s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${status[0]}">${status[1]}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Venda atual${disc?` • descontos -${brl(disc)}`:""}${Number(s.warrantyCreditTotal||0)?` • garantia -${brl(s.warrantyCreditTotal)}`:""} • em aberto ${brl(saleOpen(s))}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior renegociado ${brl(s.renegotiatedDebtTotal)} • total da cobrança ${brl(collectionTotal)}`:""}</div><div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">Custo das baterias: ${brl(op.productCost)} • Margem comercial: <b class="rent-${cls}">${brl(op.commercialMargin)}</b> • Margem do pedido: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b>${op.warrantyImpact>0?`<br>Impacto da garantia: <b>- ${brl(op.warrantyImpact)}</b> • Margem após garantia: <b class="rent-${op.economicResult<0?"bad":"good"}">${brl(op.economicResult)}</b>`:""}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior: <b>${brl(s.renegotiatedDebtTotal)}</b> — fora do faturamento e da margem.`:""}<br><span class="muted">Impostos, taxas e despesas de viagem são analisados na quinzena.</span></div></div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="toggleSaleCardResult('${s.id}',this)">👁 Resultado</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
+ ensureState();
+ salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");
+ salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");
+
+ const clientQuery=normalizeSaleSearch(window.salesClientSearch?.value||"");
+ const duplicateIds=possibleDuplicateSales();
+ let list=[...state.sales];
+
+ if(clientQuery){
+   list=list.filter(s=>{
+     const c=state.clients.find(c=>c.id===s.clientId);
+     return normalizeSaleSearch(c?.name||"").includes(clientQuery)
+   })
+ }
+ if(salesMonthFilter!=="all")list=list.filter(s=>String(s.date||"").slice(0,7)===salesMonthFilter);
+ if(salesStatusFilter==="open")list=list.filter(s=>saleOpen(s)>.009);
+ if(salesStatusFilter==="late")list=list.filter(s=>saleOverdue(s));
+ if(salesStatusFilter==="paid")list=list.filter(s=>salePaid(s));
+
+ list.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||String(b.createdAt||"").localeCompare(String(a.createdAt||"")));
+ if(window.salesFilterSummary){
+   const bits=[];
+   if(clientQuery)bits.push(`cliente contendo “${esc(window.salesClientSearch.value.trim())}”`);
+   if(salesMonthFilter!=="all")bits.push(`mês ${recentMonths().find(m=>m.key===salesMonthFilter)?.label||salesMonthFilter}`);
+   if(salesStatusFilter!=="all")bits.push({open:"a receber",late:"vencido",paid:"recebido"}[salesStatusFilter]||salesStatusFilter);
+   salesFilterSummary.innerHTML=`${list.length} venda(s) encontrada(s)${bits.length?` • ${bits.join(" • ")}`:""}`
+ }
+ if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda encontrada com esses filtros.</div>';return}
+
+ salesList.innerHTML=list.map(s=>{
+   const c=state.clients.find(c=>c.id===s.clientId),disc=Number(s.scrapDiscount||0)+Number(s.freeAdjustmentValue||0),op=saleOperationalBreakdown(s),cls=rentabilityClass(op.rentability),ren=saleRenegotiated(s),status=salePaid(s)?["good","Recebido"]:ren?["warn","Renegociado"]:saleOverdue(s)?["bad","Vencido"]:["warn","A receber"],collectionTotal=Number(s.collectionTotal??s.total??0),duplicate=duplicateIds.has(s.id);
+   return `<div class="card ${duplicate?"sale-duplicate-card":""}">
+     <div class="cardhead">
+       <div>
+         <h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3>
+         <div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.paymentMode==="prazo"&&s.installments.length>1?` • ${s.installments.length}x`:""}</div>
+       </div>
+       <div class="sales-card-badges">
+         ${duplicate?'<span class="badge bad">⚠ Possível duplicidade</span>':""}
+         <span class="badge ${status[0]}">${status[1]}</span>
+       </div>
+     </div>
+     ${duplicate?'<div class="sale-duplicate-warning"><b>Atenção:</b> existe outro pedido deste cliente, na mesma data, com os mesmos produtos, quantidades e valor. Confira antes de manter os dois.</div>':""}
+     <div style="font-size:20px;font-weight:850">${brl(s.total)}</div>
+     <div class="muted" style="margin-top:4px">Venda atual${disc?` • descontos -${brl(disc)}`:""}${Number(s.warrantyCreditTotal||0)?` • garantia -${brl(s.warrantyCreditTotal)}`:""} • em aberto ${brl(saleOpen(s))}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior renegociado ${brl(s.renegotiatedDebtTotal)} • total da cobrança ${brl(collectionTotal)}`:""}</div>
+     <div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">Custo das baterias: ${brl(op.productCost)} • Margem comercial: <b class="rent-${cls}">${brl(op.commercialMargin)}</b> • Margem do pedido: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b>${op.warrantyImpact>0?`<br>Impacto da garantia: <b>- ${brl(op.warrantyImpact)}</b> • Margem após garantia: <b class="rent-${op.economicResult<0?"bad":"good"}">${brl(op.economicResult)}</b>`:""}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior: <b>${brl(s.renegotiatedDebtTotal)}</b> — fora do faturamento e da margem.`:""}<br><span class="muted">Impostos, taxas e despesas de viagem são analisados no mês.</span></div></div>
+     <div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="toggleSaleCardResult('${s.id}',this)">👁 Resultado</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div>
+   </div>`
+ }).join("")
 }
 function renderCollections(){
  ensureState();collectionStatusFilters.innerHTML=[["all","Tudo"],["upcoming","A vencer"],["late","Atrasado"],["sent","Enviado"]].map(([k,l])=>`<button class="filter-btn ${collectionStatusFilter===k?"active":""}" onclick="setCollectionStatusFilter('${k}')">${l}</button>`).join("");const rows=[];state.sales.forEach(s=>effectiveInstallments(s).forEach(p=>{if(!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009)rows.push({s,p:{...p,amount:p.effectiveAmount}})}));let filtered=rows;if(collectionStatusFilter==="upcoming")filtered=rows.filter(x=>collectionStatus(x.p)==="upcoming");if(collectionStatusFilter==="late")filtered=rows.filter(x=>collectionStatus(x.p)==="late");if(collectionStatusFilter==="sent")filtered=rows.filter(x=>x.p.sent);filtered.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));if(!filtered.length){collectionsList.innerHTML='<div class="empty">Nenhuma cobrança nesse filtro.</div>'}else{collectionsList.innerHTML=filtered.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c),late=collectionStatus(p)==="late",grp=p.groupTotal||s.installments.length,hasWarranty=Number(p.warrantyCreditApplied||0)>.009;return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${c?.contact?`${esc(c.contact)} • `:""}${p.paymentMethod?esc(p.paymentMethod)+" • ":""}Parcela ${p.groupNumber||p.number}/${grp} • ${fmt(p.due)}</div></div><div class="actions"><span class="badge ${late?"bad":"warn"}">${late?"Atrasado":"A vencer"}</span>${p.sent?'<span class="badge good">Enviado</span>':""}</div></div><div class="muted" style="font-size:9px">Saldo a cobrar</div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div>${hasWarranty?`<div class="collection-credit-detail"><span>Valor original <b>${brl(p.originalAmount)}</b></span><span>Crédito de garantia <b>- ${brl(p.warrantyCreditApplied)}</b></span></div>`:""}<div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar venda</button></div></div>`}).join("")}collectionUpcomingTemplate.value=state.collectionTemplates.upcoming;collectionLateTemplate.value=state.collectionTemplates.late
@@ -2811,7 +2968,14 @@ function commitPendingSaleWarranties(savedSale){
 }
 saleForm.addEventListener("submit",e=>{
  e.preventDefault();ensureState();const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Digite e selecione um cliente cadastrado.");return}const original=state.sales.find(s=>s.id===sId.value),restored={};if(original)(original.items||[]).forEach(i=>restored[i.productId]=(restored[i.productId]||0)+Number(i.qty));const items=[];let subtotal=0,cost=0;for(const r of document.querySelectorAll(".saleRow")){const prod=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(!prod||q<=0)continue;const available=Number(prod.qty)+(restored[prod.id]||0);if(available<q){alert(`Estoque insuficiente de ${prod.name}. Disponível para esta edição: ${available}.`);return}const unit=Number((prod.prices||[])[Number(sTable.value)]||0);items.push({productId:prod.id,name:prod.name,qty:q,unit,line:unit*q,cost:Number(prod.cost||0)*q});subtotal+=unit*q;cost+=Number(prod.cost||0)*q}if(!items.length){alert("Adicione pelo menos um item.");return}const scrapItems=collectSaleScrapItems(),scrapDiscount=scrapItems.reduce((a,i)=>a+Number(i.discount||0),0),freeAdjustmentValue=currentFreeAdjustment();if(scrapDiscount+freeAdjustmentValue>subtotal){alert("Os descontos não podem ser maiores que o subtotal dos produtos.");return}if(!canReplaceSaleScrap(original?.id||"",scrapItems)){alert("Não é possível reduzir essa sucata porque parte dela já foi revendida. Confira o estoque de sucata antes de editar a venda.");return}const exchangeNeeds={};pendingSaleWarrantyDrafts.filter(w=>w.solution==="exchange").forEach(w=>exchangeNeeds[w.productId]=(exchangeNeeds[w.productId]||0)+1);for(const [pid,q] of Object.entries(exchangeNeeds)){const p=state.products.find(p=>p.id===pid),saleQty=items.filter(i=>i.productId===pid).reduce((a,i)=>a+Number(i.qty||0),0),available=Number(p?.qty||0)+(restored[pid]||0)-saleQty;if(available<q){alert(`Estoque insuficiente de ${p?.name||"produto"} para atender a troca da garantia além dos itens vendidos.`);return}}
- const commercialRevenue=Math.max(0,subtotal-scrapDiscount-freeAdjustmentValue),warrantyCredits=buildWarrantyCreditsForSale(commercialRevenue),warrantyCreditTotal=warrantyCredits.reduce((a,x)=>a+Number(x.amount||0),0),currentOrderTotal=Math.max(0,Math.round((commercialRevenue-warrantyCreditTotal)*100)/100),renegotiatedDebts=buildRenegotiatedDebts(),renegotiatedDebtTotal=Math.round(renegotiatedDebts.reduce((a,x)=>a+Number(x.amount||0),0)*100)/100,collectionTotal=Math.round((currentOrderTotal+renegotiatedDebtTotal)*100)/100;let plan;try{plan=paymentPlanFromForm(collectionTotal,original)}catch(err){alert(err.message);return}if(original&&(original.installments||[]).some(p=>p.paid)&&Math.abs(Number(original.collectionTotal??original.total)-collectionTotal)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor da cobrança mudou. Deseja continuar e recalcular os pagamentos?"))return;
+ const commercialRevenue=Math.max(0,subtotal-scrapDiscount-freeAdjustmentValue),warrantyCredits=buildWarrantyCreditsForSale(commercialRevenue),warrantyCreditTotal=warrantyCredits.reduce((a,x)=>a+Number(x.amount||0),0),currentOrderTotal=Math.max(0,Math.round((commercialRevenue-warrantyCreditTotal)*100)/100),renegotiatedDebts=buildRenegotiatedDebts(),renegotiatedDebtTotal=Math.round(renegotiatedDebts.reduce((a,x)=>a+Number(x.amount||0),0)*100)/100,collectionTotal=Math.round((currentOrderTotal+renegotiatedDebtTotal)*100)/100;
+ const possibleDuplicate=findPotentialDuplicateSale(c.id,sDate.value,items,currentOrderTotal,original?.id||"");
+ if(!original&&possibleDuplicate){
+   const duplicateClient=state.clients.find(x=>x.id===possibleDuplicate.clientId);
+   const proceed=confirm(`⚠ POSSÍVEL PEDIDO DUPLICADO\n\nJá existe o Pedido ${possibleDuplicate.orderNumber||"—"} para ${duplicateClient?.name||c.name}, em ${fmt(possibleDuplicate.date)}, com os mesmos produtos, quantidades e valor (${brl(possibleDuplicate.currentOrderTotal??possibleDuplicate.total)}).\n\nConfira se este pedido já foi lançado.\n\nDeseja salvar uma segunda venda mesmo assim?`);
+   if(!proceed)return
+ }
+ let plan;try{plan=paymentPlanFromForm(collectionTotal,original)}catch(err){alert(err.message);return}if(original&&(original.installments||[]).some(p=>p.paid)&&Math.abs(Number(original.collectionTotal??original.total)-collectionTotal)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor da cobrança mudou. Deseja continuar e recalcular os pagamentos?"))return;
  const commercialMargin=commercialRevenue-cost,commercialRentability=commercialRevenue>0?commercialMargin/commercialRevenue*100:0;let savedSale;
  const common={clientId:c.id,date:sDate.value,method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,freeAdjustmentType:freeAdjustmentValue>0?sFreeAdjustmentType.value:"",freeAdjustmentValue,freeAdjustmentReason:freeAdjustmentValue>0?sFreeAdjustmentReason.value.trim():"",warrantyCredits,warrantyCreditTotal,total:currentOrderTotal,currentOrderTotal,renegotiatedDebts,renegotiatedDebtTotal,collectionTotal,marginValue:commercialMargin,commercialRevenue,commercialResult:commercialMargin,commercialMargin,commercialRentability,routeCost:Number(original?.routeCost||0),otherCost:Number(original?.otherCost||0),paymentFeeRate:null,paymentFeeValue:Number(original?.paymentFeeValue||0),taxRate:Number(original?.taxRate||0),taxValue:Number(original?.taxValue||0),totalCosts:cost,operationalResult:commercialMargin,operationalRentability:commercialRentability,installments:plan.installments};
  if(original){(original.items||[]).forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)+Number(i.qty)});items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});Object.assign(original,common,{sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id});savedSale=original}else{const sale={id:uid(),createdAt:nowIsoSP(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),...common};state.sales.push(sale);items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale}
