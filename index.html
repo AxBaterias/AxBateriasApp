@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.14">
-<meta name="ax-build" content="2026-09-15-v5.14-month-evolution-mobile">
+<meta name="ax-version" content="5.14.2">
+<meta name="ax-build" content="2026-09-15-v5.14.2-manual-route-visible">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -838,6 +838,59 @@ html,body{max-width:100%;overflow-x:hidden}
   .month-reading{grid-template-columns:1fr}
 }
 
+
+/* v5.14 atualização — viagem manual independente da análise */
+.route-screen-head{align-items:flex-start;flex-wrap:wrap}
+.route-top-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.route-plan-compare.manual{grid-template-columns:1fr 1.35fr}
+.route-plan-compare.manual b{font-size:9px;line-height:1.35}
+.route-editor-actions{flex-wrap:wrap}
+@media(max-width:520px){
+  .route-screen-head>div:first-child{width:100%}
+  .route-top-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  .route-top-actions .btn{width:100%;white-space:normal;line-height:1.2}
+  .route-plan-compare.manual{grid-template-columns:1fr}
+  .route-editor-actions{display:grid;grid-template-columns:1fr}
+  .route-editor-actions .btn{width:100%}
+}
+
+
+/* v5.14.2 — rota manual explícita */
+.route-start-options{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:4px 0 10px;
+}
+.route-start-card{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  padding:14px;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+  text-align:left;
+  cursor:pointer;
+  min-width:0;
+}
+.route-start-card.smart{border-color:#c7d7fe;background:#f8faff}
+.route-start-card.manual{border-color:#b7e4c7;background:#f7fcf9}
+.route-start-icon{font-size:23px}
+.route-start-copy{min-width:0}
+.route-start-copy b{display:block;font-size:13px;line-height:1.2}
+.route-start-copy small{display:block;font-size:9px;color:var(--muted);line-height:1.35;margin-top:4px}
+.route-start-arrow{font-size:24px;color:var(--muted);line-height:1}
+.route-start-note{font-size:9.5px}
+@media(max-width:520px){
+  .route-start-options{grid-template-columns:1fr}
+  .route-start-card{padding:15px 13px;min-height:74px}
+  .route-start-copy b{font-size:14px}
+  .route-start-copy small{font-size:9px}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -863,7 +916,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.14</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.14.2</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -925,11 +978,22 @@ html,body{max-width:100%;overflow-x:hidden}
 </section>
 
 <section id="routes" class="screen">
-  <div class="cardhead">
-    <div><h1>Rotas inteligentes</h1><div class="muted">O sistema sugere. O Alex escolhe, edita e registra o que realmente gastou.</div></div>
-    <button class="btn" onclick="analyzeSmartRoutes()">Analisar rotas</button>
+  <div class="cardhead route-screen-head">
+    <div><h1>Rotas</h1><div class="muted">Escolha como quer começar.</div></div>
   </div>
-  <div class="notice" style="margin-bottom:12px">A rota é calculada automaticamente com distância, tempo, pedágios e retorno comercial. Depois de escolher uma opção, você pode <b>alterar ordem, incluir ou retirar clientes</b>. O planejamento original fica preservado para comparar com o realizado.</div>
+  <div class="route-start-options">
+    <button class="route-start-card smart" type="button" onclick="analyzeSmartRoutes()">
+      <span class="route-start-icon">🧠</span>
+      <span class="route-start-copy"><b>Analisar rotas</b><small>O sistema calcula e sugere as melhores opções.</small></span>
+      <span class="route-start-arrow">›</span>
+    </button>
+    <button class="route-start-card manual" type="button" onclick="createManualRoute()">
+      <span class="route-start-icon">✍️</span>
+      <span class="route-start-copy"><b>+ Nova rota manual</b><small>Crie a viagem direto e lance clientes e despesas reais.</small></span>
+      <span class="route-start-arrow">›</span>
+    </button>
+  </div>
+  <div class="notice route-start-note" style="margin-bottom:12px"><b>Rota manual:</b> não precisa passar por “Analisar rotas”. O Alex pode criar a viagem, adicionar clientes se quiser e lançar combustível, alimentação, hospedagem, pedágio e outros gastos.</div>
   <div id="routeRunsList" class="route-real-history"></div>
   <div id="routeCandidates" class="card"></div>
   <div id="smartRoutesList"></div>
@@ -960,7 +1024,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.14</div>
+  <div class="version-note">AX Baterias • v5.14.2</div>
 </section>
 
 <section id="clients" class="screen">
@@ -1099,8 +1163,8 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.14</span></div>
-    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.14</b></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.14.2</span></div>
+    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.14.2</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">15/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
     <div id="systemUpdateMessage" class="muted" style="margin-top:8px">O botão busca o index.html publicado sem usar o cache.</div>
@@ -1496,8 +1560,10 @@ html,body{max-width:100%;overflow-x:hidden}
 </form></div></div>
 
 <!-- Route run editor -->
-<div class="sheet" id="routeRunSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2>Editar rota escolhida</h2><div class="muted">A sugestão original fica guardada. Edite a ordem e marque quem já foi atendido; isso permite recalcular a rota a partir do ponto atual.</div></div><button class="btn secondary" onclick="closeSheet('routeRunSheet')">Fechar</button></div>
-<input type="hidden" id="rrId"><div id="rrPlannedSummary" class="notice"></div><div id="rrStops"></div><div class="formgrid" style="margin-top:10px"><div class="field span2"><label>Adicionar cliente / parada</label><select id="rrAddClient"></select></div></div><div class="actions" style="margin-top:10px"><button class="btn secondary" type="button" onclick="addRouteRunStop()">＋ Adicionar</button><button class="btn" type="button" onclick="saveRouteRunEdits()">Salvar alterações</button></div><div class="muted" style="margin-top:8px">Depois de salvar, use “Recalcular a partir daqui” para avaliar se vale continuar com os clientes restantes ou reprogramar.</div>
+<div class="sheet" id="routeRunSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2 id="rrTitle">Editar rota</h2><div id="rrHelper" class="muted">Edite a ordem, os clientes e marque quem já foi atendido.</div></div><button class="btn secondary" onclick="closeSheet('routeRunSheet')">Fechar</button></div>
+<input type="hidden" id="rrId">
+<div class="formgrid" style="margin-bottom:10px"><div class="field span2"><label>Data da rota / viagem</label><input id="rrDate" type="date"></div></div>
+<div id="rrPlannedSummary" class="notice"></div><div id="rrStops"></div><div class="formgrid" style="margin-top:10px"><div class="field span2"><label>Adicionar cliente / parada</label><select id="rrAddClient"></select></div></div><div class="actions route-editor-actions" style="margin-top:10px"><button class="btn secondary" type="button" onclick="addRouteRunStop()">＋ Adicionar cliente</button><button class="btn" type="button" onclick="saveRouteRunEdits(false)">Salvar rota</button><button class="btn secondary" type="button" onclick="saveRouteRunEdits(true)">Salvar e lançar despesa</button></div><div class="muted" style="margin-top:8px">Clientes são opcionais em uma viagem manual. Depois, você pode registrar despesas ou recalcular o trajeto quando houver clientes na rota.</div>
 </div></div>
 
 <!-- Route expense -->
@@ -1532,7 +1598,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.14';
+const AX_APP_VERSION='5.14.2';
 const AX_RELEASE_DATE='2026-09-15';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
@@ -1582,7 +1648,7 @@ function ensureState(){
  state.clients.forEach(c=>{if(c.contact==null)c.contact=""});
  state.sales.forEach(s=>{if(s.freeAdjustmentValue==null)s.freeAdjustmentValue=0;if(!s.renegotiatedDebts)s.renegotiatedDebts=[];if(s.renegotiatedDebtTotal==null)s.renegotiatedDebtTotal=0;if(s.collectionTotal==null)s.collectionTotal=Number(s.total||0)});
  state.warranties.forEach(w=>{if(w.type==="Sucata")return;if(!w.batteryDisposition)w.batteryDisposition="pending";if(w.batteryValue==null)w.batteryValue=Number(w.creditValue||0)||Number(state.products.find(p=>p.id===w.productId)?.prices?.[Number(state.clients.find(c=>c.id===w.clientId)?.price||0)]||0)});
- state.routeRuns.forEach(r=>{r.expenses=r.expenses||[];r.attendedClientIds=r.attendedClientIds||[]});
+ state.routeRuns.forEach(r=>{r.expenses=r.expenses||[];r.attendedClientIds=r.attendedClientIds||[];if(!r.source)r.source="smart"});
  migrateOrderNumbers();
 }
 function loadCache(){
@@ -2383,13 +2449,57 @@ function routeClientAddress(c){
  return [c.address,c.city,"SP","Brasil"].filter(Boolean).join(", ")
 }
 function routeClientSequence(ids){const base=(state.config.base||"Osasco").split(",")[0],names=[base,...ids.map(id=>state.clients.find(c=>c.id===id)?.city||state.clients.find(c=>c.id===id)?.name||"Cliente"),base];return `<div class="route-seq">${names.map((n,i)=>`${i?'<span class="route-arrow">→</span>':""}<span class="route-stop">${esc(n)}</span>`).join("")}</div>`}
-function chooseSmartRoute(index){const p=smartRoutePlan,r=p?.routes?.[index];if(!r)return;const ids=r.order.map(i=>p.candidates[i-1]?.c?.id).filter(Boolean),run={id:uid(),date:today(),createdAt:nowIsoSP(),status:"planned",plannedClientIds:[...ids],currentClientIds:[...ids],plannedKm:Number(r.km||0),plannedMinutes:Number(r.minutes||0),plannedToll:Number(r.toll||0),plannedCost:Number(r.travelCost||0),plannedRevenue:Number(r.revenue||0),plannedReturn:Number(r.grossProfit||0),plannedResult:Number(r.result||0),currentKm:Number(r.km||0),currentMinutes:Number(r.minutes||0),currentToll:Number(r.toll||0),currentEstimatedCost:Number(r.travelCost||0),expenses:[],attendedClientIds:[],edited:false};state.routeRuns.unshift(run);save();setTimeout(()=>openRouteRunEditor(run.id),40)}
-function renderRouteRuns(){
- if(!window.routeRunsList)return;const runs=[...(state.routeRuns||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
- if(!runs.length){routeRunsList.innerHTML='<div class="card"><div class="cardhead"><div><h2>Rotas escolhidas</h2><div class="muted">Quando você escolher uma sugestão, ela aparecerá aqui para edição e despesas reais.</div></div></div><div class="empty">Nenhuma rota escolhida ainda.</div></div>';return}
- routeRunsList.innerHTML='<div class="cardhead"><div><h2>Rotas escolhidas e realizadas</h2><div class="muted">Estimado para planejar. Real para aprender.</div></div></div>'+runs.map((r,idx)=>{const expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),hasExpenses=expenses.length>0,diff=actual-planned,status=r.status==="completed"?"Concluída":"Em andamento",ids=r.currentClientIds||[],attended=r.attendedClientIds||[],changed=r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids),ca=r.continuationAnalysis;const diffHtml=hasExpenses?`<b>${diff>=0?"+ ":"- "}${brl(Math.abs(diff))}</b><span>${diff>=0?"Acima do plano":"Abaixo do plano"}</span>`:`<b>—</b><span>Comparação após lançamentos</span>`;return `<div class="card route-run-card"><div class="cardhead"><div><h3>Rota ${fmt(r.date)}${idx===0?" • mais recente":""}</h3><div class="muted">${ids.length} cliente(s) • ${attended.length} atendido(s) • ${changed?"rota editada":"rota conforme sugestão"}</div></div><span class="badge ${r.status==="completed"?"good":"warn"}">${status}</span></div>${routeClientSequence(ids)}<div class="route-plan-compare"><div><small>Planejado pelo sistema</small><b>${brl(planned)} • ${Number(r.plannedKm||0).toFixed(0)} km</b></div><div><small>Estimativa da rota atual</small><b>${brl(Number(r.currentEstimatedCost??planned))} • ${Number(r.currentKm??r.plannedKm??0).toFixed(0)} km</b></div></div>${ca?`<div class="route-continue-box ${ca.status}"><div class="route-continue-head"><b>${ca.status==="good"?"🟢":ca.status==="bad"?"🔴":"🟡"} ${esc(ca.label)}</b><small>${ca.remainingClients} cliente(s) restantes</small></div><div>${esc(ca.message)}</div>${ca.remainingClients?`<div class="route-continue-kpis"><span>Custo para continuar <b>${brl(ca.travelCost)}</b></span><span>Retorno comercial esperado <b>${brl(ca.potentialReturn)}</b></span><span>Resultado estimado <b>${brl(ca.estimatedResult)}</b></span><span>${Number(ca.km||0).toFixed(0)} km • ${fmtHours(ca.minutes||0)}</span></div>`:""}</div>`:""}<div class="route-expense-summary"><div class="mini"><b>${brl(actual)}</b><span>Despesas reais</span></div><div class="mini">${diffHtml}</div><div class="mini"><b>${expenses.length}</b><span>Lançamentos</span></div></div>${hasExpenses?`<div class="route-expense-list">${expenses.map(e=>`<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></span><b>${brl(e.amount)}</b></div>`).join("")}</div>`:'<div class="muted" style="margin-top:8px">Nenhuma despesa real lançada.</div>'}<div class="route-run-actions"><button class="btn secondary" onclick="openRouteRunEditor('${r.id}')">✏️ Editar / atendidos</button><button class="btn secondary" onclick="recalculateRouteRun('${r.id}')">↻ Recalcular trajeto completo</button><button class="btn ${attended.length?"good":"secondary"}" onclick="recalculateRouteFromHere('${r.id}')">📍 Recalcular a partir daqui</button><button class="btn" onclick="openRouteExpense('${r.id}')">＋ Despesa</button><button class="btn ${r.status==="completed"?"secondary":"good"}" onclick="toggleRouteRunStatus('${r.id}')">${r.status==="completed"?"Reabrir":"Finalizar rota"}</button></div></div>`}).join("")
+function createManualRoute(){
+ ensureState();
+ const run={
+   id:uid(),date:today(),createdAt:nowIsoSP(),status:"planned",source:"manual",
+   plannedClientIds:[],currentClientIds:[],
+   plannedKm:0,plannedMinutes:0,plannedToll:0,plannedCost:0,plannedRevenue:0,plannedReturn:0,plannedResult:0,
+   currentKm:0,currentMinutes:0,currentToll:0,currentEstimatedCost:0,
+   expenses:[],attendedClientIds:[],edited:false
+ };
+ state.routeRuns.unshift(run);
+ save();
+ setTimeout(()=>openRouteRunEditor(run.id),40)
 }
-function openRouteRunEditor(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;rrId.value=id;routeRunEditStops=[...(r.currentClientIds||[])];rrPlannedSummary.innerHTML=`<b>Planejamento original:</b> ${r.plannedClientIds.length} clientes • ${Number(r.plannedKm||0).toFixed(0)} km • custo estimado ${brl(r.plannedCost||0)}.`;renderRouteRunEditorStops();openSheet("routeRunSheet")}
+function chooseSmartRoute(index){const p=smartRoutePlan,r=p?.routes?.[index];if(!r)return;const ids=r.order.map(i=>p.candidates[i-1]?.c?.id).filter(Boolean),run={id:uid(),date:today(),createdAt:nowIsoSP(),status:"planned",plannedClientIds:[...ids],currentClientIds:[...ids],plannedKm:Number(r.km||0),plannedMinutes:Number(r.minutes||0),plannedToll:Number(r.toll||0),plannedCost:Number(r.travelCost||0),plannedRevenue:Number(r.revenue||0),plannedReturn:Number(r.grossProfit||0),plannedResult:Number(r.result||0),currentKm:Number(r.km||0),currentMinutes:Number(r.minutes||0),currentToll:Number(r.toll||0),currentEstimatedCost:Number(r.travelCost||0),expenses:[],attendedClientIds:[],source:"smart",edited:false};state.routeRuns.unshift(run);save();setTimeout(()=>openRouteRunEditor(run.id),40)}
+function renderRouteRuns(){
+ if(!window.routeRunsList)return;
+ const runs=[...(state.routeRuns||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ if(!runs.length){
+   routeRunsList.innerHTML='<div class="card"><div class="cardhead"><div><h2>Rotas e viagens</h2><div class="muted">Você pode escolher uma rota sugerida ou registrar uma viagem manual para lançar despesas.</div></div></div><div class="empty">Nenhuma rota/viagem registrada ainda.</div></div>';
+   return
+ }
+ routeRunsList.innerHTML='<div class="cardhead"><div><h2>Rotas e viagens realizadas</h2><div class="muted">As despesas reais ficam vinculadas à viagem correspondente.</div></div></div>'+runs.map((r,idx)=>{
+   const manual=r.source==="manual",expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),hasExpenses=expenses.length>0,diff=actual-planned,status=r.status==="completed"?"Concluída":"Em andamento",ids=r.currentClientIds||[],attended=r.attendedClientIds||[],changed=manual||r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids),ca=r.continuationAnalysis;
+   const diffHtml=manual
+     ? `<b>${brl(actual)}</b><span>Total realizado</span>`
+     : hasExpenses?`<b>${diff>=0?"+ ":"- "}${brl(Math.abs(diff))}</b><span>${diff>=0?"Acima do plano":"Abaixo do plano"}</span>`:`<b>—</b><span>Comparação após lançamentos</span>`;
+   const planHtml=manual
+     ? `<div class="route-plan-compare manual"><div><small>Origem</small><b>Viagem manual</b></div><div><small>Estimativa atual</small><b>${Number(r.currentKm||0)>0?`${brl(Number(r.currentEstimatedCost||0))} • ${Number(r.currentKm||0).toFixed(0)} km`:"Adicione clientes e recalcule, se quiser"}</b></div></div>`
+     : `<div class="route-plan-compare"><div><small>Planejado pelo sistema</small><b>${brl(planned)} • ${Number(r.plannedKm||0).toFixed(0)} km</b></div><div><small>Estimativa da rota atual</small><b>${brl(Number(r.currentEstimatedCost??planned))} • ${Number(r.currentKm??r.plannedKm??0).toFixed(0)} km</b></div></div>`;
+   return `<div class="card route-run-card">
+     <div class="cardhead"><div><h3>${manual?"Viagem manual":"Rota"} ${fmt(r.date)}${idx===0?" • mais recente":""}</h3><div class="muted">${ids.length} cliente(s) • ${attended.length} atendido(s) • ${manual?"registrada pelo Alex":changed?"rota editada":"rota conforme sugestão"}</div></div><span class="badge ${r.status==="completed"?"good":"warn"}">${status}</span></div>
+     ${ids.length?routeClientSequence(ids):'<div class="notice"><b>Sem clientes vinculados.</b> Você ainda pode usar esta viagem para registrar despesas reais.</div>'}
+     ${planHtml}
+     ${ca?`<div class="route-continue-box ${ca.status}"><div class="route-continue-head"><b>${ca.status==="good"?"🟢":ca.status==="bad"?"🔴":"🟡"} ${esc(ca.label)}</b><small>${ca.remainingClients} cliente(s) restantes</small></div><div>${esc(ca.message)}</div>${ca.remainingClients?`<div class="route-continue-kpis"><span>Custo para continuar <b>${brl(ca.travelCost)}</b></span><span>Retorno comercial esperado <b>${brl(ca.potentialReturn)}</b></span><span>Resultado estimado <b>${brl(ca.estimatedResult)}</b></span><span>${Number(ca.km||0).toFixed(0)} km • ${fmtHours(ca.minutes||0)}</span></div>`:""}</div>`:""}
+     <div class="route-expense-summary"><div class="mini"><b>${brl(actual)}</b><span>Despesas reais</span></div><div class="mini">${diffHtml}</div><div class="mini"><b>${expenses.length}</b><span>Lançamentos</span></div></div>
+     ${hasExpenses?`<div class="route-expense-list">${expenses.map(e=>`<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></span><b>${brl(e.amount)}</b></div>`).join("")}</div>`:'<div class="muted" style="margin-top:8px">Nenhuma despesa real lançada.</div>'}
+     <div class="route-run-actions"><button class="btn secondary" onclick="openRouteRunEditor('${r.id}')">✏️ Editar / atendidos</button>${ids.length?`<button class="btn secondary" onclick="recalculateRouteRun('${r.id}')">↻ Recalcular trajeto completo</button><button class="btn ${attended.length?"good":"secondary"}" onclick="recalculateRouteFromHere('${r.id}')">📍 Recalcular a partir daqui</button>`:""}<button class="btn" onclick="openRouteExpense('${r.id}')">＋ Despesa</button><button class="btn ${r.status==="completed"?"secondary":"good"}" onclick="toggleRouteRunStatus('${r.id}')">${r.status==="completed"?"Reabrir":"Finalizar rota"}</button></div>
+   </div>`
+ }).join("")
+}
+function openRouteRunEditor(id){
+ const r=state.routeRuns.find(r=>r.id===id);if(!r)return;
+ rrId.value=id;rrDate.value=r.date||today();routeRunEditStops=[...(r.currentClientIds||[])];
+ const manual=r.source==="manual";
+ rrTitle.textContent=manual?"Registrar / editar viagem manual":"Editar rota escolhida";
+ rrHelper.textContent=manual?"Adicione os clientes que pretende visitar, se quiser. Você também pode usar esta viagem somente para registrar despesas.":"A sugestão original fica guardada. Edite a ordem e marque quem já foi atendido.";
+ rrPlannedSummary.innerHTML=manual
+   ?'<b>Viagem manual:</b> não depende de “Analisar rotas”. Você pode lançar despesas mesmo sem clientes e recalcular o trajeto depois que adicionar paradas.'
+   :`<b>Planejamento original:</b> ${(r.plannedClientIds||[]).length} clientes • ${Number(r.plannedKm||0).toFixed(0)} km • custo estimado ${brl(r.plannedCost||0)}.`;
+ renderRouteRunEditorStops();openSheet("routeRunSheet")
+}
 function renderRouteRunEditorStops(){
  const r=state.routeRuns.find(r=>r.id===rrId.value),attended=new Set(r?.attendedClientIds||[]);
  rrStops.innerHTML=routeRunEditStops.length?routeRunEditStops.map((id,i)=>{const c=state.clients.find(c=>c.id===id),done=attended.has(id);return `<div class="route-edit-stop ${done?"attended":""}"><div class="route-attend-wrap"><label class="route-attend-check"><input type="checkbox" ${done?"checked":""} onchange="toggleRouteRunAttended('${id}',this.checked)"> <span>${done?"Atendido":"Pendente"}</span></label><b>${i+1}. ${esc(c?.name||"Cliente")}</b><div class="muted">${esc(c?.city||"")}</div></div><div class="actions"><button class="btn secondary" onclick="moveRouteRunStop(${i},-1)" ${i===0?"disabled":""}>↑</button><button class="btn secondary" onclick="moveRouteRunStop(${i},1)" ${i===routeRunEditStops.length-1?"disabled":""}>↓</button><button class="btn danger" onclick="removeRouteRunStop(${i})">×</button></div></div>`}).join(""):'<div class="empty">Nenhum cliente nesta rota.</div>';
@@ -2402,7 +2512,13 @@ function toggleRouteRunAttended(clientId,checked){
 function moveRouteRunStop(i,dir){const j=i+dir;if(j<0||j>=routeRunEditStops.length)return;[routeRunEditStops[i],routeRunEditStops[j]]=[routeRunEditStops[j],routeRunEditStops[i]];renderRouteRunEditorStops()}
 function removeRouteRunStop(i){const id=routeRunEditStops[i],r=state.routeRuns.find(r=>r.id===rrId.value);routeRunEditStops.splice(i,1);if(r)r.attendedClientIds=(r.attendedClientIds||[]).filter(x=>x!==id);renderRouteRunEditorStops()}
 function addRouteRunStop(){if(!rrAddClient.value)return;if(!routeRunEditStops.includes(rrAddClient.value))routeRunEditStops.push(rrAddClient.value);renderRouteRunEditorStops()}
-function saveRouteRunEdits(){const r=state.routeRuns.find(r=>r.id===rrId.value);if(!r)return;r.currentClientIds=[...routeRunEditStops];r.edited=JSON.stringify(r.currentClientIds)!==JSON.stringify(r.plannedClientIds||[]);r.updatedAt=nowIsoSP();closeSheet("routeRunSheet");save()}
+function saveRouteRunEdits(openExpense=false){
+ const r=state.routeRuns.find(r=>r.id===rrId.value);if(!r)return;
+ r.date=rrDate.value||r.date||today();r.currentClientIds=[...routeRunEditStops];
+ r.edited=r.source==="manual"||JSON.stringify(r.currentClientIds)!==JSON.stringify(r.plannedClientIds||[]);
+ r.updatedAt=nowIsoSP();const id=r.id;closeSheet("routeRunSheet");save();
+ if(openExpense)setTimeout(()=>openRouteExpense(id),60)
+}
 async function recalculateRouteRun(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;if(!mapsConfigured()){alert("Configure a integração de rotas para recalcular distância, tempo e pedágio.");return}const stops=(r.currentClientIds||[]).map(id=>routeClientAddress(state.clients.find(c=>c.id===id))).filter(Boolean);if(!stops.length){alert("Adicione pelo menos um cliente à rota.");return}try{const base=state.config.base||"Osasco, SP, Brasil",d=await computeSelectedRouteDetail(base,base,stops);if(d.km==null)throw new Error("Não foi possível recalcular.");r.currentKm=d.km;r.currentMinutes=d.driveMinutes+(r.currentClientIds||[]).length*Number(state.config.visitMinutes||35);r.currentToll=d.toll;r.currentTollAvailable=d.tollAvailable;r.currentEstimatedCost=d.km*Number(state.config.costKm||0)+Number(d.toll||0);r.recalculatedAt=nowIsoSP();save()}catch(e){alert(e.message||"Não foi possível recalcular a rota.")}}
 async function recalculateRouteFromHere(id){
  const r=state.routeRuns.find(r=>r.id===id);if(!r)return;if(!mapsConfigured()){alert("Configure a integração de rotas para recalcular.");return}
@@ -2418,9 +2534,56 @@ async function recalculateRouteFromHere(id){
 function toggleRouteRunStatus(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;r.status=r.status==="completed"?"planned":"completed";r.completedAt=r.status==="completed"?nowIsoSP():"";save()}
 function openRouteExpense(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;routeExpenseForm.reset();reRouteId.value=id;reDate.value=today();selectRouteExpenseCategory("fuel");openSheet("routeExpenseSheet")}
 function selectRouteExpenseCategory(cat){reCategory.value=cat;document.querySelectorAll(".expense-category-btn").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));reAmount.focus()}
-function renderRoutes(){renderRouteRuns();const crit=criticalClients();routeCandidates.innerHTML=`<div class="cardhead"><div><h2>Clientes que precisam de visita</h2><div class="muted">${crit.length} cliente(s) dentro da janela ou marcados como prioridade.</div></div></div>`+(crit.length?`<div class="list">${crit.map(x=>`<div class="listitem"><div><div class="title">${x.manual?'<span class="priority-dot"></span>':""}${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ${x.st.orders?`próxima compra ${fmt(x.st.next)} • ticket ${brl(x.st.ticket)}`:"sem histórico"}</div></div><button class="btn secondary" onclick="toggleVisitPriority('${x.c.id}')">${x.manual?"Retirar prioridade":"Priorizar"}</button></div>`).join("")}</div>`:'<div class="empty">Nenhum cliente crítico. Na ficha do cliente você pode marcar “Priorizar visita”.</div>');if(!smartRoutePlan){smartRoutesList.innerHTML='<div class="empty">Toque em <b>Analisar rotas</b> para o sistema montar as opções. Depois escolha uma rota para poder editar e lançar as despesas reais.</div>';return}renderSmartRoutePlan()}
+function renderRoutes(){
+ renderRouteRuns();const crit=criticalClients();
+ routeCandidates.innerHTML=`<div class="cardhead"><div><h2>Clientes que precisam de visita</h2><div class="muted">${crit.length} cliente(s) dentro da janela ou marcados como prioridade.</div></div></div>`+(crit.length?`<div class="list">${crit.map(x=>`<div class="listitem"><div><div class="title">${x.manual?'<span class="priority-dot"></span>':""}${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ${x.st.orders?`próxima compra ${fmt(x.st.next)} • ticket ${brl(x.st.ticket)}`:"sem histórico"}</div></div><button class="btn secondary" onclick="toggleVisitPriority('${x.c.id}')">${x.manual?"Retirar prioridade":"Priorizar"}</button></div>`).join("")}</div>`:'<div class="empty">Nenhum cliente crítico. Na ficha do cliente você pode marcar “Priorizar visita”.</div>');
+ if(!smartRoutePlan){smartRoutesList.innerHTML='<div class="empty"><b>Quer ajuda do sistema?</b> Use “Analisar rotas”.<br><br><b>Já sabe a viagem que vai fazer?</b> Use “+ Nova rota manual”.</div>';return}
+ renderSmartRoutePlan()
+}
 function fmtHours(minutes){const h=Math.floor(minutes/60),m=Math.round(minutes%60);return `${h}h${String(m).padStart(2,"0")}`}
 function routeSequenceHtml(order,candidates){const base=(state.config.base||"Osasco").split(",")[0],names=[base,...order.map(i=>candidates[i-1]?.c?.city||candidates[i-1]?.c?.name||"Cliente"),base];return `<div class="route-seq">${names.map((n,i)=>`${i?'<span class="route-arrow">→</span>':""}<span class="route-stop">${esc(n)}</span>`).join("")}</div>`}
+async function analyzeSmartRoutes(){
+ const candidates=criticalClients();
+ smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Analisando clientes, distâncias e tempo de viagem...</div>';
+
+ if(!candidates.length){
+   smartRoutePlan={error:"Nenhum cliente está dentro da janela de visita neste momento. Você pode priorizar clientes manualmente ou usar “Registrar viagem” para criar uma rota sem análise automática."};
+   renderRoutes();
+   return
+ }
+
+ if(candidates.length>24){
+   smartRoutePlan={error:"Há mais de 24 clientes candidatos. Reduza a janela de visita ou priorize os clientes em grupos menores."};
+   renderRoutes();
+   return
+ }
+
+ if(!mapsConfigured()){
+   smartRoutePlan={error:"A integração de rotas não está configurada. Vá em Mais → Configurações → Integração de rotas e confirme a Google Maps API Key."};
+   renderRoutes();
+   return
+ }
+
+ try{
+   const {matrix,fromCache}=await buildRouteMatrix(candidates);
+   let daily=makeDailyClusters(candidates,matrix);
+
+   smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Grupos definidos. Calculando trajeto e pedágios das opções finais...</div>';
+
+   daily=await enrichSelectedRoutes(daily,candidates);
+   let overnight=overnightAlternative(daily,candidates,matrix);
+   if(overnight)overnight=await enrichOvernight(overnight,candidates,daily);
+
+   smartRoutePlan={candidates,matrix,routes:daily,fromCache,overnight};
+ }catch(e){
+   console.error("Erro ao analisar rotas:",e);
+   smartRoutePlan={error:e?.message||"Não foi possível calcular as rotas. Verifique a conexão e a configuração do Google Maps."}
+ }
+
+ renderRoutes();
+ renderHome()
+}
+
 function renderSmartRoutePlan(){
  const p=smartRoutePlan;if(p.error){smartRoutesList.innerHTML=`<div class="card"><span class="badge bad">Não foi possível calcular</span><div class="explain">${esc(p.error)}</div></div>`;return}let h=`<div class="card"><div class="cardhead"><div><h2>Opções calculadas pelo sistema</h2><div class="muted">Base: ${esc(state.config.base)} • matriz ${p.fromCache?"reaproveitada":"atualizada"} • pedágio só nas rotas finais</div></div><span class="badge good">${p.routes.length} rota(s)</span></div><div class="explain">O sistema sugere a rota. Você escolhe uma opção e, se o dia mudar, pode editar a sequência, retirar ou adicionar clientes sem perder o planejamento original.</div></div>`;p.routes.forEach((r,i)=>{const cls=r.result>0?"good":r.grossProfit>=r.travelCost*.75?"warn":"bad";h+=`<div class="card"><div class="cardhead"><div><h2>Rota ${i+1}</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${cls}">${r.result>0?"Recomendada":cls==="warn"?"Avaliar":"Baixo retorno"}</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${brl(r.revenue)}</b><span>Faturamento potencial</span></div><div class="mini"><b>${brl(r.grossProfit)}</b><span>Retorno comercial potencial</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado</span></div><div class="mini"><b>${brl(r.result)}</b><span>Resultado estimado</span></div></div><div class="muted">Rodagem: ${brl(r.km*Number(state.config.costKm||0))} • Pedágios (${state.config.tollPass==="BR_SEM_PARAR"?"Sem Parar":"Google"}): ${r.tollAvailable?brl(r.toll):"não informado pelo Google"}</div><div class="list" style="margin-top:10px">${r.order.map(idx=>{const x=p.candidates[idx-1];return `<div class="listitem"><div><div class="title">${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ticket ${brl(x.st.ticket)} • retorno médio líquido ${brl(x.st.netAvgMargin)}${x.st.warrantyStats?.incidence>=10?` • ⚠ garantia ${x.st.warrantyStats.incidence.toFixed(1)}%`:""}</div></div><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">Confirmar visita</button></div>`}).join("")}</div><div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseSmartRoute(${i})">Usar esta rota</button></div></div>`});if(p.overnight){const o=p.overnight,good=o.savings>0;h+=`<div class="card"><div class="cardhead"><div><h2>Alternativa com 1 hospedagem</h2><div class="muted">Comparação com as rotas separadas, incluindo pedágio quando disponível.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode compensar":"Não economiza"}</span></div><div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem estimada</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div><div class="muted">Depois da viagem, a hospedagem real deve ser registrada nas despesas da rota escolhida.</div></div>`}smartRoutesList.innerHTML=h
 }
