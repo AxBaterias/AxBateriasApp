@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.13">
-<meta name="ax-build" content="2026-09-15-v5.13-fortnight-finance">
+<meta name="ax-version" content="5.14">
+<meta name="ax-build" content="2026-09-15-v5.14-month-evolution-mobile">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -720,8 +720,122 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
  .sale-debt-row .debt-amount{grid-column:2;font-size:15px;margin-top:2px}
  .fortnight-kpis{grid-template-columns:1fr 1fr}
  .fortnight-rates{grid-template-columns:1fr}
- .fortnight-history{overflow-x:auto}
- .fortnight-history-row{min-width:430px}
+}
+
+
+/* v5.14 — pedido realmente mobile */
+html,body{max-width:100%;overflow-x:hidden}
+.sheet{max-width:100vw;overflow:hidden}
+.sheetpanel{
+  width:100%;
+  max-width:100vw;
+  min-width:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+#saleForm,.sale-step,.sale-step-body,.sale-section-card,.sale-client-table-grid,
+.sale-price-preview,.autocomplete,.field,.formgrid,.quick-warranty-panel,
+.quick-warranty-credit-box,.payment-row,.payment-row-grid,.payment-row-extra{
+  min-width:0;
+  max-width:100%;
+}
+.sale-step{width:100%;overflow:hidden}
+.sale-step-head{min-width:0;max-width:100%}
+.sale-step-copy,.sale-step-helper,#sClientSelectedHint{
+  min-width:0;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+.sale-step-helper,#sClientSelectedHint{white-space:normal}
+.sale-price-preview{overflow:hidden}
+.sale-price-strip{width:100%;max-width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain}
+.sale-client-debt-alert{width:100%;max-width:100%;min-width:0;overflow:hidden}
+.sale-client-debt-alert .debt-top>div{min-width:0;max-width:100%}
+.sale-client-debt-alert .muted{overflow-wrap:anywhere}
+.segmented{max-width:100%;min-width:0}
+.segmented .segment-btn{max-width:100%;white-space:normal;line-height:1.2}
+.sale-fixed-summary{max-width:100vw;overflow:hidden}
+
+/* v5.14 — leitura mensal didática */
+.month-dashboard{min-width:0}
+.month-main-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.month-main-title{font-size:16px;font-weight:950;line-height:1.15}
+.month-status{display:inline-flex;align-items:center;white-space:nowrap;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:900}
+.month-status.good{background:#ecfdf3;color:var(--good)}
+.month-status.warn{background:#fff7ed;color:var(--warn)}
+.month-status.bad{background:#fef3f2;color:var(--bad)}
+.month-status.setup{background:#f2f4f7;color:var(--muted)}
+.month-main-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px}
+.month-kpi{border:1px solid var(--line);border-radius:13px;padding:10px;background:#fff;min-width:0}
+.month-kpi span{display:block;font-size:8px;font-weight:850;text-transform:uppercase;color:var(--muted);line-height:1.25}
+.month-kpi b{display:block;font-size:14px;margin-top:4px;overflow-wrap:anywhere}
+.month-kpi.result.good{background:#f6fef9;border-color:#abefc6}.month-kpi.result.good b{color:var(--good)}
+.month-kpi.result.warn{background:#fffaeb;border-color:#fedf89}.month-kpi.result.warn b{color:var(--warn)}
+.month-kpi.result.bad{background:#fffbfa;border-color:#fecdca}.month-kpi.result.bad b{color:var(--bad)}
+.month-main-message{margin-top:9px;padding:11px 12px;border-radius:13px;font-size:10px;line-height:1.5;border:1px solid var(--line)}
+.month-main-message.good{background:#f6fef9;border-color:#abefc6}
+.month-main-message.warn{background:#fffaeb;border-color:#fedf89}
+.month-main-message.bad{background:#fffbfa;border-color:#fecdca}
+.month-main-message.setup{background:#f7f8fa}
+.month-fortnight-title,.month-trend-title{font-size:11px;font-weight:950;margin-top:14px;margin-bottom:7px}
+.month-fortnights{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.month-fortnight-card{border:1px solid var(--line);border-radius:13px;padding:10px;background:#fff;min-width:0}
+.month-fortnight-card.good{border-color:#abefc6}.month-fortnight-card.warn{border-color:#fedf89}.month-fortnight-card.bad{border-color:#fecdca}.month-fortnight-card.future,.month-fortnight-card.setup{background:#fafafa}
+.month-fortnight-head{display:flex;justify-content:space-between;align-items:center;gap:5px;font-size:10px}
+.month-fortnight-result{font-size:13px;font-weight:950;margin-top:8px;line-height:1.15}
+.month-fortnight-lines{display:grid;gap:3px;margin-top:7px;font-size:8px;color:var(--muted)}
+.month-fortnight-lines span{display:flex;justify-content:space-between;gap:5px}.month-fortnight-lines b{color:var(--text)}
+.month-fortnight-message{font-size:9px;color:var(--muted);margin-top:10px;line-height:1.4}
+.month-reading{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.month-reading>div{border:1px solid var(--line);border-radius:12px;padding:9px;display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:8px}
+.month-reading b{font-size:12px}
+.month-trend{border-top:1px solid var(--line);margin-top:14px;padding-top:1px}
+.month-trend-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.month-trend-card{border:1px solid var(--line);border-radius:12px;padding:9px 7px;text-align:center;min-width:0;background:#fff}
+.month-trend-name{font-size:9px;font-weight:900;text-transform:capitalize}
+.month-trend-dot{font-size:13px;margin:3px 0}
+.month-trend-card>b{display:block;font-size:11px;white-space:nowrap}
+.month-trend-card small{display:block;font-size:6.8px;color:var(--muted);line-height:1.3;margin-top:3px;min-height:18px}
+.month-trend-bar{height:4px;background:#f2f4f7;border-radius:99px;overflow:hidden;margin-top:6px}
+.month-trend-bar i{display:block;height:100%;border-radius:99px}
+.month-trend-bar i.good{background:var(--good)}.month-trend-bar i.warn{background:var(--warn)}.month-trend-bar i.bad{background:var(--bad)}
+.month-trend-message{margin-top:9px;padding:9px 10px;border-radius:11px;background:#f8f9fb;font-size:9px;line-height:1.45}
+@media(max-width:520px){
+  .sheetpanel{padding-left:10px;padding-right:10px}
+  #saleForm{width:100%;max-width:100%}
+  .sale-step{padding:11px}
+  .sale-client-table-grid{grid-template-columns:minmax(0,1fr) 78px;gap:7px}
+  .sale-step-head{align-items:flex-start}
+  .sale-block-actions{flex:0 0 auto;padding:8px 9px}
+  .saleRow{
+    width:100%;
+    max-width:100%;
+    grid-template-columns:minmax(0,1fr) 82px 38px;
+    gap:6px;
+  }
+  .saleRow .sp{grid-column:1/-1;min-width:0}
+  .saleRow .sq{grid-column:1;min-width:0}
+  .saleRow .lineTotal{grid-column:2;min-width:0;padding-left:7px;padding-right:7px}
+  .saleRow button{grid-column:3}
+  .scrapRow{
+    width:100%;
+    max-width:100%;
+    grid-template-columns:minmax(0,1fr) 72px 38px;
+    gap:6px;
+  }
+  .scrapRow .sst{grid-column:1/-1;min-width:0}
+  .scrapRow .ssq{grid-column:1}
+  .scrapRow .scrapDiscount{grid-column:2;min-width:0;padding-left:6px;padding-right:6px}
+  .scrapRow button{grid-column:3}
+  .quick-warranty-grid,.quick-warranty-optional,.quick-warranty-credit-grid{grid-template-columns:1fr}
+  .payment-row-grid,.payment-row-extra{grid-template-columns:1fr}
+  .payment-row-grid .pm-condition-wrap,.payment-row-extra .pm-due-wrap{grid-column:auto}
+  .free-adjustment-grid{grid-template-columns:1fr}
+  .free-adjustment-grid .field:last-child{grid-column:auto}
+  .month-main-kpis{grid-template-columns:1fr 1fr}
+  .month-main-kpis .month-kpi.result{grid-column:1/-1}
+  .month-reading{grid-template-columns:1fr}
 }
 
 </style>
@@ -749,7 +863,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.13</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.14</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -784,7 +898,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 
   <div class="card">
     <div class="cardhead">
-      <div><h2>Desempenho quinzenal</h2><div class="muted">A margem das vendas está pagando os custos da operação?</div></div>
+      <div><h2>Desempenho do mês</h2><div class="muted">Quinzenas para acompanhar. Últimos 3 meses para enxergar a evolução.</div></div>
       <span id="homeChartPrivacyBadge" class="badge">oculto</span>
     </div>
     <div id="homeFinanceChart"></div>
@@ -846,7 +960,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.13</div>
+  <div class="version-note">AX Baterias • v5.14</div>
 </section>
 
 <section id="clients" class="screen">
@@ -985,8 +1099,8 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.13</span></div>
-    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.13</b></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.14</span></div>
+    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.14</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">15/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
     <div id="systemUpdateMessage" class="muted" style="margin-top:8px">O botão busca o index.html publicado sem usar o cache.</div>
@@ -1418,7 +1532,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.13';
+const AX_APP_VERSION='5.14';
 const AX_RELEASE_DATE='2026-09-15';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
@@ -2157,20 +2271,77 @@ function variableCostBreakdownLabel(r){
  const parts=[];if(r.routeCosts>0)parts.push(`viagens ${brl(r.routeCosts)}`);if(r.manualCosts>0)parts.push(`taxas/outros ${brl(r.manualCosts)}`);if(r.tax.amount>0)parts.push(`imposto ${brl(r.tax.amount)}${r.tax.provisional?" (provisório)":""}`);if(r.warranty>0)parts.push(`garantias ${brl(r.warranty)}`);
  return parts.length?parts.join(" • "):"Nenhum custo variável real registrado nesta quinzena."
 }
-function monthlyFinancialSummary(){return fortnightFinancialRows(6)}
-function renderFortnightHistory(rows){
- return `<div class="fortnight-history"><div class="fortnight-history-title">Últimas 6 quinzenas</div>${rows.map(r=>`<div class="fortnight-history-row"><div><b>${esc(r.label)}</b><small>${fmt(r.start)}–${fmt(r.end)}</small></div><div><span>Margem</span><b>${brl(r.margin)}</b></div><div><span>Variáveis</span><b>${brl(r.variableCosts)}</b></div><div class="fortnight-history-net rent-${r.revenue<=0?"warn":r.net<0?"bad":r.status==="warn"?"warn":"good"}"><span>Sobra</span><b>${r.revenue<=0?"—":brl(r.net)}</b></div></div>`).join("")}</div>`
+function financialRange(start,end,monthKey,started=true){
+ if(!started)return {start,end,month:monthKey,started:false,revenue:0,margin:0,marginPct:0,routeCosts:0,manualCosts:0,tax:{amount:0,provisional:false,sourceMonth:""},warranty:0,variableCosts:0,net:0,requiredMarginPct:0,status:"future",sales:[]};
+ const realEnd=end>today()?today():end;
+ const sales=state.sales.filter(s=>(s.date||"")>=start&&(s.date||"")<=realEnd),ops=sales.map(s=>saleOperationalBreakdown(s));
+ const revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0),margin=ops.reduce((a,o)=>a+o.commercialMargin,0),marginPct=revenue>0?margin/revenue*100:0;
+ const routeItems=routeExpensesBetween(start,realEnd),routeCosts=routeItems.reduce((a,e)=>a+Number(e.amount||0),0);
+ const manualItems=manualExpensesBetween(start,realEnd),manualCosts=manualItems.reduce((a,e)=>a+Number(e.amount||0),0);
+ const tax=taxForFortnight({month:monthKey}),warranty=warrantyImpactBetween(start,realEnd),variableCosts=routeCosts+manualCosts+tax.amount+warranty,net=margin-variableCosts,requiredMarginPct=revenue>0?variableCosts/revenue*100:0;
+ let status="setup";
+ if(revenue<=0&&variableCosts>0)status="bad";
+ else if(revenue<=0)status="setup";
+ else if(net<0)status="bad";
+ else if(net<Math.max(100,variableCosts*.10))status="warn";
+ else status="good";
+ return {start,end:realEnd,month:monthKey,started:true,revenue,margin,marginPct,routeItems,routeCosts,manualItems,manualCosts,tax,warranty,variableCosts,net,requiredMarginPct,status,sales}
 }
+function monthKeys(count=3){
+ const [cy,cm]=today().slice(0,7).split("-").map(Number),out=[];
+ for(let i=0;i<count;i++){const d=new Date(Date.UTC(cy,cm-1-i,1)),y=d.getUTCFullYear(),m=String(d.getUTCMonth()+1).padStart(2,"0");out.push(`${y}-${m}`)}
+ return out
+}
+function monthLabel(key,long=false){
+ const d=new Date(`${key}-01T12:00:00-03:00`);
+ return d.toLocaleDateString("pt-BR",{timeZone:AX_TIME_ZONE,month:long?"long":"short"}).replace(".","")
+}
+function monthFinancialRows(count=3){
+ const t=today(),currentMonth=t.slice(0,7),currentDay=Number(t.slice(8,10));
+ return monthKeys(count).map((month,idx)=>{
+   const endDay=daysInMonthKey(month),q1Start=`${month}-01`,q1End=`${month}-15`,q2Start=`${month}-16`,q2End=`${month}-${String(endDay).padStart(2,"0")}`,isCurrent=month===currentMonth;
+   const q1Started=!isCurrent||currentDay>=1,q2Started=!isCurrent||currentDay>=16;
+   const q1=financialRange(q1Start,q1End,month,q1Started),q2=financialRange(q2Start,q2End,month,q2Started),periods=[q1,q2].filter(q=>q.started);
+   const revenue=periods.reduce((a,q)=>a+q.revenue,0),margin=periods.reduce((a,q)=>a+q.margin,0),variableCosts=periods.reduce((a,q)=>a+q.variableCosts,0),net=margin-variableCosts,marginPct=revenue>0?margin/revenue*100:0,requiredMarginPct=revenue>0?variableCosts/revenue*100:0,afterVariablePct=revenue>0?net/revenue*100:0;
+   let status="setup";if(revenue<=0&&variableCosts>0)status="bad";else if(revenue<=0)status="setup";else if(net<0)status="bad";else if(net<Math.max(150,variableCosts*.10))status="warn";else status="good";
+   return {month,label:monthLabel(month),longLabel:monthLabel(month,true),isCurrent,isPartial:isCurrent&&currentDay<endDay,q1,q2,revenue,margin,variableCosts,net,marginPct,requiredMarginPct,afterVariablePct,status}
+ })
+}
+function monthStatusLabel(status){return status==="good"?"BOM":status==="warn"?"ATENÇÃO":status==="bad"?"CRÍTICO":"SEM MOVIMENTO"}
+function monthStatusEmoji(status){return status==="good"?"🟢":status==="warn"?"🟡":status==="bad"?"🔴":"⚪"}
+function fortnightMiniCard(q,label){
+ if(!q.started)return `<div class="month-fortnight-card future"><div class="month-fortnight-head"><b>${label}</b><span>⚪</span></div><div class="month-fortnight-message">Ainda não iniciada.</div></div>`;
+ if(q.revenue<=0&&q.variableCosts<=0)return `<div class="month-fortnight-card setup"><div class="month-fortnight-head"><b>${label}</b><span>⚪</span></div><div class="month-fortnight-message">Sem movimento registrado.</div></div>`;
+ const resultLabel=q.net>=0?"Sobrou":"Faltou";
+ return `<div class="month-fortnight-card ${q.status}"><div class="month-fortnight-head"><b>${label}</b><span>${monthStatusEmoji(q.status)}</span></div><div class="month-fortnight-result ${q.net<0?"rent-bad":q.status==="warn"?"rent-warn":"rent-good"}">${resultLabel} ${brl(Math.abs(q.net))}</div><div class="month-fortnight-lines"><span>Margem <b>${brl(q.margin)}</b></span><span>Custos <b>${brl(q.variableCosts)}</b></span></div></div>`
+}
+function monthEvolutionMessage(rows){
+ const active=[...rows].reverse().filter(r=>r.revenue>0);
+ if(active.length<2)return "Ainda não há histórico suficiente para dizer se o negócio está melhorando ou piorando.";
+ const first=active[0],last=active[active.length-1],delta=last.afterVariablePct-first.afterVariablePct;
+ if(delta>2)return `A evolução é <b>positiva</b>: a sobra após custos variáveis melhorou ${Math.abs(delta).toFixed(1)} p.p. em relação ao início deste histórico.`;
+ if(delta<-2)return `⚠️ A evolução merece atenção: a sobra após custos variáveis caiu ${Math.abs(delta).toFixed(1)} p.p. em relação ao início deste histórico.`;
+ return `O desempenho está <b>relativamente estável</b> nos últimos meses. Acompanhe as quinzenas para perceber mudanças antes do fechamento.`
+}
+function renderMonthEvolution(rows){
+ const activeVals=rows.map(r=>Math.abs(r.net)),max=Math.max(1,...activeVals);
+ return `<div class="month-trend"><div class="month-trend-title">Evolução dos últimos 3 meses</div><div class="month-trend-grid">${[...rows].reverse().map(r=>{const w=Math.max(8,Math.round(Math.abs(r.net)/max*100)),cls=r.revenue<=0?"setup":r.net<0?"bad":r.status==="warn"?"warn":"good";return `<div class="month-trend-card ${cls}"><div class="month-trend-name">${esc(r.label)}${r.isPartial?"*":""}</div><div class="month-trend-dot">${monthStatusEmoji(r.status)}</div><b class="rent-${r.revenue<=0?"warn":r.net<0?"bad":r.status==="warn"?"warn":"good"}">${r.revenue<=0?"—":`${r.net>=0?"+":"-"}${brl(Math.abs(r.net))}`}</b><small>${r.revenue>0?`${r.afterVariablePct.toFixed(1)}% das vendas após variáveis`:"sem movimento"}</small><div class="month-trend-bar"><i class="${cls}" style="width:${r.revenue>0?w:0}%"></i></div></div>`}).join("")}</div><div class="month-trend-message">${monthEvolutionMessage(rows)}</div>${rows[0]?.isPartial?'<div class="muted" style="margin-top:6px">* mês atual ainda em andamento.</div>':""}</div>`
+}
+function monthlyFinancialSummary(){return monthFinancialRows(3)}
+function renderFortnightHistory(rows){return renderMonthEvolution(monthFinancialRows(3))}
 function renderHomeFinanceChart(){
  homeChartPrivacyBadge.textContent=homeFinanceVisible?"visível":"oculto";homeChartPrivacyBadge.className="badge "+(homeFinanceVisible?"good":"");
- if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para visualizar o desempenho quinzenal.</span></div>';return}
- const rows=fortnightFinancialRows(6),cur=rows[0],cls=cur.status;
- if(cur.revenue<=0){homeFinanceChart.innerHTML='<div class="fortnight-explain setup"><b>Ainda não há vendas nesta quinzena.</b><br>Conforme os pedidos e custos reais forem registrados, o sistema mostrará se a operação está se pagando.</div>'+renderFortnightHistory(rows);return}
- let explanation="";
- if(cur.net<0)explanation=`<b>As vendas desta quinzena ainda não geraram margem suficiente para pagar os custos variáveis.</b> Falta ${brl(Math.abs(cur.net))}.`;
- else if(cls==="warn")explanation=`<b>A margem está cobrindo os custos variáveis, mas com pouca folga.</b> A sobra atual é ${brl(cur.net)}.`;
- else explanation=`<b>A margem das vendas está pagando os custos variáveis da operação.</b> Depois desses custos, restam ${brl(cur.net)} nesta quinzena.`;
- homeFinanceChart.innerHTML=`<div class="fortnight-head"><div><div class="fortnight-title">${esc(cur.label)} • ${fmt(cur.start)} a ${fmt(cur.end)}</div><div class="muted">Margem comercial gerada x custos reais da operação.</div></div><span class="badge ${cls}">${cls==="good"?"Saudável":cls==="warn"?"Atenção":"Crítico"}</span></div><div class="fortnight-kpis"><div class="mini"><b>${brl(cur.revenue)}</b><span>Vendas</span></div><div class="mini"><b class="rent-${rentabilityClass(cur.marginPct)}">${brl(cur.margin)}</b><span>Margem comercial</span></div><div class="mini"><b class="${cur.variableCosts>cur.margin?"rent-bad":""}">${brl(cur.variableCosts)}</b><span>Custos variáveis</span></div><div class="mini"><b class="rent-${cur.net<0?"bad":cur.status==="warn"?"warn":"good"}">${brl(cur.net)}</b><span>Sobra / déficit</span></div></div><div class="fortnight-rates"><div><span>Margem média dos pedidos</span><b class="rent-${cur.marginPct>=cur.requiredMarginPct?"good":"bad"}">${cur.marginPct.toFixed(1)}%</b></div><div><span>Margem necessária para cobrir os variáveis</span><b class="rent-${cur.marginPct>=cur.requiredMarginPct?"good":"bad"}">${cur.requiredMarginPct.toFixed(1)}%</b></div></div><div class="fortnight-explain ${cls}">${explanation}<div class="muted" style="margin-top:6px">${variableCostBreakdownLabel(cur)}</div>${cur.tax.provisional?`<div class="muted" style="margin-top:4px">Imposto provisório baseado no último mês fechado (${cur.tax.sourceMonth}).</div>`:""}</div>${renderFortnightHistory(rows)}`
+ if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para acompanhar o mês e a evolução recente.</span></div>';return}
+ const rows=monthFinancialRows(3),cur=rows[0],status=cur.status,statusLabel=monthStatusLabel(status),emoji=monthStatusEmoji(status);
+ let headline="";
+ if(cur.revenue<=0&&cur.variableCosts<=0)headline=`<b>Ainda não há movimento financeiro neste mês.</b> Assim que vendas e despesas forem registradas, o sistema começa a acompanhar as quinzenas.`;
+ else if(cur.net<0)headline=`<b>A margem das vendas ainda não está pagando os custos variáveis do mês.</b> Até agora, faltam ${brl(Math.abs(cur.net))}.`;
+ else if(status==="warn")headline=`<b>O mês está positivo, mas com pouca folga.</b> Depois dos custos variáveis, sobraram ${brl(cur.net)} para ajudar a pagar a estrutura fixa.`;
+ else headline=`<b>O mês está indo bem.</b> A margem das vendas cobre os custos variáveis e deixa ${brl(cur.net)} para ajudar a pagar a estrutura fixa.`;
+ const detailParts=[];const qs=[cur.q1,cur.q2].filter(q=>q.started);const route=qs.reduce((a,q)=>a+q.routeCosts,0),manual=qs.reduce((a,q)=>a+q.manualCosts,0),tax=qs.reduce((a,q)=>a+q.tax.amount,0),warranty=qs.reduce((a,q)=>a+q.warranty,0);
+ if(route>0)detailParts.push(`viagens ${brl(route)}`);if(manual>0)detailParts.push(`taxas/outros ${brl(manual)}`);if(tax>0)detailParts.push(`impostos ${brl(tax)}`);if(warranty>0)detailParts.push(`garantias ${brl(warranty)}`);
+ const costDetail=detailParts.length?detailParts.join(" • "):"Nenhum custo variável real registrado no mês até agora.";
+ homeFinanceChart.innerHTML=`<div class="month-dashboard"><div class="month-main-head"><div><div class="month-main-title">${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas do mês: ${brl(cur.revenue)}</div></div><span class="month-status ${status}">${emoji} ${statusLabel}</span></div><div class="month-main-kpis"><div class="month-kpi"><span>Margem gerada</span><b>${brl(cur.margin)}</b></div><div class="month-kpi"><span>Custos variáveis</span><b class="${cur.variableCosts>cur.margin?"rent-bad":""}">${brl(cur.variableCosts)}</b></div><div class="month-kpi result ${status}"><span>${cur.net>=0?"Sobra":"Falta"}</span><b>${brl(Math.abs(cur.net))}</b></div></div><div class="month-main-message ${status}">${headline}<div class="muted" style="margin-top:6px">${costDetail}</div></div><div class="month-fortnight-title">Como o mês está se formando</div><div class="month-fortnights">${fortnightMiniCard(cur.q1,"1ª quinzena")}${fortnightMiniCard(cur.q2,"2ª quinzena")}</div><div class="month-reading"><div><span>Margem média das vendas</span><b class="rent-${cur.marginPct>=Number(state.config?.orderRentabilityReference??12)?"good":"bad"}">${cur.marginPct.toFixed(1)}%</b></div><div><span>Margem necessária para cobrir os variáveis</span><b class="rent-${cur.marginPct>=cur.requiredMarginPct?"good":"bad"}">${cur.requiredMarginPct.toFixed(1)}%</b></div></div>${renderMonthEvolution(rows)}</div>`
 }
 function renderHome(){
  const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),
