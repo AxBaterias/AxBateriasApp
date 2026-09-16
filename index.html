@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.14.2">
-<meta name="ax-build" content="2026-09-15-v5.14.2-manual-route-visible">
+<meta name="ax-version" content="5.14.3">
+<meta name="ax-build" content="2026-09-15-v5.14.3-route-calc-delete">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -891,6 +891,16 @@ html,body{max-width:100%;overflow-x:hidden}
   .route-start-copy small{font-size:9px}
 }
 
+
+/* v5.14.3 — estimativa de rota mais clara */
+.route-estimate-rich{display:grid;gap:3px}
+.route-estimate-rich>b{font-size:14px}
+.route-estimate-rich>span{font-size:8.5px;color:var(--muted);line-height:1.35}
+.route-run-actions .btn.danger{margin-left:auto}
+@media(max-width:520px){
+  .route-run-actions .btn.danger{margin-left:0;width:100%}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -916,7 +926,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.14.2</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.14.3</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -1024,7 +1034,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.14.2</div>
+  <div class="version-note">AX Baterias • v5.14.3</div>
 </section>
 
 <section id="clients" class="screen">
@@ -1163,8 +1173,8 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.14.2</span></div>
-    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.14.2</b></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.14.3</span></div>
+    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.14.3</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">15/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
     <div id="systemUpdateMessage" class="muted" style="margin-top:8px">O botão busca o index.html publicado sem usar o cache.</div>
@@ -1598,7 +1608,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.14.2';
+const AX_APP_VERSION='5.14.3';
 const AX_RELEASE_DATE='2026-09-15';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
@@ -2095,27 +2105,57 @@ async function buildRouteMatrix(candidates){
  const signature=routeAnalysisKey(candidates),cached=readTimedCache(ROUTE_MATRIX_CACHE_KEY,signature,30*24*60*60*1000);
  const base=state.config.base||"Osasco, SP, Brasil",points=[base,...candidates.map(x=>x.address)];
  if(cached?.matrix)return {matrix:cached.matrix,points,fromCache:true};
- await loadGoogleMaps();const {RouteMatrix}=await google.maps.importLibrary("routes");
- // IMPORTANT: no TOLLS here. This keeps the large all-to-all matrix in the cheaper Essentials tier.
- const result=await RouteMatrix.computeRouteMatrix({origins:points,destinations:points,travelMode:"DRIVING",units:"METRIC",language:"pt-BR",region:"BR",fields:["distanceMeters","durationMillis","condition"]});
- const matrix=plainMatrix(result.matrix);writeTimedCache(ROUTE_MATRIX_CACHE_KEY,signature,{matrix});
+ await loadGoogleMaps();
+ const [{RouteMatrix},{UnitSystem}]=await Promise.all([
+   google.maps.importLibrary("routes"),
+   google.maps.importLibrary("core")
+ ]);
+ // Matriz sem pedágios: usada apenas para distância/tempo e agrupamento das visitas.
+ const request={
+   origins:points,
+   destinations:points,
+   travelMode:"DRIVING",
+   units:UnitSystem.METRIC,
+   language:"pt-BR",
+   region:"BR",
+   fields:["distanceMeters","durationMillis","condition"]
+ };
+ const result=await RouteMatrix.computeRouteMatrix(request);
+ const matrix=plainMatrix(result.matrix);
+ writeTimedCache(ROUTE_MATRIX_CACHE_KEY,signature,{matrix});
  return {matrix,points,fromCache:false}
 }
 function routeDetailSignature(origin,destination,intermediates){return JSON.stringify({origin,destination,intermediates,tollPass:state.config.tollPass||"BR_SEM_PARAR"})}
 async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
- const signature=routeDetailSignature(origin,destination,intermediates),cached=readTimedCache(ROUTE_DETAIL_CACHE_KEY+":"+btoa(unescape(encodeURIComponent(signature))).slice(0,50),signature,24*60*60*1000);
+ const signature=routeDetailSignature(origin,destination,intermediates),cacheKey=ROUTE_DETAIL_CACHE_KEY+":"+btoa(unescape(encodeURIComponent(signature))).slice(0,50),cached=readTimedCache(cacheKey,signature,24*60*60*1000);
  if(cached)return {...cached,fromCache:true};
- await loadGoogleMaps();const {Route}=await google.maps.importLibrary("routes");
+ await loadGoogleMaps();
+ const {Route}=await google.maps.importLibrary("routes");
+ const common={origin,destination,travelMode:"DRIVING"};
+ if(intermediates.length)common.intermediates=intermediates.map(location=>({location}));
  try{
-   // Tolls are requested only for routes the optimizer actually selected, not for every pair in the matrix.
-   const modifiers={vehicleInfo:{emissionType:"GASOLINE"}};if(state.config.tollPass)modifiers.tollPasses=[state.config.tollPass];const request={origin,destination,travelMode:"DRIVING",extraComputations:["TOLLS"],routeModifiers:modifiers,fields:["distanceMeters","durationMillis","travelAdvisory"]};
-   if(intermediates.length)request.intermediates=intermediates.map(location=>({location}));
-   const {routes}=await Route.computeRoutes(request);const r=routes?.[0];
+   // Primeiro tenta a rota completa com pedágios.
+   const modifiers={vehicleInfo:{emissionType:"GASOLINE"}};
+   if(state.config.tollPass)modifiers.tollPasses=[state.config.tollPass];
+   const request={...common,extraComputations:["TOLLS"],routeModifiers:modifiers,fields:["distanceMeters","durationMillis","travelAdvisory"]};
+   const {routes}=await Route.computeRoutes(request),r=routes?.[0];
    if(!r)throw new Error("Rota final não encontrada.");
    const prices=r.travelAdvisory?.tollInfo?.estimatedPrices||[],br=prices.find(p=>p.currencyCode==="BRL")||prices[0];
-   const data={km:Number(r.distanceMeters||0)/1000,driveMinutes:Number(r.durationMillis||0)/60000,toll:moneyValue(br),tollAvailable:!!br};
-   writeTimedCache(ROUTE_DETAIL_CACHE_KEY+":"+btoa(unescape(encodeURIComponent(signature))).slice(0,50),signature,data);return data
- }catch(err){console.warn("Não foi possível obter pedágio da rota final",err);return {km:null,driveMinutes:null,toll:0,tollAvailable:false,error:true}}
+   const data={km:Number(r.distanceMeters||0)/1000,driveMinutes:Number(r.durationMillis||0)/60000,toll:moneyValue(br),tollAvailable:!!br,tollError:false};
+   writeTimedCache(cacheKey,signature,data);return data
+ }catch(tollErr){
+   console.warn("Pedágio indisponível; tentando rota básica.",tollErr);
+   try{
+     // Mesmo se o cálculo de pedágio falhar, não perde distância e tempo.
+     const {routes}=await Route.computeRoutes({...common,fields:["distanceMeters","durationMillis"]}),r=routes?.[0];
+     if(!r)throw new Error("Rota final não encontrada.");
+     const data={km:Number(r.distanceMeters||0)/1000,driveMinutes:Number(r.durationMillis||0)/60000,toll:0,tollAvailable:false,tollError:true};
+     writeTimedCache(cacheKey,signature,data);return data
+   }catch(routeErr){
+     console.error("Não foi possível calcular a rota final.",routeErr);
+     return {km:null,driveMinutes:null,toll:0,tollAvailable:false,tollError:true,error:true}
+   }
+ }
 }
 async function enrichSelectedRoutes(routes,candidates){
  const base=state.config.base||"Osasco, SP, Brasil";
@@ -2470,13 +2510,17 @@ function renderRouteRuns(){
    routeRunsList.innerHTML='<div class="card"><div class="cardhead"><div><h2>Rotas e viagens</h2><div class="muted">Você pode escolher uma rota sugerida ou registrar uma viagem manual para lançar despesas.</div></div></div><div class="empty">Nenhuma rota/viagem registrada ainda.</div></div>';
    return
  }
- routeRunsList.innerHTML='<div class="cardhead"><div><h2>Rotas e viagens realizadas</h2><div class="muted">As despesas reais ficam vinculadas à viagem correspondente.</div></div></div>'+runs.map((r,idx)=>{
-   const manual=r.source==="manual",expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),hasExpenses=expenses.length>0,diff=actual-planned,status=r.status==="completed"?"Concluída":"Em andamento",ids=r.currentClientIds||[],attended=r.attendedClientIds||[],changed=manual||r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids),ca=r.continuationAnalysis;
-   const diffHtml=manual
-     ? `<b>${brl(actual)}</b><span>Total realizado</span>`
-     : hasExpenses?`<b>${diff>=0?"+ ":"- "}${brl(Math.abs(diff))}</b><span>${diff>=0?"Acima do plano":"Abaixo do plano"}</span>`:`<b>—</b><span>Comparação após lançamentos</span>`;
+ routeRunsList.innerHTML='<div class="cardhead"><div><h2>Rotas e viagens realizadas</h2><div class="muted">Compare o custo estimado com o que realmente foi gasto.</div></div></div>'+runs.map((r,idx)=>{
+   const manual=r.source==="manual",expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),hasExpenses=expenses.length>0,status=r.status==="completed"?"Concluída":"Em andamento",ids=r.currentClientIds||[],attended=r.attendedClientIds||[],changed=manual||r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids),ca=r.continuationAnalysis;
+   const currentEstimate=Number(r.currentEstimatedCost||0),comparisonBase=manual?currentEstimate:planned,diff=actual-comparisonBase;
+   const diffHtml=hasExpenses&&comparisonBase>0
+     ? `<b>${diff>=0?"+ ":"- "}${brl(Math.abs(diff))}</b><span>${diff>=0?"Acima da estimativa":"Abaixo da estimativa"}</span>`
+     : manual?`<b>${brl(actual)}</b><span>Total realizado</span>`:`<b>—</b><span>Comparação após lançamentos</span>`;
+   const manualEstimate=Number(r.currentKm||0)>0
+     ? `<div class="route-estimate-rich"><b>${brl(currentEstimate)}</b><span>${Number(r.currentKm||0).toFixed(0)} km • ${fmtHours(r.currentMinutes||0)}</span><span>Pedágio: ${r.currentTollAvailable?brl(r.currentToll||0):r.currentTollError?"indisponível no cálculo":"sem valor retornado"} • Custo/km: ${brl(Number(state.config.costKm||0))}</span></div>`
+     : `<b>${ids.length?"Toque em “Recalcular trajeto completo” para calcular.":"Adicione clientes para gerar a estimativa."}</b>`;
    const planHtml=manual
-     ? `<div class="route-plan-compare manual"><div><small>Origem</small><b>Viagem manual</b></div><div><small>Estimativa atual</small><b>${Number(r.currentKm||0)>0?`${brl(Number(r.currentEstimatedCost||0))} • ${Number(r.currentKm||0).toFixed(0)} km`:"Adicione clientes e recalcule, se quiser"}</b></div></div>`
+     ? `<div class="route-plan-compare manual"><div><small>Origem</small><b>Viagem manual</b></div><div><small>Estimativa da viagem</small>${manualEstimate}</div></div>`
      : `<div class="route-plan-compare"><div><small>Planejado pelo sistema</small><b>${brl(planned)} • ${Number(r.plannedKm||0).toFixed(0)} km</b></div><div><small>Estimativa da rota atual</small><b>${brl(Number(r.currentEstimatedCost??planned))} • ${Number(r.currentKm??r.plannedKm??0).toFixed(0)} km</b></div></div>`;
    return `<div class="card route-run-card">
      <div class="cardhead"><div><h3>${manual?"Viagem manual":"Rota"} ${fmt(r.date)}${idx===0?" • mais recente":""}</h3><div class="muted">${ids.length} cliente(s) • ${attended.length} atendido(s) • ${manual?"registrada pelo Alex":changed?"rota editada":"rota conforme sugestão"}</div></div><span class="badge ${r.status==="completed"?"good":"warn"}">${status}</span></div>
@@ -2485,7 +2529,7 @@ function renderRouteRuns(){
      ${ca?`<div class="route-continue-box ${ca.status}"><div class="route-continue-head"><b>${ca.status==="good"?"🟢":ca.status==="bad"?"🔴":"🟡"} ${esc(ca.label)}</b><small>${ca.remainingClients} cliente(s) restantes</small></div><div>${esc(ca.message)}</div>${ca.remainingClients?`<div class="route-continue-kpis"><span>Custo para continuar <b>${brl(ca.travelCost)}</b></span><span>Retorno comercial esperado <b>${brl(ca.potentialReturn)}</b></span><span>Resultado estimado <b>${brl(ca.estimatedResult)}</b></span><span>${Number(ca.km||0).toFixed(0)} km • ${fmtHours(ca.minutes||0)}</span></div>`:""}</div>`:""}
      <div class="route-expense-summary"><div class="mini"><b>${brl(actual)}</b><span>Despesas reais</span></div><div class="mini">${diffHtml}</div><div class="mini"><b>${expenses.length}</b><span>Lançamentos</span></div></div>
      ${hasExpenses?`<div class="route-expense-list">${expenses.map(e=>`<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></span><b>${brl(e.amount)}</b></div>`).join("")}</div>`:'<div class="muted" style="margin-top:8px">Nenhuma despesa real lançada.</div>'}
-     <div class="route-run-actions"><button class="btn secondary" onclick="openRouteRunEditor('${r.id}')">✏️ Editar / atendidos</button>${ids.length?`<button class="btn secondary" onclick="recalculateRouteRun('${r.id}')">↻ Recalcular trajeto completo</button><button class="btn ${attended.length?"good":"secondary"}" onclick="recalculateRouteFromHere('${r.id}')">📍 Recalcular a partir daqui</button>`:""}<button class="btn" onclick="openRouteExpense('${r.id}')">＋ Despesa</button><button class="btn ${r.status==="completed"?"secondary":"good"}" onclick="toggleRouteRunStatus('${r.id}')">${r.status==="completed"?"Reabrir":"Finalizar rota"}</button></div>
+     <div class="route-run-actions"><button class="btn secondary" onclick="openRouteRunEditor('${r.id}')">✏️ Editar / atendidos</button>${ids.length?`<button class="btn secondary" onclick="recalculateRouteRun('${r.id}')">↻ Recalcular trajeto completo</button><button class="btn ${attended.length?"good":"secondary"}" onclick="recalculateRouteFromHere('${r.id}')">📍 Recalcular a partir daqui</button>`:""}<button class="btn" onclick="openRouteExpense('${r.id}')">＋ Despesa</button><button class="btn ${r.status==="completed"?"secondary":"good"}" onclick="toggleRouteRunStatus('${r.id}')">${r.status==="completed"?"Reabrir":"Finalizar rota"}</button><button class="btn danger" onclick="deleteRouteRun('${r.id}')">Excluir rota</button></div>
    </div>`
  }).join("")
 }
@@ -2512,14 +2556,43 @@ function toggleRouteRunAttended(clientId,checked){
 function moveRouteRunStop(i,dir){const j=i+dir;if(j<0||j>=routeRunEditStops.length)return;[routeRunEditStops[i],routeRunEditStops[j]]=[routeRunEditStops[j],routeRunEditStops[i]];renderRouteRunEditorStops()}
 function removeRouteRunStop(i){const id=routeRunEditStops[i],r=state.routeRuns.find(r=>r.id===rrId.value);routeRunEditStops.splice(i,1);if(r)r.attendedClientIds=(r.attendedClientIds||[]).filter(x=>x!==id);renderRouteRunEditorStops()}
 function addRouteRunStop(){if(!rrAddClient.value)return;if(!routeRunEditStops.includes(rrAddClient.value))routeRunEditStops.push(rrAddClient.value);renderRouteRunEditorStops()}
-function saveRouteRunEdits(openExpense=false){
+async function saveRouteRunEdits(openExpense=false){
  const r=state.routeRuns.find(r=>r.id===rrId.value);if(!r)return;
- r.date=rrDate.value||r.date||today();r.currentClientIds=[...routeRunEditStops];
+ const previousIds=[...(r.currentClientIds||[])];
+ r.date=rrDate.value||r.date||today();
+ r.currentClientIds=[...routeRunEditStops];
  r.edited=r.source==="manual"||JSON.stringify(r.currentClientIds)!==JSON.stringify(r.plannedClientIds||[]);
- r.updatedAt=nowIsoSP();const id=r.id;closeSheet("routeRunSheet");save();
- if(openExpense)setTimeout(()=>openRouteExpense(id),60)
+ r.updatedAt=nowIsoSP();
+ const id=r.id,manual=r.source==="manual",changed=JSON.stringify(previousIds)!==JSON.stringify(r.currentClientIds);
+ closeSheet("routeRunSheet");
+ save();
+ if(manual&&r.currentClientIds.length&&(changed||Number(r.currentKm||0)<=0)){
+   await recalculateRouteRun(id);
+ }
+ if(openExpense)setTimeout(()=>openRouteExpense(id),80)
 }
-async function recalculateRouteRun(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;if(!mapsConfigured()){alert("Configure a integração de rotas para recalcular distância, tempo e pedágio.");return}const stops=(r.currentClientIds||[]).map(id=>routeClientAddress(state.clients.find(c=>c.id===id))).filter(Boolean);if(!stops.length){alert("Adicione pelo menos um cliente à rota.");return}try{const base=state.config.base||"Osasco, SP, Brasil",d=await computeSelectedRouteDetail(base,base,stops);if(d.km==null)throw new Error("Não foi possível recalcular.");r.currentKm=d.km;r.currentMinutes=d.driveMinutes+(r.currentClientIds||[]).length*Number(state.config.visitMinutes||35);r.currentToll=d.toll;r.currentTollAvailable=d.tollAvailable;r.currentEstimatedCost=d.km*Number(state.config.costKm||0)+Number(d.toll||0);r.recalculatedAt=nowIsoSP();save()}catch(e){alert(e.message||"Não foi possível recalcular a rota.")}}
+async function recalculateRouteRun(id){
+ const r=state.routeRuns.find(r=>r.id===id);if(!r)return false;
+ if(!mapsConfigured()){alert("Configure a integração de rotas para calcular distância, tempo e pedágio.");return false}
+ const stops=(r.currentClientIds||[]).map(cid=>routeClientAddress(state.clients.find(c=>c.id===cid))).filter(Boolean);
+ if(!stops.length){alert("Adicione pelo menos um cliente à rota.");return false}
+ try{
+   const base=state.config.base||"Osasco, SP, Brasil",d=await computeSelectedRouteDetail(base,base,stops);
+   if(d.km==null)throw new Error("Não foi possível calcular o trajeto.");
+   r.currentKm=d.km;
+   r.currentMinutes=Number(d.driveMinutes||0)+(r.currentClientIds||[]).length*Number(state.config.visitMinutes||35);
+   r.currentToll=Number(d.toll||0);
+   r.currentTollAvailable=!!d.tollAvailable;
+   r.currentTollError=!!d.tollError;
+   r.currentEstimatedCost=d.km*Number(state.config.costKm||0)+Number(d.toll||0);
+   r.recalculatedAt=nowIsoSP();
+   save();
+   return true
+ }catch(e){
+   alert(e.message||"Não foi possível recalcular a rota.");
+   return false
+ }
+}
 async function recalculateRouteFromHere(id){
  const r=state.routeRuns.find(r=>r.id===id);if(!r)return;if(!mapsConfigured()){alert("Configure a integração de rotas para recalcular.");return}
  const attended=r.attendedClientIds||[],remaining=(r.currentClientIds||[]).filter(cid=>!attended.includes(cid));if(!remaining.length){r.continuationAnalysis={status:"good",label:"Rota concluída",message:"Todos os clientes desta rota estão marcados como atendidos.",remainingClients:0,calculatedAt:nowIsoSP()};save();return}
@@ -2530,6 +2603,14 @@ async function recalculateRouteFromHere(id){
    let status="good",label="Vale continuar",message=`O retorno comercial esperado dos clientes restantes supera o custo estimado para continuar.`;if(result<0){status="bad";label="Reprogramar pode ser melhor";message="O custo estimado para continuar está acima do retorno comercial esperado dos clientes restantes."}else if(result<travelCost*.25){status="warn";label="Avaliar antes de seguir";message="A rota restante ainda pode fechar positiva, mas com pouca folga."}
    r.continuationAnalysis={status,label,message,originClientId:lastAttended||"",remainingClients:remaining.length,km:d.km,minutes:d.driveMinutes+remaining.length*Number(state.config.visitMinutes||35),toll:Number(d.toll||0),travelCost,potentialReturn:potential,estimatedResult:result,calculatedAt:nowIsoSP()};r.recalculatedAt=nowIsoSP();save()
  }catch(e){alert(e.message||"Não foi possível recalcular a rota.")}
+}
+function deleteRouteRun(id){
+ const r=state.routeRuns.find(r=>r.id===id);if(!r)return;
+ const expenseCount=(r.expenses||[]).length,kind=r.source==="manual"?"viagem manual":"rota";
+ const extra=expenseCount?` Ela possui ${expenseCount} lançamento(s) de despesa, que também serão excluídos.`:"";
+ if(!confirm(`Excluir esta ${kind} de ${fmt(r.date)}?${extra}`))return;
+ state.routeRuns=state.routeRuns.filter(x=>x.id!==id);
+ save()
 }
 function toggleRouteRunStatus(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;r.status=r.status==="completed"?"planned":"completed";r.completedAt=r.status==="completed"?nowIsoSP():"";save()}
 function openRouteExpense(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;routeExpenseForm.reset();reRouteId.value=id;reDate.value=today();selectRouteExpenseCategory("fuel");openSheet("routeExpenseSheet")}
