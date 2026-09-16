@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.12">
-<meta name="ax-build" content="2026-09-12-v5.12-warranty-debt-routes">
+<meta name="ax-version" content="5.13">
+<meta name="ax-build" content="2026-09-15-v5.13-fortnight-finance">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -536,7 +536,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 }
 
 
-/* v5.12 — Saúde da AX */
+/* v5.13 — Saúde da AX */
 .health-card{overflow:hidden}
 .health-question{
   font-size:17px;
@@ -658,7 +658,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 }
 
 
-/* v5.12 — garantia rastreável, renegociação e rotas realizadas */
+/* v5.13 — garantia rastreável, renegociação e rotas realizadas */
 .sale-rentability-thumb{font-size:14px}
 .sale-client-debt-alert{margin-top:10px;border:1px solid #f0c9c0;background:#fff6f3;border-radius:14px;padding:11px}
 .sale-client-debt-alert .debt-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
@@ -672,6 +672,57 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 .warranty-card-main{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}.warranty-value{font-size:18px;font-weight:900;text-align:right}.warranty-value small{display:block;font-size:8px;color:var(--muted);font-weight:700;margin-top:2px}.warranty-destination-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.warranty-destination-actions .btn.active{outline:2px solid currentColor}.warranty-trace-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.warranty-filter-row{margin:0 0 10px}
 .route-run-card .route-seq{margin:8px 0}.route-run-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.route-expense-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.route-expense-list{margin-top:9px;border-top:1px solid #eef0f2}.route-expense-item{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #eef0f2;font-size:9px}.route-expense-item b{font-size:10px}.expense-category-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:9px 0}.expense-category-btn{border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px 8px;text-align:left;font-size:10px;font-weight:800}.expense-category-btn.active{border-color:#222;box-shadow:0 0 0 1px #222}.route-edit-stop{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #eef0f2}.route-edit-stop .actions{gap:4px}.route-edit-stop .btn{padding:6px 8px}.route-plan-compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.route-plan-compare>div{border:1px solid var(--line);border-radius:12px;padding:9px}.route-plan-compare small{display:block;color:var(--muted);font-size:8px;margin-bottom:4px}.route-plan-compare b{font-size:11px}.route-real-history{margin-bottom:12px}.route-run-status{font-size:8px}
 @media(max-width:520px){.free-adjustment-grid{grid-template-columns:1fr 1fr}.free-adjustment-grid .field:last-child{grid-column:1/-1}.route-plan-compare{grid-template-columns:1fr}.route-expense-summary{grid-template-columns:1fr 1fr}.route-expense-summary .mini:last-child{grid-column:1/-1}}
+
+
+/* v5.13 — leitura quinzenal, custos reais, mobile e rota em andamento */
+.sale-client-debt-alert .debt-top{align-items:flex-start}
+.sale-debt-row{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) auto;
+  gap:9px;
+  align-items:start;
+  padding:11px 0;
+}
+.sale-debt-row .debt-check{width:24px;height:24px;margin:2px 0 0}
+.sale-debt-row .debt-copy{min-width:0}
+.sale-debt-row .debt-copy b{display:block;font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+.sale-debt-row .debt-copy small{display:block;font-size:9px;line-height:1.4}
+.sale-debt-row .debt-amount{font-size:13px;font-weight:900;white-space:nowrap}
+.warranty-code-hero.expired{border-color:#fecdca;background:#fffbfa}
+.warranty-code-meta.bad{color:var(--bad);font-weight:850}
+.real-cost-history{margin-top:13px;border-top:1px solid var(--line);padding-top:8px}
+.real-cost-title{font-size:10px;font-weight:900;margin-bottom:5px}
+.real-cost-row{display:grid;grid-template-columns:minmax(0,1fr) auto 34px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #eef0f2}
+.real-cost-row b{display:block;font-size:10px}.real-cost-row small{display:block;font-size:8px;color:var(--muted);margin-top:2px}.real-cost-row strong{font-size:11px;white-space:nowrap}.real-cost-row .btn{padding:7px 8px}
+.fortnight-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}
+.fortnight-title{font-size:13px;font-weight:900}
+.fortnight-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.fortnight-kpis .mini{background:#fff}.fortnight-kpis .mini b{font-size:13px}
+.fortnight-rates{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.fortnight-rates>div{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:9px 10px;font-size:9px}
+.fortnight-rates b{font-size:13px}
+.fortnight-explain{margin-top:10px;border-radius:13px;padding:11px 12px;font-size:10px;line-height:1.45;border:1px solid var(--line)}
+.fortnight-explain.good{background:#f6fef9;border-color:#abefc6}.fortnight-explain.warn{background:#fffaeb;border-color:#fedf89}.fortnight-explain.bad{background:#fffbfa;border-color:#fecdca}.fortnight-explain.setup{background:#f7f8fa}
+.fortnight-history{margin-top:13px;border-top:1px solid var(--line);padding-top:9px}
+.fortnight-history-title{font-size:10px;font-weight:900;margin-bottom:4px}
+.fortnight-history-row{display:grid;grid-template-columns:1.15fr .9fr .9fr .9fr;gap:7px;align-items:center;padding:8px 0;border-bottom:1px solid #eef0f2;font-size:8px}
+.fortnight-history-row>div span,.fortnight-history-row>div small{display:block;color:var(--muted);font-size:7px}.fortnight-history-row b{font-size:9px}
+.route-edit-stop.attended{background:#f3fbf6;border-color:#abefc6}
+.route-attend-wrap{min-width:0}.route-attend-check{display:flex;align-items:center;gap:5px;margin-bottom:5px;font-size:8px;font-weight:800;color:var(--muted)}.route-attend-check input{width:18px;height:18px;margin:0}
+.route-continue-box{margin-top:10px;padding:11px;border-radius:13px;border:1px solid var(--line);font-size:9px;line-height:1.45}
+.route-continue-box.good{background:#f6fef9;border-color:#abefc6}.route-continue-box.warn{background:#fffaeb;border-color:#fedf89}.route-continue-box.bad{background:#fffbfa;border-color:#fecdca}
+.route-continue-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px}.route-continue-head b{font-size:11px}.route-continue-head small{color:var(--muted)}
+.route-continue-kpis{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.route-continue-kpis span{border-top:1px solid rgba(0,0,0,.06);padding-top:5px}.route-continue-kpis b{display:block}
+@media(max-width:520px){
+ .sale-client-debt-alert .debt-top{flex-direction:column}
+ .sale-client-debt-alert .debt-top .btn{width:100%}
+ .sale-debt-row{grid-template-columns:30px minmax(0,1fr)}
+ .sale-debt-row .debt-amount{grid-column:2;font-size:15px;margin-top:2px}
+ .fortnight-kpis{grid-template-columns:1fr 1fr}
+ .fortnight-rates{grid-template-columns:1fr}
+ .fortnight-history{overflow-x:auto}
+ .fortnight-history-row{min-width:430px}
+}
 
 </style>
 </head>
@@ -698,7 +749,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.12</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.13</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -733,7 +784,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 
   <div class="card">
     <div class="cardhead">
-      <div><h2>Desempenho financeiro</h2><div class="muted">Faturamento comercial x custos variáveis • últimos 3 meses</div></div>
+      <div><h2>Desempenho quinzenal</h2><div class="muted">A margem das vendas está pagando os custos da operação?</div></div>
       <span id="homeChartPrivacyBadge" class="badge">oculto</span>
     </div>
     <div id="homeFinanceChart"></div>
@@ -795,7 +846,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.12</div>
+  <div class="version-note">AX Baterias • v5.13</div>
 </section>
 
 <section id="clients" class="screen">
@@ -856,6 +907,7 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <button class="morecard" onclick="exportSales()"><span>📄</span>Vendas<small>Exportar CSV</small></button>
     <button class="morecard" onclick="exportReceivables()"><span>💳</span>Recebimentos<small>Exportar CSV</small></button>
     <button class="morecard" onclick="exportClients()"><span>👥</span>Clientes<small>Exportar CSV</small></button>
+    <button class="morecard" onclick="exportRouteExpenses()"><span>🧾</span>Despesas de rotas<small>Exportar CSV</small></button>
   </div>
   <div class="card" style="margin-top:12px"><div class="cardhead"><h2>Resumo do mês</h2></div><div id="monthReport"></div></div>
 </section>
@@ -879,19 +931,34 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Resultado dos pedidos</h2><div class="muted">Custos variáveis usados para avaliar cada venda.</div></div></div>
-    <div class="notice" style="margin-bottom:11px"><b>Custos totais</b> = produtos + taxa de pagamento + imposto estimado + rota atribuída + outros custos. O custo por km já deve contemplar combustível/manutenção para evitar dupla contagem.</div>
+    <div class="cardhead"><div><h2>Margem comercial dos pedidos</h2><div class="muted">O pedido responde somente: “vendi bem?”. Custos gerais da operação ficam na análise quinzenal.</div></div></div>
+    <div class="notice" style="margin-bottom:11px"><b>Margem do pedido</b> = receita comercial da venda − custo das baterias. Sucata e desconto/crédito livre reduzem a receita. Garantias, impostos, taxas bancárias e despesas de viagem são analisados separadamente.</div>
     <div class="formgrid">
-      <div class="field"><label>Imposto estimado sobre vendas (%)</label><input id="cfgTaxRate" type="number" min="0" step=".01"></div>
       <div class="field"><label>Referência rápida do pedido (%)</label><input id="cfgMinRentability" type="number" min="0" step=".1"></div>
-      <div class="field"><label>Taxa PIX (%)</label><input id="cfgFeePix" type="number" min="0" step=".01"></div>
-      <div class="field"><label>Taxa Dinheiro (%)</label><input id="cfgFeeCash" type="number" min="0" step=".01"></div>
-      <div class="field"><label>Taxa Cheque (%)</label><input id="cfgFeeCheque" type="number" min="0" step=".01"></div>
-      <div class="field"><label>Taxa Boleto (%)</label><input id="cfgFeeBoleto" type="number" min="0" step=".01"></div>
-      <div class="field"><label>Taxa Cartão (%)</label><input id="cfgFeeCard" type="number" min="0" step=".01"></div>
     </div>
-    <div class="notice" style="margin-top:9px"><b>Semáforo do pedido:</b> hoje a referência é 12%. 👍 acima ou igual à referência; 👎 abaixo. A <b>Saúde da AX</b> calcula uma margem mínima diferente, baseada na estrutura real da empresa.</div>
-    <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar parâmetros</button></div>
+    <div class="notice" style="margin-top:9px"><b>Semáforo:</b> 🟢 igual ou acima da referência; 🔴 abaixo. Referência atual: 12%.</div>
+    <div style="margin-top:11px"><button class="btn" onclick="saveSettings()">Salvar referência</button></div>
+  </div>
+
+  <div class="card">
+    <div class="cardhead"><div><h2>Custos reais do período</h2><div class="muted">Entram no Desempenho Quinzenal, não na margem de cada pedido.</div></div></div>
+    <div class="notice"><b>Imposto:</b> registre o valor real da guia quando o mês fechar. Enquanto não houver valor do mês atual, o sistema usa metade do último mês fechado em cada quinzena como referência provisória.</div>
+    <div class="formgrid" style="margin-top:11px">
+      <div class="field"><label>Competência do imposto</label><input id="cfgTaxMonthReal" type="month"></div>
+      <div class="field"><label>Valor real da guia (R$)</label><input id="cfgTaxAmountReal" type="number" min="0" step=".01" placeholder="R$ 0,00"></div>
+      <div class="field span2"><label>Observação do imposto <span class="muted">(opcional)</span></label><input id="cfgTaxNoteReal" placeholder="Ex.: guia DAS paga em 20/09"></div>
+      <div class="field span2"><button class="btn secondary" type="button" onclick="saveRealTax()">Registrar imposto mensal</button></div>
+    </div>
+    <div style="border-top:1px solid var(--line);margin:14px 0 11px"></div>
+    <div class="notice"><b>Taxas e outros custos:</b> lance o valor realmente cobrado no dia/período. Não é necessário saber um percentual.</div>
+    <div class="formgrid" style="margin-top:11px">
+      <div class="field"><label>Tipo</label><select id="cfgPeriodExpenseType"><option value="pixbank">Taxas PIX / bancárias</option><option value="cardbank">Taxas cartão / maquininha</option><option value="other">Outro custo variável</option></select></div>
+      <div class="field"><label>Data</label><input id="cfgPeriodExpenseDate" type="date"></div>
+      <div class="field"><label>Valor real (R$)</label><input id="cfgPeriodExpenseAmount" type="number" min="0" step=".01" placeholder="R$ 0,00"></div>
+      <div class="field"><label>Observação <span class="muted">(opcional)</span></label><input id="cfgPeriodExpenseNote" placeholder="Ex.: tarifas da 1ª quinzena"></div>
+      <div class="field span2"><button class="btn secondary" type="button" onclick="addPeriodExpense()">Registrar custo real</button></div>
+    </div>
+    <div id="realCostHistory" class="real-cost-history"></div>
   </div>
   <div class="card">
     <div class="cardhead">
@@ -918,9 +985,12 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Sobre o sistema</h2><div class="muted">Confirma se o celular já carregou a versão publicada.</div></div></div>
-    <div class="system-card-row"><span>Versão do sistema</span><b>5.12</b></div>
-    <div class="system-card-row"><span>Data da versão</span><b>12/09/2026</b></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.13</span></div>
+    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.13</b></div>
+    <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">15/09/2026</b></div>
+    <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
+    <div id="systemUpdateMessage" class="muted" style="margin-top:8px">O botão busca o index.html publicado sem usar o cache.</div>
+    <div style="margin-top:10px"><button id="systemUpdateBtn" class="btn" type="button" onclick="forceSystemUpdate()">↻ Atualizar sistema</button></div>
   </div>
   <div class="card">
     <div class="cardhead"><h2>Dados</h2></div>
@@ -1198,24 +1268,17 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
     <div style="margin-top:10px">
       <button id="saleAdminToggle" class="btn secondary sale-admin-toggle" type="button" onclick="toggleSaleAdminResult()"><span>👁 Ver resultado da venda</span><span>Privado</span></button>
       <div id="saleAdminPanel" class="sale-admin-panel hidden" style="margin-top:8px">
-        <div class="sale-admin-title">Resultado administrativo</div>
-        <div class="sale-admin-note">Informações privadas. A rentabilidade do pedido mede a venda atual <b>antes do impacto da garantia</b>. A garantia aparece separada para mostrar quanto ela consumiu do resultado.</div>
-        <div class="formgrid" style="margin-top:10px">
-          <div class="field"><label>Custo de rota atribuído a este pedido (R$)</label><input id="sRouteCost" type="number" min="0" step=".01" value="0"></div>
-          <div class="field"><label>Outros custos desta venda (R$)</label><input id="sOtherCost" type="number" min="0" step=".01" value="0"></div>
-        </div>
+        <div class="sale-admin-title">Margem comercial do pedido</div>
+        <div class="sale-admin-note">Informações privadas. Aqui entram somente <b>receita da venda e custo das baterias</b>. Impostos, taxas e despesas de viagem são avaliados no Desempenho Quinzenal.</div>
+        <input id="sRouteCost" type="hidden" value="0"><input id="sOtherCost" type="hidden" value="0">
         <div class="sale-admin-grid">
-          <div class="mini"><b id="saleCostPreview">R$ 0,00</b><span>Custo dos produtos</span></div>
-          <div class="mini"><b id="salePaymentFeePreview">R$ 0,00</b><span>Taxa de pagamento</span></div>
-          <div class="mini"><b id="saleTaxPreview">R$ 0,00</b><span>Impostos estimados</span></div>
-          <div class="mini"><b id="saleExtraCostsPreview">R$ 0,00</b><span>Rota + outros</span></div>
-          <div class="mini"><b id="saleGrossProfitPreview">R$ 0,00</b><span>Margem bruta comercial</span></div>
-          <div class="mini"><b id="saleTotalCostsPreview">R$ 0,00</b><span>Custos variáveis</span></div>
-          <div id="saleOperationalResultBox" class="mini"><b id="saleProfitPreview">R$ 0,00</b><span>Resultado comercial</span></div>
-          <div id="saleRentabilityBox" class="mini"><b id="saleRentabilityPreview">0%</b><span>Rentabilidade do pedido</span></div>
+          <div class="mini"><b id="saleCostPreview">R$ 0,00</b><span>Custo das baterias</span></div>
+          <div id="saleOperationalResultBox" class="mini"><b id="saleProfitPreview">R$ 0,00</b><span>Margem comercial</span></div>
+          <div id="saleRentabilityBox" class="mini"><b id="saleRentabilityPreview">0%</b><span>Margem do pedido</span></div>
+          <div class="mini"><b id="saleCommercialRevenuePreview">R$ 0,00</b><span>Receita comercial</span></div>
           <div class="sale-admin-separator"></div>
           <div class="mini"><b id="saleWarrantyImpactAdminPreview">- R$ 0,00</b><span>Impacto da garantia</span></div>
-          <div id="saleEconomicResultBox" class="mini"><b id="saleEconomicResultPreview">R$ 0,00</b><span>Resultado após garantia</span></div>
+          <div id="saleEconomicResultBox" class="mini"><b id="saleEconomicResultPreview">R$ 0,00</b><span>Margem após garantia</span></div>
         </div>
         <div id="saleRentabilityAlert" class="notice" style="margin-top:9px"></div>
       </div>
@@ -1319,13 +1382,13 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 </form></div></div>
 
 <!-- Route run editor -->
-<div class="sheet" id="routeRunSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2>Editar rota escolhida</h2><div class="muted">A sugestão original fica guardada. Edite somente o que o Alex pretende fazer.</div></div><button class="btn secondary" onclick="closeSheet('routeRunSheet')">Fechar</button></div>
-<input type="hidden" id="rrId"><div id="rrPlannedSummary" class="notice"></div><div id="rrStops"></div><div class="formgrid" style="margin-top:10px"><div class="field span2"><label>Adicionar cliente / parada</label><select id="rrAddClient"></select></div></div><div class="actions" style="margin-top:10px"><button class="btn secondary" type="button" onclick="addRouteRunStop()">＋ Adicionar</button><button class="btn" type="button" onclick="saveRouteRunEdits()">Salvar alterações</button></div><div class="muted" style="margin-top:8px">Depois de salvar, use “Recalcular trajeto” na rota para atualizar km, tempo e pedágio da versão editada.</div>
+<div class="sheet" id="routeRunSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2>Editar rota escolhida</h2><div class="muted">A sugestão original fica guardada. Edite a ordem e marque quem já foi atendido; isso permite recalcular a rota a partir do ponto atual.</div></div><button class="btn secondary" onclick="closeSheet('routeRunSheet')">Fechar</button></div>
+<input type="hidden" id="rrId"><div id="rrPlannedSummary" class="notice"></div><div id="rrStops"></div><div class="formgrid" style="margin-top:10px"><div class="field span2"><label>Adicionar cliente / parada</label><select id="rrAddClient"></select></div></div><div class="actions" style="margin-top:10px"><button class="btn secondary" type="button" onclick="addRouteRunStop()">＋ Adicionar</button><button class="btn" type="button" onclick="saveRouteRunEdits()">Salvar alterações</button></div><div class="muted" style="margin-top:8px">Depois de salvar, use “Recalcular a partir daqui” para avaliar se vale continuar com os clientes restantes ou reprogramar.</div>
 </div></div>
 
 <!-- Route expense -->
 <div class="sheet" id="routeExpenseSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2>Registrar despesa da rota</h2><div class="muted">Toque na categoria, informe o valor e salve.</div></div><button class="btn secondary" onclick="closeSheet('routeExpenseSheet')">Fechar</button></div>
-<form id="routeExpenseForm" class="formgrid"><input type="hidden" id="reRouteId"><input type="hidden" id="reCategory" value="fuel"><div class="field span2"><label>Categoria</label><div class="expense-category-grid" id="routeExpenseCategories"><button type="button" class="expense-category-btn active" data-cat="fuel" onclick="selectRouteExpenseCategory('fuel')">⛽ Combustível</button><button type="button" class="expense-category-btn" data-cat="breakfast" onclick="selectRouteExpenseCategory('breakfast')">☕ Café da manhã</button><button type="button" class="expense-category-btn" data-cat="lunch" onclick="selectRouteExpenseCategory('lunch')">🍽️ Almoço</button><button type="button" class="expense-category-btn" data-cat="dinner" onclick="selectRouteExpenseCategory('dinner')">🌙 Jantar</button><button type="button" class="expense-category-btn" data-cat="lodging" onclick="selectRouteExpenseCategory('lodging')">🏨 Hospedagem</button><button type="button" class="expense-category-btn" data-cat="other" onclick="selectRouteExpenseCategory('other')">➕ Outro</button></div></div><div class="field"><label>Valor</label><input id="reAmount" type="number" min="0" step=".01" required placeholder="R$ 0,00"></div><div class="field"><label>Data</label><input id="reDate" type="date" required></div><div class="field span2"><label>Observação <span class="muted">(opcional)</span></label><input id="reNote" placeholder="Ex.: Posto, restaurante, hotel..."></div><div class="field span2"><button class="btn" type="submit">Salvar despesa</button></div></form>
+<form id="routeExpenseForm" class="formgrid"><input type="hidden" id="reRouteId"><input type="hidden" id="reCategory" value="fuel"><div class="field span2"><label>Categoria</label><div class="expense-category-grid" id="routeExpenseCategories"><button type="button" class="expense-category-btn active" data-cat="fuel" onclick="selectRouteExpenseCategory('fuel')">⛽ Combustível</button><button type="button" class="expense-category-btn" data-cat="breakfast" onclick="selectRouteExpenseCategory('breakfast')">☕ Café da manhã</button><button type="button" class="expense-category-btn" data-cat="lunch" onclick="selectRouteExpenseCategory('lunch')">🍽️ Almoço</button><button type="button" class="expense-category-btn" data-cat="dinner" onclick="selectRouteExpenseCategory('dinner')">🌙 Jantar</button><button type="button" class="expense-category-btn" data-cat="lodging" onclick="selectRouteExpenseCategory('lodging')">🏨 Hospedagem</button><button type="button" class="expense-category-btn" data-cat="toll" onclick="selectRouteExpenseCategory('toll')">🛣️ Pedágio</button><button type="button" class="expense-category-btn" data-cat="other" onclick="selectRouteExpenseCategory('other')">➕ Outro</button></div></div><div class="field"><label>Valor</label><input id="reAmount" type="number" min="0" step=".01" required placeholder="R$ 0,00"></div><div class="field"><label>Data</label><input id="reDate" type="date" required></div><div class="field span2"><label>Observação <span class="muted">(opcional)</span></label><input id="reNote" placeholder="Ex.: Posto, restaurante, hotel..."></div><div class="field span2"><button class="btn" type="submit">Salvar despesa</button></div></form>
 </div></div>
 
 <!-- Scrap type sheet -->
@@ -1355,13 +1418,15 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.12';
+const AX_APP_VERSION='5.13';
+const AX_RELEASE_DATE='2026-09-15';
+const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
 const TEST_MODE=false;
 const KEY="ax_baterias_mobile_v5_cache";
 const defaults={
  clients:[],routes:[],products:[],sales:[],visits:[],warranties:[],routeRuns:[],
- scrapTypes:[],scrapTransactions:[],
+ scrapTypes:[],scrapTransactions:[],periodExpenses:[],taxRecords:[],
  config:{costKm:1.50,window:5,base:"Osasco, SP, Brasil",hotelCost:250,visitMinutes:35,maxDailyHours:9,companyPhone:"",sellerName:"Alex",googleMapsApiKey:"",tollPass:"BR_SEM_PARAR",taxRate:0,minRentability:12,orderRentabilityReference:12,monthlyProfitTarget:0,fixedCosts:{proLabore:0,accountant:0,phone:0,insurance:0,systems:0,rent:0,other:0},paymentFees:{PIX:0,Dinheiro:0,Cheque:0,Boleto:0,"Cartão":0}},
  collectionTemplates:{
    upcoming:"Oi, {contato_cliente}! Tudo bem? Passando só para lembrar que o pagamento de {valor}, do pedido {pedido}, vence em {vencimento}. Se precisar de alguma informação, me chama 👍",
@@ -1397,12 +1462,13 @@ function ensureConfig(){
 function ensureState(){
  ensureConfig();
  state.clients=state.clients||[];state.routes=state.routes||[];state.products=state.products||[];state.sales=state.sales||[];state.visits=state.visits||[];state.warranties=state.warranties||[];state.routeRuns=state.routeRuns||[];
- state.scrapTypes=state.scrapTypes||[];state.scrapTransactions=state.scrapTransactions||[];
+ state.scrapTypes=state.scrapTypes||[];state.scrapTransactions=state.scrapTransactions||[];state.periodExpenses=state.periodExpenses||[];state.taxRecords=state.taxRecords||[];
  state.collectionTemplates=Object.assign(copy(defaults.collectionTemplates),state.collectionTemplates||{});
  if(state.collectionTemplate&&!state.collectionTemplates.upcoming)state.collectionTemplates.upcoming=state.collectionTemplate;
  state.clients.forEach(c=>{if(c.contact==null)c.contact=""});
  state.sales.forEach(s=>{if(s.freeAdjustmentValue==null)s.freeAdjustmentValue=0;if(!s.renegotiatedDebts)s.renegotiatedDebts=[];if(s.renegotiatedDebtTotal==null)s.renegotiatedDebtTotal=0;if(s.collectionTotal==null)s.collectionTotal=Number(s.total||0)});
  state.warranties.forEach(w=>{if(w.type==="Sucata")return;if(!w.batteryDisposition)w.batteryDisposition="pending";if(w.batteryValue==null)w.batteryValue=Number(w.creditValue||0)||Number(state.products.find(p=>p.id===w.productId)?.prices?.[Number(state.clients.find(c=>c.id===w.clientId)?.price||0)]||0)});
+ state.routeRuns.forEach(r=>{r.expenses=r.expenses||[];r.attendedClientIds=r.attendedClientIds||[]});
  migrateOrderNumbers();
 }
 function loadCache(){
@@ -1425,7 +1491,7 @@ function scheduleRemoteSave(){
   setSync("salvando…","syncing");
   clearTimeout(remoteTimer);
   remoteTimer=setTimeout(async()=>{
-    const {error}=await sb.from("ax_app_state").upsert({user_id:currentUser.id,data:state,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+    const {error}=await sb.from("ax_app_state").upsert({user_id:currentUser.id,data:state,updated_at:nowIsoSP()},{onConflict:"user_id"});
     if(error){console.error(error);setSync("erro ao sincronizar","error")}
     else setSync("sincronizado","ok");
   },300);
@@ -1447,11 +1513,11 @@ async function loadRemote(user){
       state=Object.assign(copy(defaults),data.data);ensureState();
       try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}
       if(!TEST_MODE){
-        const {error:migErr}=await sb.from("ax_app_state").upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+        const {error:migErr}=await sb.from("ax_app_state").upsert({user_id:user.id,data:state,updated_at:nowIsoSP()},{onConflict:"user_id"});
         if(migErr){console.error(migErr);setSync("erro ao migrar dados","error");throw migErr}
       }
     }else if(!TEST_MODE){
-      const {error:upErr}=await sb.from("ax_app_state").upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+      const {error:upErr}=await sb.from("ax_app_state").upsert({user_id:user.id,data:state,updated_at:nowIsoSP()},{onConflict:"user_id"});
       if(upErr)throw upErr;
     }
   }
@@ -1497,15 +1563,48 @@ async function logout(){
   currentUser=null;document.body.classList.add("auth-locked");setSync("offline","");
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function today(){return new Date().toISOString().slice(0,10)}
+function today(){
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:AX_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+ const get=t=>parts.find(p=>p.type===t)?.value||"";
+ return `${get("year")}-${get("month")}-${get("day")}`
+}
 function brl(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
-function fmt(v){return v?new Date(v+"T12:00:00").toLocaleDateString("pt-BR"):"—"}
+function fmt(v){
+ if(!v)return "—";
+ const s=String(v);
+ if(/^\d{4}-\d{2}-\d{2}$/.test(s)){const [y,m,d]=s.split("-");return `${d}/${m}/${y}`}
+ const d=new Date(s);return Number.isNaN(d.getTime())?"—":d.toLocaleDateString("pt-BR",{timeZone:AX_TIME_ZONE})
+}
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function days(a,b){return Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/86400000)}
-function addDays(v,n){const d=new Date(v+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
-function addMonths(v,n){const d=new Date(v+"T12:00:00");d.setMonth(d.getMonth()+n);return d.toISOString().slice(0,10)}
-function monthStart(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),1)}
-
+function days(a,b){
+ const pa=String(a).slice(0,10).split("-").map(Number),pb=String(b).slice(0,10).split("-").map(Number);
+ return Math.round((Date.UTC(pb[0],pb[1]-1,pb[2])-Date.UTC(pa[0],pa[1]-1,pa[2]))/86400000)
+}
+function addDays(v,n){
+ const [y,m,d]=String(v).slice(0,10).split("-").map(Number),dt=new Date(Date.UTC(y,m-1,d+Number(n||0)));
+ return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth()+1).padStart(2,"0")}-${String(dt.getUTCDate()).padStart(2,"0")}`
+}
+function addMonths(v,n){
+ const [y,m,d]=String(v).slice(0,10).split("-").map(Number),dt=new Date(Date.UTC(y,m-1,d));
+ dt.setUTCMonth(dt.getUTCMonth()+Number(n||0));
+ return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth()+1).padStart(2,"0")}-${String(dt.getUTCDate()).padStart(2,"0")}`
+}
+function monthStart(){
+ const [y,m]=today().split("-");return new Date(`${y}-${m}-01T00:00:00-03:00`)
+}
+function nowIsoSP(){
+ const d=new Date(),parts=new Intl.DateTimeFormat("en-US",{timeZone:AX_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"}).formatToParts(d);
+ const g=t=>parts.find(p=>p.type===t)?.value||"00";
+ const wallUTC=Date.UTC(Number(g("year")),Number(g("month"))-1,Number(g("day")),Number(g("hour")),Number(g("minute")),Number(g("second")));
+ const offMin=Math.round((wallUTC-d.getTime())/60000),sign=offMin>=0?"+":"-",abs=Math.abs(offMin),oh=String(Math.floor(abs/60)).padStart(2,"0"),om=String(abs%60).padStart(2,"0");
+ return `${g("year")}-${g("month")}-${g("day")}T${g("hour")}:${g("minute")}:${g("second")}${sign}${oh}:${om}`
+}
+function formatDateTimeSP(v){
+ if(!v)return "—";const d=new Date(v);if(Number.isNaN(d.getTime()))return "—";
+ return d.toLocaleString("pt-BR",{timeZone:AX_TIME_ZONE,day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})
+}
+function monthKeySP(){return today().slice(0,7)}
+function daysInMonthKey(key){const [y,m]=key.split("-").map(Number);return new Date(Date.UTC(y,m,0)).getUTCDate()}
 function go(id){
  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
  document.getElementById(id).classList.add("active");
@@ -1587,6 +1686,13 @@ function selectSaleClient(id){const c=state.clients.find(c=>c.id===id);if(!c)ret
 function clearSaleClientIfNeeded(){const c=state.clients.find(c=>c.id===sClient.value);if(!c||sClientSearch.value.trim()!==c.name)sClient.value=""}
 function setPaymentSplitMode(mode,silent=false){sPaymentSplitMode.value=mode;paymentSingleBtn.classList.toggle("active",mode==="single");paymentSplitBtn.classList.toggle("active",mode==="multiple");singlePaymentSection.classList.toggle("hidden",mode!=="single");multiPaymentSection.classList.toggle("hidden",mode!=="multiple");if(mode==="multiple"&&!paymentRows.children.length)addPaymentRow({amount:0});if(!silent)updateSale()}
 function paymentMethods(){return ["PIX","Dinheiro","Cheque","Boleto","Cartão"]}
+function paymentMethodsForMode(mode){return mode==="prazo"?["PIX","Cheque","Boleto","Cartão"]:["PIX","Dinheiro","Cheque","Cartão"]}
+function syncPaymentRowMethods(row){
+ const mode=row.querySelector(".pm-mode").value,current=row.querySelector(".pm-method").value,sel=row.querySelector(".pm-method"),opts=paymentMethodsForMode(mode);
+ if(current&&!opts.includes(current))opts.push(current);
+ sel.innerHTML=opts.map(m=>`<option ${m===current?"selected":""}>${m}</option>`).join("");
+ if(!sel.value)sel.value=opts[0]
+}
 function currentPaymentRemaining(){
  const total=currentSalePayableTotal();
  const allocated=[...paymentRows.querySelectorAll(".pm-amount")].reduce((a,i)=>a+Number(i.value||0),0);
@@ -1594,12 +1700,11 @@ function currentPaymentRemaining(){
 }
 function addPaymentRow(data={}){
  const row=document.createElement("div");row.className="payment-row";row.dataset.paymentId=data.id||uid();
- const method=data.method||"PIX",mode=data.mode||"ato";
- const hasAmount=Object.prototype.hasOwnProperty.call(data,"amount");
- const amount=hasAmount?Number(data.amount||0):currentPaymentRemaining();
+ const mode=data.mode||"ato",allowed=paymentMethodsForMode(mode),method=data.method&&allowed.includes(data.method)?data.method:allowed[0];
+ const hasAmount=Object.prototype.hasOwnProperty.call(data,"amount"),amount=hasAmount?Number(data.amount||0):currentPaymentRemaining();
  const parts=Math.max(1,Number(data.parts||data.installments?.length||1)),due=data.due||data.installments?.[0]?.due||today(),paid=data.paid!=null?!!data.paid:!!(data.installments?.length&&data.installments.every(p=>p.paid));
- row.innerHTML=`<div class="row-title"><span>Forma de pagamento</span><button type="button" class="btn secondary pm-remove">Remover</button></div><div class="payment-row-grid"><div><label>Forma</label><select class="pm-method">${paymentMethods().map(m=>`<option ${m===method?"selected":""}>${m}</option>`).join("")}</select></div><div><label>Valor</label><input class="pm-amount" type="number" min="0" step=".01" value="${amount>0?amount.toFixed(2):""}"></div><div class="pm-condition-wrap"><label>Condição</label><select class="pm-mode"><option value="ato" ${mode==="ato"?"selected":""}>No ato</option><option value="prazo" ${mode==="prazo"?"selected":""}>A prazo</option></select></div></div><div class="payment-row-extra"><div class="pm-paid-wrap"><label>Recebido?</label><select class="pm-paid"><option value="no" ${!paid?"selected":""}>Não</option><option value="yes" ${paid?"selected":""}>Sim</option></select></div><div class="pm-parts-wrap"><label>Parcelas</label><input class="pm-parts" type="number" min="1" max="24" value="${parts}"></div><div class="pm-due-wrap"><label>1º vencimento</label><input class="pm-due" type="date" value="${due}"></div></div>`;
- const sync=()=>{const prazo=row.querySelector(".pm-mode").value==="prazo";row.querySelector(".pm-paid-wrap").classList.toggle("hidden",prazo);row.querySelector(".pm-parts-wrap").classList.toggle("hidden",!prazo);row.querySelector(".pm-due-wrap").classList.toggle("hidden",!prazo);if(prazo)row.querySelector(".pm-paid").value="no";updateSale()};
+ row.innerHTML=`<div class="row-title"><span>Forma de pagamento</span><button type="button" class="btn secondary pm-remove">Remover</button></div><div class="payment-row-grid"><div><label>Forma</label><select class="pm-method">${allowed.map(m=>`<option ${m===method?"selected":""}>${m}</option>`).join("")}</select></div><div><label>Valor</label><input class="pm-amount" type="number" min="0" step=".01" value="${amount>0?amount.toFixed(2):""}"></div><div class="pm-condition-wrap"><label>Condição</label><select class="pm-mode"><option value="ato" ${mode==="ato"?"selected":""}>No ato</option><option value="prazo" ${mode==="prazo"?"selected":""}>A prazo</option></select></div></div><div class="payment-row-extra"><div class="pm-paid-wrap"><label>Recebido?</label><select class="pm-paid"><option value="no" ${!paid?"selected":""}>Não</option><option value="yes" ${paid?"selected":""}>Sim</option></select></div><div class="pm-parts-wrap"><label>Parcelas</label><input class="pm-parts" type="number" min="1" max="24" value="${parts}"></div><div class="pm-due-wrap"><label>1º vencimento</label><input class="pm-due" type="date" value="${due}"></div></div>`;
+ const sync=()=>{const prazo=row.querySelector(".pm-mode").value==="prazo";syncPaymentRowMethods(row);row.querySelector(".pm-paid-wrap").classList.toggle("hidden",prazo);row.querySelector(".pm-parts-wrap").classList.toggle("hidden",!prazo);row.querySelector(".pm-due-wrap").classList.toggle("hidden",!prazo);if(prazo)row.querySelector(".pm-paid").value="no";updateSale()};
  row.querySelectorAll("select,input").forEach(el=>el.addEventListener(el.tagName==="INPUT"?"input":"change",sync));
  row.querySelector(".pm-remove").onclick=()=>{row.remove();updateSale()};
  paymentRows.appendChild(row);sync()
@@ -1611,7 +1716,15 @@ function selectedRenegotiatedDebtRows(){const clientId=sClient.value,currentId=s
 function selectedRenegotiatedDebtTotal(){return Math.round(selectedRenegotiatedDebtRows().reduce((a,x)=>a+x.amount,0)*100)/100}
 function toggleSaleDebtPanel(){const p=document.getElementById("saleDebtPanel");if(p)p.classList.toggle("hidden")}
 function toggleDebtSelection(saleId,installmentId,checked){const key=`${saleId}::${installmentId}`;pendingRenegotiatedDebts=pendingRenegotiatedDebts.filter(x=>`${x.saleId}::${x.installmentId}`!==key);if(checked)pendingRenegotiatedDebts.push({saleId,installmentId});renderSaleClientDebt();updateSale()}
-function renderSaleClientDebt(){if(!window.sClientDebtAlert)return;const clientId=sClient.value;if(!clientId){sClientDebtAlert.classList.add("hidden");sClientDebtAlert.innerHTML="";return}const rows=debtRowsForClient(clientId,sId.value||""),total=rows.reduce((a,x)=>a+x.amount,0),selected=selectedRenegotiatedDebtTotal();if(!rows.length){sClientDebtAlert.classList.add("hidden");sClientDebtAlert.innerHTML="";return}const keys=new Set(pendingRenegotiatedDebts.map(x=>`${x.saleId}::${x.installmentId}`));sClientDebtAlert.classList.remove("hidden");sClientDebtAlert.innerHTML=`<div class="debt-top"><div><strong>⚠️ Cliente possui ${brl(total)} em aberto</strong><div class="muted">Você pode trazer uma ou mais cobranças para este pedido, sem juros.</div></div><button class="btn secondary" type="button" onclick="toggleSaleDebtPanel()">Ver / renegociar</button></div><div id="saleDebtPanel" class="sale-debt-panel ${selected>0?"":"hidden"}">${rows.map(({s,p,amount})=>{const k=`${s.id}::${p.id}`,grp=p.groupTotal||s.installments.length;return `<div class="sale-debt-row"><label><input type="checkbox" ${keys.has(k)?"checked":""} onchange="toggleDebtSelection('${s.id}','${p.id}',this.checked)"><span><b>Pedido ${esc(s.orderNumber||"—")} • parcela ${p.groupNumber||p.number}/${grp}</b><small>Vencimento ${fmt(p.due)} • será marcada como renegociada, não como paga.</small></span></label><b>${brl(amount)}</b></div>`}).join("")}<div class="notice" style="margin-top:8px"><b>Selecionado para renegociar: ${brl(selected)}</b><br>Esse valor aumenta a nova cobrança, mas não entra como faturamento novo nem melhora a rentabilidade deste pedido.</div></div>`}
+function renderSaleClientDebt(){
+ if(!window.sClientDebtAlert)return;const clientId=sClient.value;
+ if(!clientId){sClientDebtAlert.classList.add("hidden");sClientDebtAlert.innerHTML="";return}
+ const rows=debtRowsForClient(clientId,sId.value||""),total=rows.reduce((a,x)=>a+x.amount,0),selected=selectedRenegotiatedDebtTotal();
+ if(!rows.length){sClientDebtAlert.classList.add("hidden");sClientDebtAlert.innerHTML="";return}
+ const keys=new Set(pendingRenegotiatedDebts.map(x=>`${x.saleId}::${x.installmentId}`));
+ sClientDebtAlert.classList.remove("hidden");
+ sClientDebtAlert.innerHTML=`<div class="debt-top"><div><strong>⚠️ Cliente possui ${brl(total)} em aberto</strong><div class="muted">Você pode trazer uma ou mais cobranças para este pedido, sem juros.</div></div><button class="btn secondary" type="button" onclick="toggleSaleDebtPanel()">Ver / renegociar</button></div><div id="saleDebtPanel" class="sale-debt-panel ${selected>0?"":"hidden"}">${rows.map(({s,p,amount})=>{const k=`${s.id}::${p.id}`,grp=p.groupTotal||s.installments.length;return `<div class="sale-debt-row"><input class="debt-check" type="checkbox" aria-label="Selecionar cobrança" ${keys.has(k)?"checked":""} onchange="toggleDebtSelection('${s.id}','${p.id}',this.checked)"><div class="debt-copy"><b>Pedido ${esc(s.orderNumber||"—")} • parcela ${p.groupNumber||p.number}/${grp}</b><small>Vencimento ${fmt(p.due)}</small><small>Ao renegociar, sai da fila antiga e não é marcada como paga.</small></div><div class="debt-amount">${brl(amount)}</div></div>`}).join("")}<div class="notice" style="margin-top:8px"><b>Selecionado para renegociar: ${brl(selected)}</b><br>Esse valor aumenta a nova cobrança, mas não entra como faturamento novo nem melhora a margem deste pedido.</div></div>`
+}
 function buildRenegotiatedDebts(){return selectedRenegotiatedDebtRows().map(({s,p,amount})=>({sourceSaleId:s.id,sourceOrderNumber:s.orderNumber||"",installmentId:p.id,due:p.due,amount}))}
 function syncRenegotiatedDebtLinks(savedSale){state.sales.forEach(s=>(s.installments||[]).forEach(p=>{if(p.renegotiatedToSaleId===savedSale.id){delete p.renegotiatedToSaleId;delete p.renegotiatedToOrderNumber;delete p.renegotiatedAt}}));(savedSale.renegotiatedDebts||[]).forEach(d=>{const source=state.sales.find(s=>s.id===d.sourceSaleId),p=source?.installments?.find(p=>p.id===d.installmentId);if(p){p.renegotiatedToSaleId=savedSale.id;p.renegotiatedToOrderNumber=savedSale.orderNumber;p.renegotiatedAt=savedSale.date}})}
 function saleHasRenegotiatedSource(s){return (s.installments||[]).some(p=>!!p.renegotiatedToSaleId)}
@@ -1631,8 +1744,18 @@ function parseWarrantyCode(code){
 }
 function productWarrantyModelCode(p){const name=String(p?.name||"");const m=name.match(/(?:^|\D)(5|6|7)(?:[A-Za-z]|\D|$)/);return m?String(Number(m[1])).padStart(2,"0"):""}
 function warrantyValue(w){if(Number(w.batteryValue||0)>0)return Number(w.batteryValue);if(Number(w.creditValue||0)>0)return Number(w.creditValue);const c=state.clients.find(c=>c.id===w.clientId),p=state.products.find(p=>p.id===w.productId),ti=Math.max(0,Math.min(5,Number(c?.price||0)));return Number((p?.prices||[])[ti]||p?.cost||0)}
-function warrantyCodeStatus(w){const x=parseWarrantyCode(w.code),p=state.products.find(p=>p.id===w.productId),pm=productWarrantyModelCode(p);return {...x,modelMismatch:!!(x.valid&&pm&&pm!==x.model),withinWarranty:x.valid&&w.collect?String(w.collect)<=x.warrantyUntil:null}}
-function renderWarrantyCodeHint(where){const input=where==="quick"?swqCode:wCode,el=where==="quick"?swqCodeInfo:wCodeInfo,p=state.products.find(p=>p.id===(where==="quick"?swqProduct.value:wProduct.value)),x=parseWarrantyCode(input.value),pm=productWarrantyModelCode(p);if(!input.value.trim()){el.className="warranty-code-hint";el.textContent="Formato: PRO + semana + ano + modelo + sequencial.";return}if(!x.valid){el.className="warranty-code-hint bad";el.textContent=x.error;return}const mismatch=pm&&pm!==x.model;el.className="warranty-code-hint "+(mismatch?"bad":"good");el.textContent=`Semana ${String(x.week).padStart(2,"0")}/${x.year} • modelo ${x.model} • sequencial ${x.sequence} • garantia até ${fmt(x.warrantyUntil)}${mismatch?` • ATENÇÃO: produto selecionado parece modelo ${pm}`:""}`}
+function warrantyCodeStatus(w){
+ const x=parseWarrantyCode(w.code),p=state.products.find(p=>p.id===w.productId),pm=productWarrantyModelCode(p);
+ return {...x,modelMismatch:!!(x.valid&&pm&&pm!==x.model),withinWarranty:x.valid?today()<=x.warrantyUntil:null}
+}
+function renderWarrantyCodeHint(where){
+ const input=where==="quick"?swqCode:wCode,el=where==="quick"?swqCodeInfo:wCodeInfo,p=state.products.find(p=>p.id===(where==="quick"?swqProduct.value:wProduct.value)),x=parseWarrantyCode(input.value),pm=productWarrantyModelCode(p);
+ if(!input.value.trim()){el.className="warranty-code-hint";el.textContent="Formato: PRO + semana + ano + modelo + sequencial.";return}
+ if(!x.valid){el.className="warranty-code-hint bad";el.textContent=x.error;return}
+ const mismatch=pm&&pm!==x.model,expired=today()>x.warrantyUntil;
+ el.className="warranty-code-hint "+(mismatch||expired?"bad":"good");
+ el.textContent=`Semana ${String(x.week).padStart(2,"0")}/${x.year} • modelo ${x.model} • sequencial ${x.sequence} • ${expired?`GARANTIA VENCIDA em ${fmt(x.warrantyUntil)}`:`garantia até ${fmt(x.warrantyUntil)}`}${mismatch?` • ATENÇÃO: produto selecionado parece modelo ${pm}`:""}`
+}
 function warrantyDispositionLabel(v){return v==="recharge"?"Recarga":v==="factory"?"Fábrica":"Pendente"}
 function setWarrantyDisposition(id,status){const w=state.warranties.find(w=>w.id===id);if(!w)return;w.batteryDisposition=status;w.dispositionDate=today();save()}
 function setWarrantyStatusFilter(v){warrantyStatusFilter=v;renderWarranties()}
@@ -1710,7 +1833,7 @@ function updateWarrantyOpenSales(){
  const show=wResolution.value==="credit";wOpenSaleField.classList.toggle("hidden",!show);if(!show)return;const currentWarrantyId=wId.value,rows=[];state.sales.filter(s=>s.clientId===wClient.value).forEach(s=>{effectiveInstallments(s,currentWarrantyId).forEach(p=>{if(!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009)rows.push({s,p})})});rows.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));wOpenSale.innerHTML='<option value="">Selecione</option>'+rows.map(({s,p})=>`<option value="${s.id}::${p.id}">Pedido ${esc(s.orderNumber||"—")} • parcela ${p.groupNumber||p.number}/${p.groupTotal||s.installments.length} • ${fmt(p.due)} • saldo ${brl(p.effectiveAmount)}</option>`).join("");wOpenSaleHint.textContent=rows.length?"O crédito será abatido exatamente desta cobrança.":"Este cliente não possui cobrança em aberto."
 }
 function openSaleSheet(saleId=""){
- pendingSaleWarrantyDrafts=[];pendingRenegotiatedDebts=[];saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=Number(s?.routeCost||0);sOtherCost.value=Number(s?.otherCost||0);saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";setFreeAdjustmentMode(Number(s?.freeAdjustmentValue||0)>0,true);sFreeAdjustmentType.value=s?.freeAdjustmentType||"discount";sFreeAdjustmentValue.value=Number(s?.freeAdjustmentValue||0)||"";sFreeAdjustmentReason.value=s?.freeAdjustmentReason||"";pendingRenegotiatedDebts=(s?.renegotiatedDebts||[]).map(x=>({saleId:x.sourceSaleId,installmentId:x.installmentId}));if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));saleWarrantyQuickForm.classList.add("hidden");renderSaleTablePricePreview();renderSaleWarrantyCredits();renderSaleWarrantyDrafts();renderSaleClientDebt();updateSale();openSheet("saleSheet")
+ pendingSaleWarrantyDrafts=[];pendingRenegotiatedDebts=[];saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=0;sOtherCost.value=0;saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";setFreeAdjustmentMode(Number(s?.freeAdjustmentValue||0)>0,true);sFreeAdjustmentType.value=s?.freeAdjustmentType||"discount";sFreeAdjustmentValue.value=Number(s?.freeAdjustmentValue||0)||"";sFreeAdjustmentReason.value=s?.freeAdjustmentReason||"";pendingRenegotiatedDebts=(s?.renegotiatedDebts||[]).map(x=>({saleId:x.sourceSaleId,installmentId:x.installmentId}));if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));saleWarrantyQuickForm.classList.add("hidden");renderSaleTablePricePreview();renderSaleWarrantyCredits();renderSaleWarrantyDrafts();renderSaleClientDebt();updateSale();openSheet("saleSheet")
 }
 function openWarrantySheet(warrantyId=""){
  warrantyForm.reset();wId.value=warrantyId;const w=state.warranties.find(w=>w.id===warrantyId);warrantySheetTitle.textContent=w?"Editar garantia":"Nova garantia";wClient.value=w?.clientId||"";wProduct.value=w?.productId||state.products.find(p=>p.name===w?.model)?.id||"";wQty.value=Number(w?.qty||1);wCode.value=w?.code||"";wCollect.value=w?.collect||today();wResolution.value=(w?.solution||w?.resolution)==="credit"?"credit":"exchange";wCreditValue.value=Number(w?.batteryValue||w?.creditValue||0);wCreditHint.textContent="";wCreditDestination.value="open";wNote.value=w?.note||"";updateWarrantyResolutionFields();updateWarrantyOpenSales();const a=w?.applications?.find(a=>a.kind==="collection"||a.kind==="open");if(a?.installmentId)wOpenSale.value=`${a.saleId}::${a.installmentId}`;renderWarrantyCodeHint("standalone");openSheet("warrantySheet")
@@ -1730,14 +1853,16 @@ function clientStats(id){
  return {ticket,avgMargin,netAvgMargin,warrantyImpactPerOrder:warrantyPerOrder,warrantyStats:ws,avgInterval,interval,last,next,open,orders:sales.length,visits:visits.length,conv}
 }
 function saleCostValue(s){return (s.items||[]).reduce((a,i)=>a+Number(i.cost||0),0)}
-function saleGrossProfit(s){return saleOperationalBreakdown(s).commercialResult}
+function saleGrossProfit(s){return saleOperationalBreakdown(s).commercialMargin}
 function saleRentability(s){return saleOperationalBreakdown(s).rentability}
 function paymentFeeRate(method){return Number(state.config?.paymentFees?.[method]||0)}
 function saleOperationalBreakdown(s){
  const warrantyCredit=Number(s.warrantyCreditTotal||0),subtotal=Number(s.subtotal!=null?s.subtotal:(s.items||[]).reduce((a,i)=>a+Number(i.line||0),0)),scrapDiscount=Number(s.scrapDiscount||0),freeAdjustment=Number(s.freeAdjustmentValue||0);
- const commercialRevenue=Number(s.commercialRevenue!=null?s.commercialRevenue:Math.max(0,subtotal-scrapDiscount-freeAdjustment)),productCost=saleCostValue(s),feeRate=Number(s.paymentFeeRate!=null?s.paymentFeeRate:paymentFeeRate(s.method)),taxRate=Number(s.taxRate!=null?s.taxRate:state.config?.taxRate||0),paidRevenue=Number(s.currentOrderTotal!=null?s.currentOrderTotal:s.total||Math.max(0,commercialRevenue-warrantyCredit));
- const paymentFee=s.paymentFeeValue!=null?Number(s.paymentFeeValue):paidRevenue*feeRate/100,tax=s.taxValue!=null?Number(s.taxValue):paidRevenue*taxRate/100,routeCost=Number(s.routeCost||0),otherCost=Number(s.otherCost||0),totalCosts=productCost+paymentFee+tax+routeCost+otherCost,commercialResult=commercialRevenue-totalCosts,rentability=commercialRevenue>0?commercialResult/commercialRevenue*100:0,exchangeImpact=state.warranties.filter(w=>w.sourceSaleId===s.id&&(w.solution==="exchange"||w.resolution==="exchange")).reduce((a,w)=>a+warrantyImpact(w),0),warrantyImpactValue=warrantyCredit+exchangeImpact,economicResult=commercialResult-warrantyImpactValue;
- return {revenue:commercialRevenue,commercialRevenue,paidRevenue,productCost,feeRate,paymentFee,taxRate,tax,routeCost,otherCost,totalCosts,result:commercialResult,commercialResult,rentability,grossProfit:commercialRevenue-productCost,warrantyImpact:warrantyImpactValue,economicResult}
+ const commercialRevenue=Math.max(0,subtotal-scrapDiscount-freeAdjustment),productCost=saleCostValue(s),commercialMargin=commercialRevenue-productCost,rentability=commercialRevenue>0?commercialMargin/commercialRevenue*100:0;
+ const paidRevenue=Number(s.currentOrderTotal!=null?s.currentOrderTotal:s.total||Math.max(0,commercialRevenue-warrantyCredit));
+ const exchangeImpact=state.warranties.filter(w=>w.sourceSaleId===s.id&&(w.solution==="exchange"||w.resolution==="exchange")).reduce((a,w)=>a+warrantyImpact(w),0),warrantyImpactValue=warrantyCredit+exchangeImpact,economicResult=commercialMargin-warrantyImpactValue;
+ return {revenue:commercialRevenue,commercialRevenue,paidRevenue,productCost,totalCosts:productCost,result:commercialMargin,commercialResult:commercialMargin,commercialMargin,rentability,grossProfit:commercialMargin,warrantyImpact:warrantyImpactValue,economicResult,
+ legacyPaymentFee:Number(s.paymentFeeValue||0),legacyTax:Number(s.taxValue||0),legacyRouteCost:Number(s.routeCost||0),legacyOtherCost:Number(s.otherCost||0)}
 }
 function rentabilityClass(value){
  const ref=Number(state.config?.orderRentabilityReference??12);
@@ -1896,7 +2021,7 @@ function setCollectionStatusFilter(v){collectionStatusFilter=v;renderCollections
 function setPaymentMode(mode,preferredMethod="",silent=false){
  sPaymentMode.value=mode;payModeAto.classList.toggle("active",mode==="ato");payModePrazo.classList.toggle("active",mode==="prazo");
  saleTermsFields.classList.toggle("hidden",mode!=="prazo");salePaidField.classList.toggle("hidden",mode==="prazo");
- const options=mode==="ato"?["PIX","Dinheiro","Cheque"]:["Cheque","Boleto","Cartão"];
+ const options=paymentMethodsForMode(mode);
  if(preferredMethod&&!options.includes(preferredMethod))options.push(preferredMethod);
  sMethod.innerHTML=options.map(x=>`<option>${esc(x)}</option>`).join("");sMethod.value=preferredMethod&&options.includes(preferredMethod)?preferredMethod:options[0];
  salePaidLabel.textContent=sMethod.value==="Cheque"?"Recebido / compensado?":"Recebido no ato?";
@@ -1979,113 +2104,73 @@ function scrapResaleForMonth(key){
  return (state.scrapTransactions||[]).filter(t=>t.direction==="out"&&String(t.date||"").slice(0,7)===key).reduce((a,t)=>a+Number(t.resaleValue||0),0)
 }
 function businessHealthAnalysis(){
- ensureConfig();
- const rows=recentMonths().slice().reverse().map((m,idx)=>{
-   const sales=state.sales.filter(s=>String(s.date||"").slice(0,7)===m.key);
-   const ops=sales.map(s=>saleOperationalBreakdown(s));
-   const revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0);
-   const costs=ops.reduce((a,o)=>a+o.totalCosts,0);
-   const result=revenue-costs;
-   const warranty=warrantyImpactEvents().filter(e=>String(e.date||"").slice(0,7)===m.key).reduce((a,e)=>a+Number(e.amount||0),0);
-   const scrapResale=scrapResaleForMonth(m.key);
-   return {...m,sales,ops,revenue,costs,result,rentability:revenue>0?result/revenue*100:0,warranty,scrapResale,isCurrent:idx===2}
- });
- const activeRows=rows.filter(r=>r.revenue>0||r.warranty>0||r.scrapResale>0);
- const totalRevenue=rows.reduce((a,r)=>a+r.revenue,0),totalResult=rows.reduce((a,r)=>a+r.result,0);
- const avgMargin=totalRevenue>0?totalResult/totalRevenue*100:0;
-
- const now=new Date(),daysInCurrent=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),day=Math.max(1,now.getDate());
- const revenueEquivalents=rows.filter(r=>r.revenue>0).map(r=>r.isCurrent?r.revenue*daysInCurrent/day:r.revenue);
- const expectedRevenue=revenueEquivalents.length?revenueEquivalents.reduce((a,v)=>a+v,0)/revenueEquivalents.length:0;
- const divisor=Math.max(1,activeRows.length);
- const avgWarranty=rows.reduce((a,r)=>a+r.warranty,0)/divisor;
- const avgScrapResale=rows.reduce((a,r)=>a+r.scrapResale,0)/divisor;
- const fixedCosts=fixedCostsMonthlyTotal();
- const target=Number(state.config?.monthlyProfitTarget||0);
- const requiredMargin=expectedRevenue>0?Math.max(0,(fixedCosts+avgWarranty+target-avgScrapResale)/expectedRevenue*100):0;
- const gap=avgMargin-requiredMargin;
- const estimatedMonthlyResult=expectedRevenue*avgMargin/100+avgScrapResale-avgWarranty-fixedCosts;
-
- const sales=rows.flatMap(r=>r.sales),ops=sales.map(s=>saleOperationalBreakdown(s));
- const lowRevenue=ops.filter(o=>o.rentability<Number(state.config?.orderRentabilityReference??12)).reduce((a,o)=>a+o.commercialRevenue,0);
- const lowMarginShare=totalRevenue>0?lowRevenue/totalRevenue*100:0;
- const routeOther=ops.reduce((a,o)=>a+o.routeCost+o.otherCost,0),routeRatio=totalRevenue>0?routeOther/totalRevenue*100:0;
- const feesTax=ops.reduce((a,o)=>a+o.paymentFee+o.tax,0),feesTaxRatio=totalRevenue>0?feesTax/totalRevenue*100:0;
- const warrantyRatio=expectedRevenue>0?avgWarranty/expectedRevenue*100:0;
- const overdue=state.sales.reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0);
- const overdueRatio=expectedRevenue>0?overdue/expectedRevenue*100:0;
-
- const current=rows[rows.length-1],previous=[...rows].reverse().find(r=>!r.isCurrent&&r.revenue>0);
- const projectedCurrent=current.revenue>0?current.revenue*daysInCurrent/day:0;
- const revenueTrend=previous&&previous.revenue>0?(projectedCurrent-previous.revenue)/previous.revenue*100:null;
-
- let status="setup",statusLabel="CONFIGURAR",statusEmoji="⚙️";
- if(fixedCosts>0&&expectedRevenue>0){
-   if(gap>=2){status="good";statusLabel="BOA";statusEmoji="🟢"}
-   else if(gap>=-2){status="warn";statusLabel="ATENÇÃO";statusEmoji="🟡"}
-   else{status="bad";statusLabel="CRÍTICA";statusEmoji="🔴"}
- }
-
- const helping=[],hurting=[];
- if(avgMargin>=Number(state.config?.orderRentabilityReference??12))helping.push(`A margem média dos pedidos está em <b>${avgMargin.toFixed(1)}%</b>, acima da referência rápida de ${Number(state.config?.orderRentabilityReference??12).toFixed(0)}%.`);
- if(lowMarginShare<=25&&totalRevenue>0)helping.push(`A maior parte do faturamento está vindo de pedidos com margem adequada.`);
- if(warrantyRatio<1&&expectedRevenue>0)helping.push(`O impacto médio das garantias está baixo em relação ao faturamento.`);
- if(overdueRatio<5&&expectedRevenue>0)helping.push(`O valor vencido está controlado em relação ao faturamento mensal esperado.`);
- if(avgScrapResale>0)helping.push(`A revenda de sucata está recuperando em média <b>${brl(avgScrapResale)}</b> por mês.`);
- if(revenueTrend!=null&&revenueTrend>10)helping.push(`O faturamento projetado do mês está crescendo cerca de <b>${revenueTrend.toFixed(0)}%</b> contra o último mês com vendas.`);
-
- if(lowMarginShare>25)hurting.push(`<b>${lowMarginShare.toFixed(0)}%</b> do faturamento recente veio de pedidos abaixo da referência de ${Number(state.config?.orderRentabilityReference??12).toFixed(0)}%.`);
- if(routeRatio>3)hurting.push(`Rota e outros custos diretos estão consumindo <b>${routeRatio.toFixed(1)}%</b> do faturamento comercial.`);
- if(feesTaxRatio>4)hurting.push(`Taxas de pagamento e impostos estimados estão consumindo <b>${feesTaxRatio.toFixed(1)}%</b> do faturamento.`);
- if(warrantyRatio>=2)hurting.push(`Garantias estão consumindo em média <b>${warrantyRatio.toFixed(1)}%</b> do faturamento mensal esperado.`);
- if(overdueRatio>=10)hurting.push(`O vencido equivale a cerca de <b>${overdueRatio.toFixed(1)}%</b> do faturamento mensal esperado.`);
- if(revenueTrend!=null&&revenueTrend<-10)hurting.push(`O faturamento projetado do mês está abaixo do último mês com vendas.`);
-
- return {rows,activeRows,totalRevenue,avgMargin,expectedRevenue,avgWarranty,avgScrapResale,fixedCosts,target,requiredMargin,gap,estimatedMonthlyResult,lowMarginShare,routeRatio,feesTaxRatio,warrantyRatio,overdue,overdueRatio,revenueTrend,status,statusLabel,statusEmoji,helping:helping.slice(0,3),hurting:hurting.slice(0,3),salesMonths:rows.filter(r=>r.revenue>0).length}
+ ensureConfig();const periods=fortnightFinancialRows(6),active=periods.filter(r=>r.revenue>0),totalRevenue=active.reduce((a,r)=>a+r.revenue,0),totalMargin=active.reduce((a,r)=>a+r.margin,0),avgMargin=totalRevenue>0?totalMargin/totalRevenue*100:0;
+ const avgFortnightRevenue=active.length?totalRevenue/active.length:0,expectedRevenue=avgFortnightRevenue*2,avgVariableFortnight=active.length?active.reduce((a,r)=>a+r.variableCosts,0)/active.length:0,avgVariableMonthly=avgVariableFortnight*2,fixedCosts=fixedCostsMonthlyTotal(),target=Number(state.config?.monthlyProfitTarget||0),requiredMargin=expectedRevenue>0?(avgVariableMonthly+fixedCosts+target)/expectedRevenue*100:0,gap=avgMargin-requiredMargin,estimatedMonthlyResult=expectedRevenue*avgMargin/100-avgVariableMonthly-fixedCosts;
+ const lowRevenue=active.flatMap(r=>r.ops).filter(o=>o.rentability<Number(state.config?.orderRentabilityReference??12)).reduce((a,o)=>a+o.commercialRevenue,0),lowMarginShare=totalRevenue>0?lowRevenue/totalRevenue*100:0;
+ const overdue=state.sales.reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0),overdueRatio=expectedRevenue>0?overdue/expectedRevenue*100:0;
+ let status="setup",statusLabel="CONFIGURAR",statusEmoji="⚙️";if(fixedCosts>0&&expectedRevenue>0){if(gap>=2){status="good";statusLabel="BOA";statusEmoji="🟢"}else if(gap>=-2){status="warn";statusLabel="ATENÇÃO";statusEmoji="🟡"}else{status="bad";statusLabel="CRÍTICA";statusEmoji="🔴"}}
+ const helping=[],hurting=[];if(avgMargin>=Number(state.config?.orderRentabilityReference??12))helping.push(`A margem média comercial está em <b>${avgMargin.toFixed(1)}%</b>.`);if(lowMarginShare<=25&&totalRevenue>0)helping.push("A maior parte do faturamento recente veio de pedidos com margem adequada.");if(overdueRatio<5&&expectedRevenue>0)helping.push("O valor vencido está controlado em relação ao faturamento esperado.");
+ if(lowMarginShare>25)hurting.push(`<b>${lowMarginShare.toFixed(0)}%</b> do faturamento recente veio de pedidos abaixo da referência comercial.`);if(avgVariableMonthly>0)hurting.push(`Os custos variáveis reais equivalem a cerca de <b>${brl(avgVariableMonthly)}</b> por mês no histórico recente.`);if(overdueRatio>=10)hurting.push(`O vencido equivale a cerca de <b>${overdueRatio.toFixed(1)}%</b> do faturamento mensal esperado.`);
+ return {periods,totalRevenue,avgMargin,expectedRevenue,avgVariableMonthly,fixedCosts,target,requiredMargin,gap,estimatedMonthlyResult,lowMarginShare,overdue,overdueRatio,status,statusLabel,statusEmoji,helping:helping.slice(0,3),hurting:hurting.slice(0,3),salesPeriods:active.length}
 }
 function renderHomeHealth(){
- homeHealthBadge.textContent=homeFinanceVisible?"visível":"oculto";
- homeHealthBadge.className="badge "+(homeFinanceVisible?"good":"");
- if(!homeFinanceVisible){
-   homeHealthContent.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Saúde financeira oculta</b><span>Toque em “Ver valores” para responder: estou vendendo bem ou só girando dinheiro?</span></div>';
-   return
- }
+ homeHealthBadge.textContent=homeFinanceVisible?"visível":"oculto";homeHealthBadge.className="badge "+(homeFinanceVisible?"good":"");
+ if(!homeFinanceVisible){homeHealthContent.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Saúde financeira oculta</b><span>Toque em “Ver valores” para responder: estou vendendo bem ou só girando dinheiro?</span></div>';return}
  const h=businessHealthAnalysis();
- if(h.fixedCosts<=0){
-   homeHealthBadge.textContent="configurar";homeHealthBadge.className="badge warn";
-   homeHealthContent.innerHTML=`<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-status-row"><div><div class="health-status-title setup">⚙️ Falta uma peça para responder</div></div></div><div class="health-kpis"><div class="health-kpi"><b>${h.totalRevenue?`${h.avgMargin.toFixed(1)}%`:"—"}</b><span>Margem média dos pedidos</span></div><div class="health-kpi"><b>—</b><span>Margem mínima necessária</span></div><div class="health-kpi"><b>—</b><span>Resultado estimado / mês</span></div></div><div class="health-explanation setup"><b>O app já sabe quanto as vendas estão deixando, mas ainda não sabe quanto custa manter a AX funcionando por mês.</b><br>Cadastre pró-labore, contador, telefone, seguro e demais custos fixos. A partir daí o sistema consegue dizer se o volume de vendas realmente gera resultado.</div><button class="btn secondary health-setup-btn" onclick="go('settings')">Configurar estrutura mensal</button>`;
-   return
- }
- if(h.expectedRevenue<=0){
-   homeHealthBadge.textContent="sem dados";homeHealthBadge.className="badge warn";
-   homeHealthContent.innerHTML='<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-explanation setup"><b>A estrutura mensal já está cadastrada.</b><br>Agora o sistema precisa de vendas para calcular a margem média e comparar com o ponto necessário para sustentar a empresa.</div>';
-   return
- }
- let sentence="";
- if(h.status==="good")sentence=`<b>Você está vendendo bem.</b> A margem média está ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is) acima do necessário para sustentar a estrutura${h.target>0?" e a meta de resultado":""}.`;
- else if(h.status==="warn"&&h.gap<0)sentence=`<b>As vendas estão gerando volume, mas a margem atual ainda não cobre a estrutura com folga.</b> Faltam aproximadamente ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is) para chegar à margem mínima necessária.`;
- else if(h.status==="warn")sentence=`<b>A AX está cobrindo a estrutura, mas com pouca folga.</b> Pequenos aumentos de custo, descontos ou garantias podem consumir o resultado.`;
- else sentence=`<b>Hoje a AX está mais perto de girar dinheiro do que de gerar resultado suficiente.</b> A margem média está ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is) abaixo do necessário.`;
-
- const helping=h.helping.length?h.helping:['Ainda não há um destaque positivo forte o suficiente no período.'];
- const hurting=h.hurting.length?h.hurting:['Nenhum ofensor relevante se destacou pelos dados disponíveis.'];
- const confidence=h.salesMonths<2?'<div class="muted" style="margin-top:8px">Leitura provisória: ainda há pouco histórico mensal. A análise fica mais confiável conforme o app acumula vendas.</div>':"";
-
- homeHealthContent.innerHTML=`<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-status-row"><div><div class="health-status-title ${h.status}">Saúde da AX: ${h.statusLabel} ${h.statusEmoji}</div></div></div><div class="health-kpis"><div class="health-kpi"><b>${h.avgMargin.toFixed(1)}%</b><span>Margem média</span></div><div class="health-kpi"><b>${h.requiredMargin.toFixed(1)}%</b><span>Margem mínima necessária</span></div><div class="health-kpi"><b>${brl(h.estimatedMonthlyResult)}</b><span>Resultado estimado / mês</span></div></div><div class="health-explanation ${h.status}">${sentence}</div><div class="health-drivers"><div class="health-driver"><h4>✅ O que está ajudando</h4>${helping.map(x=>`<div class="health-driver-item">${x}</div>`).join("")}</div><div class="health-driver"><h4>⚠️ O que está pesando</h4>${hurting.map(x=>`<div class="health-driver-item">${x}</div>`).join("")}</div></div><div class="health-meaning"><b>Como ler:</b> margem média = o que sobra dos pedidos depois dos custos variáveis, <b>antes</b> da estrutura mensal e das garantias. Margem mínima necessária = quanto essa margem precisa ser, em média, para pagar a estrutura + impacto médio de garantias + meta de resultado, considerando também a recuperação com revenda de sucata.</div>${confidence}`
+ if(h.fixedCosts<=0){homeHealthBadge.textContent="configurar";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-status-row"><div><div class="health-status-title setup">⚙️ Falta cadastrar a estrutura mensal</div></div></div><div class="health-kpis"><div class="health-kpi"><b>${h.totalRevenue?`${h.avgMargin.toFixed(1)}%`:"—"}</b><span>Margem média comercial</span></div><div class="health-kpi"><b>—</b><span>Margem mínima necessária</span></div><div class="health-kpi"><b>—</b><span>Resultado estimado / mês</span></div></div><div class="health-explanation setup"><b>A quinzena já consegue comparar margem x custos variáveis.</b><br>Para dizer se a empresa inteira está saudável, cadastre pró-labore, contador, telefone, seguro e demais custos fixos.</div><button class="btn secondary health-setup-btn" onclick="go('settings')">Configurar estrutura mensal</button>`;return}
+ if(h.expectedRevenue<=0){homeHealthBadge.textContent="sem dados";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML='<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-explanation setup"><b>A estrutura está cadastrada.</b><br>Agora o sistema precisa de vendas para calcular a margem média e a margem mínima necessária.</div>';return}
+ let sentence="";if(h.status==="good")sentence=`<b>Você está vendendo bem e o negócio está deixando dinheiro.</b> A margem média está ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is) acima do necessário para custos variáveis + estrutura${h.target>0?" + meta":""}.`;else if(h.status==="warn"&&h.gap<0)sentence=`<b>As vendas estão gerando volume, mas ainda não cobrem toda a operação com folga.</b> Faltam aproximadamente ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is).`;else if(h.status==="warn")sentence=`<b>A AX está se pagando, mas com pouca folga.</b> Pequenos aumentos de custo ou queda de margem podem consumir o resultado.`;else sentence=`<b>Hoje a AX está mais perto de girar dinheiro do que de gerar resultado suficiente.</b> A margem média está ${Math.abs(h.gap).toFixed(1)} ponto(s) percentual(is) abaixo do necessário.`;
+ const helping=h.helping.length?h.helping:["Ainda não há um destaque positivo forte no período."],hurting=h.hurting.length?h.hurting:["Nenhum ofensor relevante se destacou pelos dados disponíveis."],confidence=h.salesPeriods<3?'<div class="muted" style="margin-top:8px">Leitura provisória: ainda há pouco histórico quinzenal.</div>':"";
+ homeHealthContent.innerHTML=`<div class="health-question">Estou vendendo bem ou só girando dinheiro?</div><div class="health-status-row"><div><div class="health-status-title ${h.status}">Saúde da AX: ${h.statusLabel} ${h.statusEmoji}</div></div></div><div class="health-kpis"><div class="health-kpi"><b class="rent-${h.avgMargin>=h.requiredMargin?"good":"bad"}">${h.avgMargin.toFixed(1)}%</b><span>Margem média comercial</span></div><div class="health-kpi"><b class="rent-${h.avgMargin>=h.requiredMargin?"good":"bad"}">${h.requiredMargin.toFixed(1)}%</b><span>Margem mínima necessária</span></div><div class="health-kpi"><b class="rent-${h.estimatedMonthlyResult<0?"bad":"good"}">${brl(h.estimatedMonthlyResult)}</b><span>Resultado estimado / mês</span></div></div><div class="health-explanation ${h.status}">${sentence}</div><div class="health-drivers"><div class="health-driver"><h4>✅ O que está ajudando</h4>${helping.map(x=>`<div class="health-driver-item">${x}</div>`).join("")}</div><div class="health-driver"><h4>⚠️ O que está pesando</h4>${hurting.map(x=>`<div class="health-driver-item">${x}</div>`).join("")}</div></div><div class="health-meaning"><b>Como ler:</b> pedido = margem comercial. Quinzena = margem gerada menos custos variáveis reais. Saúde da AX = depois disso, verifica se a empresa também paga a estrutura fixa e a meta de resultado.</div>${confidence}`
 }
-function monthlyFinancialSummary(){
- const months=recentMonths().slice().reverse();
- return months.map((m,idx)=>{
-  const sales=state.sales.filter(s=>String(s.date||"").slice(0,7)===m.key),ops=sales.map(s=>saleOperationalBreakdown(s));
-  const revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0),costs=ops.reduce((a,o)=>a+o.totalCosts,0);
-  return {...m,revenue,costs,rentability:revenue>0?(revenue-costs)/revenue*100:0,isCurrent:idx===months.length-1}
+function fortnightPeriods(count=6){
+ let anchor=today(),out=[];
+ for(let i=0;i<count;i++){
+   const [y,m,d]=anchor.split("-").map(Number),month=`${y}-${String(m).padStart(2,"0")}`,first=d<=15,start=`${month}-${first?"01":"16"}`,end=`${month}-${first?"15":String(daysInMonthKey(month)).padStart(2,"0")}`;
+   const label=`${first?"1ª":"2ª"} quinz. ${new Date(`${month}-01T12:00:00-03:00`).toLocaleDateString("pt-BR",{timeZone:AX_TIME_ZONE,month:"short"}).replace(".","").toLowerCase()}`;
+   out.push({key:`${month}-${first?"Q1":"Q2"}`,month,start,end,label,isCurrent:i===0});
+   anchor=addDays(start,-1)
+ }
+ return out
+}
+function routeExpensesBetween(start,end){
+ const items=[];(state.routeRuns||[]).forEach(r=>(r.expenses||[]).forEach(e=>{const date=e.date||r.date||today();if(date>=start&&date<=end)items.push({...e,routeId:r.id,routeDate:r.date})}));
+ return items
+}
+function manualExpensesBetween(start,end){return (state.periodExpenses||[]).filter(e=>(e.date||"")>=start&&(e.date||"")<=end)}
+function taxForFortnight(period){
+ const exact=(state.taxRecords||[]).find(r=>r.month===period.month);
+ if(exact)return {amount:Number(exact.amount||0)/2,provisional:false,sourceMonth:exact.month};
+ const prior=[...(state.taxRecords||[])].filter(r=>(r.month||"")<period.month).sort((a,b)=>(b.month||"").localeCompare(a.month||""))[0];
+ return prior?{amount:Number(prior.amount||0)/2,provisional:true,sourceMonth:prior.month}:{amount:0,provisional:false,sourceMonth:""}
+}
+function warrantyImpactBetween(start,end){return warrantyImpactEvents().filter(e=>(e.date||"")>=start&&(e.date||"")<=end).reduce((a,e)=>a+Number(e.amount||0),0)}
+function fortnightFinancialRows(count=6){
+ return fortnightPeriods(count).map(p=>{
+   const sales=state.sales.filter(s=>(s.date||"")>=p.start&&(s.date||"")<=p.end),ops=sales.map(s=>saleOperationalBreakdown(s)),revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0),margin=ops.reduce((a,o)=>a+o.commercialMargin,0),marginPct=revenue>0?margin/revenue*100:0;
+   const routeItems=routeExpensesBetween(p.start,p.end),routeCosts=routeItems.reduce((a,e)=>a+Number(e.amount||0),0),manualItems=manualExpensesBetween(p.start,p.end),manualCosts=manualItems.reduce((a,e)=>a+Number(e.amount||0),0),tax=taxForFortnight(p),warranty=warrantyImpactBetween(p.start,p.end),variableCosts=routeCosts+manualCosts+tax.amount+warranty,net=margin-variableCosts,requiredMarginPct=revenue>0?variableCosts/revenue*100:0;
+   const status=revenue<=0?"setup":net<0?"bad":net<Math.max(100,variableCosts*.10)?"warn":"good";
+   return {...p,sales,ops,revenue,margin,marginPct,routeItems,routeCosts,manualItems,manualCosts,tax,warranty,variableCosts,net,requiredMarginPct,status}
  })
+}
+function variableCostBreakdownLabel(r){
+ const parts=[];if(r.routeCosts>0)parts.push(`viagens ${brl(r.routeCosts)}`);if(r.manualCosts>0)parts.push(`taxas/outros ${brl(r.manualCosts)}`);if(r.tax.amount>0)parts.push(`imposto ${brl(r.tax.amount)}${r.tax.provisional?" (provisório)":""}`);if(r.warranty>0)parts.push(`garantias ${brl(r.warranty)}`);
+ return parts.length?parts.join(" • "):"Nenhum custo variável real registrado nesta quinzena."
+}
+function monthlyFinancialSummary(){return fortnightFinancialRows(6)}
+function renderFortnightHistory(rows){
+ return `<div class="fortnight-history"><div class="fortnight-history-title">Últimas 6 quinzenas</div>${rows.map(r=>`<div class="fortnight-history-row"><div><b>${esc(r.label)}</b><small>${fmt(r.start)}–${fmt(r.end)}</small></div><div><span>Margem</span><b>${brl(r.margin)}</b></div><div><span>Variáveis</span><b>${brl(r.variableCosts)}</b></div><div class="fortnight-history-net rent-${r.revenue<=0?"warn":r.net<0?"bad":r.status==="warn"?"warn":"good"}"><span>Sobra</span><b>${r.revenue<=0?"—":brl(r.net)}</b></div></div>`).join("")}</div>`
 }
 function renderHomeFinanceChart(){
  homeChartPrivacyBadge.textContent=homeFinanceVisible?"visível":"oculto";homeChartPrivacyBadge.className="badge "+(homeFinanceVisible?"good":"");
- if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para visualizar o desempenho.</span></div>';return}
- const rows=monthlyFinancialSummary(),max=Math.max(1,...rows.flatMap(r=>[r.revenue,r.costs])),h=145;
- homeFinanceChart.innerHTML=`<div class="finance-chart"><div class="chart-legend"><div class="legend-item"><span class="legend-swatch"></span>Faturamento comercial</div><div class="legend-item"><span class="legend-swatch cost"></span>Custos variáveis</div></div><div class="grouped-chart">${rows.map(r=>{const rh=Math.max(r.revenue?4:2,Math.round(r.revenue/max*h)),ch=Math.max(r.costs?4:2,Math.round(r.costs/max*h)),cls=rentabilityClass(r.rentability);return `<div class="chart-month"><div class="chart-bars"><div class="chart-bar" style="height:${rh}px"><span class="chart-bar-label">${brl(r.revenue)}</span></div><div class="chart-bar cost" style="height:${ch}px"><span class="chart-bar-label">${brl(r.costs)}</span></div></div><div class="chart-month-name">${r.label}${r.isCurrent?"*":""}<small>${r.isCurrent?"mês parcial":"mês fechado"}</small></div><div class="chart-rent"><span class="badge ${cls}">Margem ${r.rentability.toFixed(1)}%</span></div></div>`}).join("")}</div><div class="muted" style="margin-top:11px">* O mês atual é parcial. Este gráfico mostra a eficiência comercial dos pedidos. Estrutura fixa, garantias e revenda de sucata são analisadas separadamente em “Saúde da AX”.</div></div>`
+ if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para visualizar o desempenho quinzenal.</span></div>';return}
+ const rows=fortnightFinancialRows(6),cur=rows[0],cls=cur.status;
+ if(cur.revenue<=0){homeFinanceChart.innerHTML='<div class="fortnight-explain setup"><b>Ainda não há vendas nesta quinzena.</b><br>Conforme os pedidos e custos reais forem registrados, o sistema mostrará se a operação está se pagando.</div>'+renderFortnightHistory(rows);return}
+ let explanation="";
+ if(cur.net<0)explanation=`<b>As vendas desta quinzena ainda não geraram margem suficiente para pagar os custos variáveis.</b> Falta ${brl(Math.abs(cur.net))}.`;
+ else if(cls==="warn")explanation=`<b>A margem está cobrindo os custos variáveis, mas com pouca folga.</b> A sobra atual é ${brl(cur.net)}.`;
+ else explanation=`<b>A margem das vendas está pagando os custos variáveis da operação.</b> Depois desses custos, restam ${brl(cur.net)} nesta quinzena.`;
+ homeFinanceChart.innerHTML=`<div class="fortnight-head"><div><div class="fortnight-title">${esc(cur.label)} • ${fmt(cur.start)} a ${fmt(cur.end)}</div><div class="muted">Margem comercial gerada x custos reais da operação.</div></div><span class="badge ${cls}">${cls==="good"?"Saudável":cls==="warn"?"Atenção":"Crítico"}</span></div><div class="fortnight-kpis"><div class="mini"><b>${brl(cur.revenue)}</b><span>Vendas</span></div><div class="mini"><b class="rent-${rentabilityClass(cur.marginPct)}">${brl(cur.margin)}</b><span>Margem comercial</span></div><div class="mini"><b class="${cur.variableCosts>cur.margin?"rent-bad":""}">${brl(cur.variableCosts)}</b><span>Custos variáveis</span></div><div class="mini"><b class="rent-${cur.net<0?"bad":cur.status==="warn"?"warn":"good"}">${brl(cur.net)}</b><span>Sobra / déficit</span></div></div><div class="fortnight-rates"><div><span>Margem média dos pedidos</span><b class="rent-${cur.marginPct>=cur.requiredMarginPct?"good":"bad"}">${cur.marginPct.toFixed(1)}%</b></div><div><span>Margem necessária para cobrir os variáveis</span><b class="rent-${cur.marginPct>=cur.requiredMarginPct?"good":"bad"}">${cur.requiredMarginPct.toFixed(1)}%</b></div></div><div class="fortnight-explain ${cls}">${explanation}<div class="muted" style="margin-top:6px">${variableCostBreakdownLabel(cur)}</div>${cur.tax.provisional?`<div class="muted" style="margin-top:4px">Imposto provisório baseado no último mês fechado (${cur.tax.sourceMonth}).</div>`:""}</div>${renderFortnightHistory(rows)}`
 }
 function renderHome(){
  const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),
@@ -2121,60 +2206,45 @@ function renderSales(){
 }
 
 function routeRunExpenseTotal(run){return (run.expenses||[]).reduce((a,e)=>a+Number(e.amount||0),0)}
-function routeExpenseLabel(cat){return {fuel:"⛽ Combustível",breakfast:"☕ Café da manhã",lunch:"🍽️ Almoço",dinner:"🌙 Jantar",lodging:"🏨 Hospedagem",other:"➕ Outro"}[cat]||cat}
+function routeExpenseLabel(cat){return {fuel:"⛽ Combustível",breakfast:"☕ Café da manhã",lunch:"🍽️ Almoço",dinner:"🌙 Jantar",lodging:"🏨 Hospedagem",toll:"🛣️ Pedágio",other:"➕ Outro"}[cat]||"Despesa"}
 function routeClientAddress(c){
  if(!c)return "";
  return [c.address,c.city,"SP","Brasil"].filter(Boolean).join(", ")
 }
 function routeClientSequence(ids){const base=(state.config.base||"Osasco").split(",")[0],names=[base,...ids.map(id=>state.clients.find(c=>c.id===id)?.city||state.clients.find(c=>c.id===id)?.name||"Cliente"),base];return `<div class="route-seq">${names.map((n,i)=>`${i?'<span class="route-arrow">→</span>':""}<span class="route-stop">${esc(n)}</span>`).join("")}</div>`}
-function chooseSmartRoute(index){const p=smartRoutePlan,r=p?.routes?.[index];if(!r)return;const ids=r.order.map(i=>p.candidates[i-1]?.c?.id).filter(Boolean),run={id:uid(),date:today(),createdAt:new Date().toISOString(),status:"planned",plannedClientIds:[...ids],currentClientIds:[...ids],plannedKm:Number(r.km||0),plannedMinutes:Number(r.minutes||0),plannedToll:Number(r.toll||0),plannedCost:Number(r.travelCost||0),plannedRevenue:Number(r.revenue||0),plannedReturn:Number(r.grossProfit||0),plannedResult:Number(r.result||0),currentKm:Number(r.km||0),currentMinutes:Number(r.minutes||0),currentToll:Number(r.toll||0),currentEstimatedCost:Number(r.travelCost||0),expenses:[],edited:false};state.routeRuns.unshift(run);save();setTimeout(()=>openRouteRunEditor(run.id),40)}
+function chooseSmartRoute(index){const p=smartRoutePlan,r=p?.routes?.[index];if(!r)return;const ids=r.order.map(i=>p.candidates[i-1]?.c?.id).filter(Boolean),run={id:uid(),date:today(),createdAt:nowIsoSP(),status:"planned",plannedClientIds:[...ids],currentClientIds:[...ids],plannedKm:Number(r.km||0),plannedMinutes:Number(r.minutes||0),plannedToll:Number(r.toll||0),plannedCost:Number(r.travelCost||0),plannedRevenue:Number(r.revenue||0),plannedReturn:Number(r.grossProfit||0),plannedResult:Number(r.result||0),currentKm:Number(r.km||0),currentMinutes:Number(r.minutes||0),currentToll:Number(r.toll||0),currentEstimatedCost:Number(r.travelCost||0),expenses:[],attendedClientIds:[],edited:false};state.routeRuns.unshift(run);save();setTimeout(()=>openRouteRunEditor(run.id),40)}
 function renderRouteRuns(){
- if(!window.routeRunsList)return;
- const runs=[...(state.routeRuns||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
- if(!runs.length){
-   routeRunsList.innerHTML='<div class="card"><div class="cardhead"><div><h2>Rotas escolhidas</h2><div class="muted">Quando você escolher uma sugestão, ela aparecerá aqui para edição e despesas reais.</div></div></div><div class="empty">Nenhuma rota escolhida ainda.</div></div>';
-   return
- }
- routeRunsList.innerHTML='<div class="cardhead"><div><h2>Rotas escolhidas e realizadas</h2><div class="muted">Estimado para planejar. Real para aprender.</div></div></div>'+runs.map((r,idx)=>{
-   const expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),
-         hasExpenses=expenses.length>0,diff=actual-planned,status=r.status==="completed"?"Concluída":"Em andamento",
-         ids=r.currentClientIds||[],changed=r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids);
-   const diffHtml=hasExpenses
-     ? `<b>${diff>=0?"+ ":"- "}${brl(Math.abs(diff))}</b><span>${diff>=0?"Acima do plano":"Abaixo do plano"}</span>`
-     : `<b>—</b><span>Comparação após lançamentos</span>`;
-   return `<div class="card route-run-card">
-     <div class="cardhead">
-       <div><h3>Rota ${fmt(r.date)}${idx===0?" • mais recente":""}</h3><div class="muted">${ids.length} cliente(s) • ${r.currentKm?`${Number(r.currentKm).toFixed(0)} km • `:""}${changed?"rota editada":"rota conforme sugestão"}</div></div>
-       <span class="badge ${r.status==="completed"?"good":"warn"}">${status}</span>
-     </div>
-     ${routeClientSequence(ids)}
-     <div class="route-plan-compare">
-       <div><small>Planejado pelo sistema</small><b>${brl(planned)} • ${Number(r.plannedKm||0).toFixed(0)} km</b></div>
-       <div><small>Estimativa da rota atual</small><b>${brl(Number(r.currentEstimatedCost??planned))} • ${Number(r.currentKm??r.plannedKm??0).toFixed(0)} km</b></div>
-     </div>
-     <div class="route-expense-summary">
-       <div class="mini"><b>${brl(actual)}</b><span>Despesas reais</span></div>
-       <div class="mini">${diffHtml}</div>
-       <div class="mini"><b>${expenses.length}</b><span>Lançamentos</span></div>
-     </div>
-     ${hasExpenses?`<div class="route-expense-list">${expenses.map(e=>`<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></span><b>${brl(e.amount)}</b></div>`).join("")}</div>`:'<div class="muted" style="margin-top:8px">Nenhuma despesa real lançada.</div>'}
-     <div class="route-run-actions">
-       <button class="btn secondary" onclick="openRouteRunEditor('${r.id}')">✏️ Editar rota</button>
-       <button class="btn secondary" onclick="recalculateRouteRun('${r.id}')">↻ Recalcular trajeto</button>
-       <button class="btn" onclick="openRouteExpense('${r.id}')">＋ Despesa</button>
-       <button class="btn ${r.status==="completed"?"secondary":"good"}" onclick="toggleRouteRunStatus('${r.id}')">${r.status==="completed"?"Reabrir":"Finalizar rota"}</button>
-     </div>
-   </div>`
- }).join("")
+ if(!window.routeRunsList)return;const runs=[...(state.routeRuns||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ if(!runs.length){routeRunsList.innerHTML='<div class="card"><div class="cardhead"><div><h2>Rotas escolhidas</h2><div class="muted">Quando você escolher uma sugestão, ela aparecerá aqui para edição e despesas reais.</div></div></div><div class="empty">Nenhuma rota escolhida ainda.</div></div>';return}
+ routeRunsList.innerHTML='<div class="cardhead"><div><h2>Rotas escolhidas e realizadas</h2><div class="muted">Estimado para planejar. Real para aprender.</div></div></div>'+runs.map((r,idx)=>{const expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),hasExpenses=expenses.length>0,diff=actual-planned,status=r.status==="completed"?"Concluída":"Em andamento",ids=r.currentClientIds||[],attended=r.attendedClientIds||[],changed=r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids),ca=r.continuationAnalysis;const diffHtml=hasExpenses?`<b>${diff>=0?"+ ":"- "}${brl(Math.abs(diff))}</b><span>${diff>=0?"Acima do plano":"Abaixo do plano"}</span>`:`<b>—</b><span>Comparação após lançamentos</span>`;return `<div class="card route-run-card"><div class="cardhead"><div><h3>Rota ${fmt(r.date)}${idx===0?" • mais recente":""}</h3><div class="muted">${ids.length} cliente(s) • ${attended.length} atendido(s) • ${changed?"rota editada":"rota conforme sugestão"}</div></div><span class="badge ${r.status==="completed"?"good":"warn"}">${status}</span></div>${routeClientSequence(ids)}<div class="route-plan-compare"><div><small>Planejado pelo sistema</small><b>${brl(planned)} • ${Number(r.plannedKm||0).toFixed(0)} km</b></div><div><small>Estimativa da rota atual</small><b>${brl(Number(r.currentEstimatedCost??planned))} • ${Number(r.currentKm??r.plannedKm??0).toFixed(0)} km</b></div></div>${ca?`<div class="route-continue-box ${ca.status}"><div class="route-continue-head"><b>${ca.status==="good"?"🟢":ca.status==="bad"?"🔴":"🟡"} ${esc(ca.label)}</b><small>${ca.remainingClients} cliente(s) restantes</small></div><div>${esc(ca.message)}</div>${ca.remainingClients?`<div class="route-continue-kpis"><span>Custo para continuar <b>${brl(ca.travelCost)}</b></span><span>Retorno comercial esperado <b>${brl(ca.potentialReturn)}</b></span><span>Resultado estimado <b>${brl(ca.estimatedResult)}</b></span><span>${Number(ca.km||0).toFixed(0)} km • ${fmtHours(ca.minutes||0)}</span></div>`:""}</div>`:""}<div class="route-expense-summary"><div class="mini"><b>${brl(actual)}</b><span>Despesas reais</span></div><div class="mini">${diffHtml}</div><div class="mini"><b>${expenses.length}</b><span>Lançamentos</span></div></div>${hasExpenses?`<div class="route-expense-list">${expenses.map(e=>`<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></span><b>${brl(e.amount)}</b></div>`).join("")}</div>`:'<div class="muted" style="margin-top:8px">Nenhuma despesa real lançada.</div>'}<div class="route-run-actions"><button class="btn secondary" onclick="openRouteRunEditor('${r.id}')">✏️ Editar / atendidos</button><button class="btn secondary" onclick="recalculateRouteRun('${r.id}')">↻ Recalcular trajeto completo</button><button class="btn ${attended.length?"good":"secondary"}" onclick="recalculateRouteFromHere('${r.id}')">📍 Recalcular a partir daqui</button><button class="btn" onclick="openRouteExpense('${r.id}')">＋ Despesa</button><button class="btn ${r.status==="completed"?"secondary":"good"}" onclick="toggleRouteRunStatus('${r.id}')">${r.status==="completed"?"Reabrir":"Finalizar rota"}</button></div></div>`}).join("")
 }
 function openRouteRunEditor(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;rrId.value=id;routeRunEditStops=[...(r.currentClientIds||[])];rrPlannedSummary.innerHTML=`<b>Planejamento original:</b> ${r.plannedClientIds.length} clientes • ${Number(r.plannedKm||0).toFixed(0)} km • custo estimado ${brl(r.plannedCost||0)}.`;renderRouteRunEditorStops();openSheet("routeRunSheet")}
-function renderRouteRunEditorStops(){rrStops.innerHTML=routeRunEditStops.length?routeRunEditStops.map((id,i)=>{const c=state.clients.find(c=>c.id===id);return `<div class="route-edit-stop"><div><b>${i+1}. ${esc(c?.name||"Cliente")}</b><div class="muted">${esc(c?.city||"")}</div></div><div class="actions"><button class="btn secondary" onclick="moveRouteRunStop(${i},-1)" ${i===0?"disabled":""}>↑</button><button class="btn secondary" onclick="moveRouteRunStop(${i},1)" ${i===routeRunEditStops.length-1?"disabled":""}>↓</button><button class="btn danger" onclick="removeRouteRunStop(${i})">×</button></div></div>`}).join(""):'<div class="empty">Nenhum cliente nesta rota.</div>';const avail=state.clients.filter(c=>!routeRunEditStops.includes(c.id));rrAddClient.innerHTML='<option value="">Selecione…</option>'+avail.map(c=>`<option value="${c.id}">${esc(c.name)} • ${esc(c.city||"")}</option>`).join("")}
+function renderRouteRunEditorStops(){
+ const r=state.routeRuns.find(r=>r.id===rrId.value),attended=new Set(r?.attendedClientIds||[]);
+ rrStops.innerHTML=routeRunEditStops.length?routeRunEditStops.map((id,i)=>{const c=state.clients.find(c=>c.id===id),done=attended.has(id);return `<div class="route-edit-stop ${done?"attended":""}"><div class="route-attend-wrap"><label class="route-attend-check"><input type="checkbox" ${done?"checked":""} onchange="toggleRouteRunAttended('${id}',this.checked)"> <span>${done?"Atendido":"Pendente"}</span></label><b>${i+1}. ${esc(c?.name||"Cliente")}</b><div class="muted">${esc(c?.city||"")}</div></div><div class="actions"><button class="btn secondary" onclick="moveRouteRunStop(${i},-1)" ${i===0?"disabled":""}>↑</button><button class="btn secondary" onclick="moveRouteRunStop(${i},1)" ${i===routeRunEditStops.length-1?"disabled":""}>↓</button><button class="btn danger" onclick="removeRouteRunStop(${i})">×</button></div></div>`}).join(""):'<div class="empty">Nenhum cliente nesta rota.</div>';
+ const avail=state.clients.filter(c=>!routeRunEditStops.includes(c.id));rrAddClient.innerHTML='<option value="">Selecione…</option>'+avail.map(c=>`<option value="${c.id}">${esc(c.name)} • ${esc(c.city||"")}</option>`).join("")
+}
+function toggleRouteRunAttended(clientId,checked){
+ const r=state.routeRuns.find(r=>r.id===rrId.value);if(!r)return;r.attendedClientIds=r.attendedClientIds||[];
+ r.attendedClientIds=r.attendedClientIds.filter(id=>id!==clientId);if(checked)r.attendedClientIds.push(clientId);r.updatedAt=nowIsoSP();save();setTimeout(()=>{if(document.getElementById("routeRunSheet")?.classList.contains("show"))renderRouteRunEditorStops()},20)
+}
 function moveRouteRunStop(i,dir){const j=i+dir;if(j<0||j>=routeRunEditStops.length)return;[routeRunEditStops[i],routeRunEditStops[j]]=[routeRunEditStops[j],routeRunEditStops[i]];renderRouteRunEditorStops()}
-function removeRouteRunStop(i){routeRunEditStops.splice(i,1);renderRouteRunEditorStops()}
+function removeRouteRunStop(i){const id=routeRunEditStops[i],r=state.routeRuns.find(r=>r.id===rrId.value);routeRunEditStops.splice(i,1);if(r)r.attendedClientIds=(r.attendedClientIds||[]).filter(x=>x!==id);renderRouteRunEditorStops()}
 function addRouteRunStop(){if(!rrAddClient.value)return;if(!routeRunEditStops.includes(rrAddClient.value))routeRunEditStops.push(rrAddClient.value);renderRouteRunEditorStops()}
-function saveRouteRunEdits(){const r=state.routeRuns.find(r=>r.id===rrId.value);if(!r)return;r.currentClientIds=[...routeRunEditStops];r.edited=JSON.stringify(r.currentClientIds)!==JSON.stringify(r.plannedClientIds||[]);r.updatedAt=new Date().toISOString();closeSheet("routeRunSheet");save()}
-async function recalculateRouteRun(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;if(!mapsConfigured()){alert("Configure a integração de rotas para recalcular distância, tempo e pedágio.");return}const stops=(r.currentClientIds||[]).map(id=>routeClientAddress(state.clients.find(c=>c.id===id))).filter(Boolean);if(!stops.length){alert("Adicione pelo menos um cliente à rota.");return}try{const base=state.config.base||"Osasco, SP, Brasil",d=await computeSelectedRouteDetail(base,base,stops);if(d.km==null)throw new Error("Não foi possível recalcular.");r.currentKm=d.km;r.currentMinutes=d.driveMinutes+(r.currentClientIds||[]).length*Number(state.config.visitMinutes||35);r.currentToll=d.toll;r.currentTollAvailable=d.tollAvailable;r.currentEstimatedCost=d.km*Number(state.config.costKm||0)+Number(d.toll||0);r.recalculatedAt=new Date().toISOString();save()}catch(e){alert(e.message||"Não foi possível recalcular a rota.")}}
-function toggleRouteRunStatus(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;r.status=r.status==="completed"?"planned":"completed";r.completedAt=r.status==="completed"?new Date().toISOString():"";save()}
+function saveRouteRunEdits(){const r=state.routeRuns.find(r=>r.id===rrId.value);if(!r)return;r.currentClientIds=[...routeRunEditStops];r.edited=JSON.stringify(r.currentClientIds)!==JSON.stringify(r.plannedClientIds||[]);r.updatedAt=nowIsoSP();closeSheet("routeRunSheet");save()}
+async function recalculateRouteRun(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;if(!mapsConfigured()){alert("Configure a integração de rotas para recalcular distância, tempo e pedágio.");return}const stops=(r.currentClientIds||[]).map(id=>routeClientAddress(state.clients.find(c=>c.id===id))).filter(Boolean);if(!stops.length){alert("Adicione pelo menos um cliente à rota.");return}try{const base=state.config.base||"Osasco, SP, Brasil",d=await computeSelectedRouteDetail(base,base,stops);if(d.km==null)throw new Error("Não foi possível recalcular.");r.currentKm=d.km;r.currentMinutes=d.driveMinutes+(r.currentClientIds||[]).length*Number(state.config.visitMinutes||35);r.currentToll=d.toll;r.currentTollAvailable=d.tollAvailable;r.currentEstimatedCost=d.km*Number(state.config.costKm||0)+Number(d.toll||0);r.recalculatedAt=nowIsoSP();save()}catch(e){alert(e.message||"Não foi possível recalcular a rota.")}}
+async function recalculateRouteFromHere(id){
+ const r=state.routeRuns.find(r=>r.id===id);if(!r)return;if(!mapsConfigured()){alert("Configure a integração de rotas para recalcular.");return}
+ const attended=r.attendedClientIds||[],remaining=(r.currentClientIds||[]).filter(cid=>!attended.includes(cid));if(!remaining.length){r.continuationAnalysis={status:"good",label:"Rota concluída",message:"Todos os clientes desta rota estão marcados como atendidos.",remainingClients:0,calculatedAt:nowIsoSP()};save();return}
+ const lastAttended=[...(r.currentClientIds||[])].reverse().find(cid=>attended.includes(cid)),origin=lastAttended?routeClientAddress(state.clients.find(c=>c.id===lastAttended)):(state.config.base||"Osasco, SP, Brasil"),destination=state.config.base||"Osasco, SP, Brasil",stops=remaining.map(cid=>routeClientAddress(state.clients.find(c=>c.id===cid))).filter(Boolean);
+ try{
+   const d=await computeSelectedRouteDetail(origin,destination,stops);if(d.km==null)throw new Error("Não foi possível recalcular o restante da rota.");
+   const travelCost=d.km*Number(state.config.costKm||0)+Number(d.toll||0),potential=remaining.reduce((a,cid)=>{const st=clientStats(cid);return a+Math.max(0,Number(st.netAvgMargin||st.avgMargin||0))*Math.max(.25,Number(st.conv||1))},0),result=potential-travelCost;
+   let status="good",label="Vale continuar",message=`O retorno comercial esperado dos clientes restantes supera o custo estimado para continuar.`;if(result<0){status="bad";label="Reprogramar pode ser melhor";message="O custo estimado para continuar está acima do retorno comercial esperado dos clientes restantes."}else if(result<travelCost*.25){status="warn";label="Avaliar antes de seguir";message="A rota restante ainda pode fechar positiva, mas com pouca folga."}
+   r.continuationAnalysis={status,label,message,originClientId:lastAttended||"",remainingClients:remaining.length,km:d.km,minutes:d.driveMinutes+remaining.length*Number(state.config.visitMinutes||35),toll:Number(d.toll||0),travelCost,potentialReturn:potential,estimatedResult:result,calculatedAt:nowIsoSP()};r.recalculatedAt=nowIsoSP();save()
+ }catch(e){alert(e.message||"Não foi possível recalcular a rota.")}
+}
+function toggleRouteRunStatus(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;r.status=r.status==="completed"?"planned":"completed";r.completedAt=r.status==="completed"?nowIsoSP():"";save()}
 function openRouteExpense(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;routeExpenseForm.reset();reRouteId.value=id;reDate.value=today();selectRouteExpenseCategory("fuel");openSheet("routeExpenseSheet")}
 function selectRouteExpenseCategory(cat){reCategory.value=cat;document.querySelectorAll(".expense-category-btn").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));reAmount.focus()}
 function renderRoutes(){renderRouteRuns();const crit=criticalClients();routeCandidates.innerHTML=`<div class="cardhead"><div><h2>Clientes que precisam de visita</h2><div class="muted">${crit.length} cliente(s) dentro da janela ou marcados como prioridade.</div></div></div>`+(crit.length?`<div class="list">${crit.map(x=>`<div class="listitem"><div><div class="title">${x.manual?'<span class="priority-dot"></span>':""}${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)} • ${x.st.orders?`próxima compra ${fmt(x.st.next)} • ticket ${brl(x.st.ticket)}`:"sem histórico"}</div></div><button class="btn secondary" onclick="toggleVisitPriority('${x.c.id}')">${x.manual?"Retirar prioridade":"Priorizar"}</button></div>`).join("")}</div>`:'<div class="empty">Nenhum cliente crítico. Na ficha do cliente você pode marcar “Priorizar visita”.</div>');if(!smartRoutePlan){smartRoutesList.innerHTML='<div class="empty">Toque em <b>Analisar rotas</b> para o sistema montar as opções. Depois escolha uma rota para poder editar e lançar as despesas reais.</div>';return}renderSmartRoutePlan()}
@@ -2225,7 +2295,8 @@ function renderSettings(){ensureConfig();cfgKm.value=state.config.costKm;cfgWind
 
 
 function renderSales(){
- ensureState();salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");let list=[...state.sales];if(salesMonthFilter!=="all")list=list.filter(s=>String(s.date||"").slice(0,7)===salesMonthFilter);if(salesStatusFilter==="open")list=list.filter(s=>saleOpen(s)>.009);if(salesStatusFilter==="late")list=list.filter(s=>saleOverdue(s));if(salesStatusFilter==="paid")list=list.filter(s=>salePaid(s));list.sort((a,b)=>(b.date||"").localeCompare(a.date||""));if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda nesse filtro.</div>';return}salesList.innerHTML=list.map(s=>{const c=state.clients.find(c=>c.id===s.clientId),disc=Number(s.scrapDiscount||0)+Number(s.freeAdjustmentValue||0),op=saleOperationalBreakdown(s),cls=rentabilityClass(op.rentability),ren=saleRenegotiated(s),status=salePaid(s)?["good","Recebido"]:ren?["warn","Renegociado"]:saleOverdue(s)?["bad","Vencido"]:["warn","A receber"],collectionTotal=Number(s.collectionTotal??s.total??0);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.paymentMode==="prazo"&&s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${status[0]}">${status[1]}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Venda atual${disc?` • descontos -${brl(disc)}`:""}${Number(s.warrantyCreditTotal||0)?` • garantia -${brl(s.warrantyCreditTotal)}`:""} • em aberto ${brl(saleOpen(s))}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior renegociado ${brl(s.renegotiatedDebtTotal)} • total da cobrança ${brl(collectionTotal)}`:""}</div><div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">Custos variáveis: ${brl(op.totalCosts)} • Resultado comercial: <b class="rent-${cls}">${brl(op.commercialResult)}</b> • Rentabilidade do pedido: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b>${op.warrantyImpact>0?`<br>Impacto da garantia: <b>- ${brl(op.warrantyImpact)}</b> • Resultado após garantia: <b class="rent-${op.economicResult<0?"bad":"good"}">${brl(op.economicResult)}</b>`:""}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior: <b>${brl(s.renegotiatedDebtTotal)}</b> — fora do faturamento e da rentabilidade.`:""}</div></div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="toggleSaleCardResult('${s.id}',this)">👁 Resultado</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
+ ensureState();salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");let list=[...state.sales];if(salesMonthFilter!=="all")list=list.filter(s=>String(s.date||"").slice(0,7)===salesMonthFilter);if(salesStatusFilter==="open")list=list.filter(s=>saleOpen(s)>.009);if(salesStatusFilter==="late")list=list.filter(s=>saleOverdue(s));if(salesStatusFilter==="paid")list=list.filter(s=>salePaid(s));list.sort((a,b)=>(b.date||"").localeCompare(a.date||""));if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda nesse filtro.</div>';return}
+ salesList.innerHTML=list.map(s=>{const c=state.clients.find(c=>c.id===s.clientId),disc=Number(s.scrapDiscount||0)+Number(s.freeAdjustmentValue||0),op=saleOperationalBreakdown(s),cls=rentabilityClass(op.rentability),ren=saleRenegotiated(s),status=salePaid(s)?["good","Recebido"]:ren?["warn","Renegociado"]:saleOverdue(s)?["bad","Vencido"]:["warn","A receber"],collectionTotal=Number(s.collectionTotal??s.total??0);return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${fmt(s.date)} • ${esc(s.method)}${s.paymentMode==="prazo"&&s.installments.length>1?` • ${s.installments.length}x`:""}</div></div><span class="badge ${status[0]}">${status[1]}</span></div><div style="font-size:20px;font-weight:850">${brl(s.total)}</div><div class="muted" style="margin-top:4px">Venda atual${disc?` • descontos -${brl(disc)}`:""}${Number(s.warrantyCreditTotal||0)?` • garantia -${brl(s.warrantyCreditTotal)}`:""} • em aberto ${brl(saleOpen(s))}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior renegociado ${brl(s.renegotiatedDebtTotal)} • total da cobrança ${brl(collectionTotal)}`:""}</div><div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">Custo das baterias: ${brl(op.productCost)} • Margem comercial: <b class="rent-${cls}">${brl(op.commercialMargin)}</b> • Margem do pedido: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b>${op.warrantyImpact>0?`<br>Impacto da garantia: <b>- ${brl(op.warrantyImpact)}</b> • Margem após garantia: <b class="rent-${op.economicResult<0?"bad":"good"}">${brl(op.economicResult)}</b>`:""}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior: <b>${brl(s.renegotiatedDebtTotal)}</b> — fora do faturamento e da margem.`:""}<br><span class="muted">Impostos, taxas e despesas de viagem são analisados na quinzena.</span></div></div><div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="toggleSaleCardResult('${s.id}',this)">👁 Resultado</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div></div>`}).join("")
 }
 function renderCollections(){
  ensureState();collectionStatusFilters.innerHTML=[["all","Tudo"],["upcoming","A vencer"],["late","Atrasado"],["sent","Enviado"]].map(([k,l])=>`<button class="filter-btn ${collectionStatusFilter===k?"active":""}" onclick="setCollectionStatusFilter('${k}')">${l}</button>`).join("");const rows=[];state.sales.forEach(s=>effectiveInstallments(s).forEach(p=>{if(!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009)rows.push({s,p:{...p,amount:p.effectiveAmount}})}));let filtered=rows;if(collectionStatusFilter==="upcoming")filtered=rows.filter(x=>collectionStatus(x.p)==="upcoming");if(collectionStatusFilter==="late")filtered=rows.filter(x=>collectionStatus(x.p)==="late");if(collectionStatusFilter==="sent")filtered=rows.filter(x=>x.p.sent);filtered.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));if(!filtered.length){collectionsList.innerHTML='<div class="empty">Nenhuma cobrança nesse filtro.</div>'}else{collectionsList.innerHTML=filtered.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c),late=collectionStatus(p)==="late",grp=p.groupTotal||s.installments.length,hasWarranty=Number(p.warrantyCreditApplied||0)>.009;return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${c?.contact?`${esc(c.contact)} • `:""}${p.paymentMethod?esc(p.paymentMethod)+" • ":""}Parcela ${p.groupNumber||p.number}/${grp} • ${fmt(p.due)}</div></div><div class="actions"><span class="badge ${late?"bad":"warn"}">${late?"Atrasado":"A vencer"}</span>${p.sent?'<span class="badge good">Enviado</span>':""}</div></div><div class="muted" style="font-size:9px">Saldo a cobrar</div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div>${hasWarranty?`<div class="collection-credit-detail"><span>Valor original <b>${brl(p.originalAmount)}</b></span><span>Crédito de garantia <b>- ${brl(p.warrantyCreditApplied)}</b></span></div>`:""}<div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar venda</button></div></div>`}).join("")}collectionUpcomingTemplate.value=state.collectionTemplates.upcoming;collectionLateTemplate.value=state.collectionTemplates.late
@@ -2246,16 +2317,44 @@ function renderWarranties(){
  warrantyPendingNotice.innerHTML=pending.length?`<div class="warranty-pending-banner"><div><b>⏳ ${pending.length} bateria(s) aguardando análise</b><span>Classifique cada uma como Recarga ou Fábrica.</span></div><button class="btn secondary" onclick="setWarrantyStatusFilter('pending')">Ver pendências</button></div>`:'<div class="notice" style="margin:10px 0"><b>✓ Sem pendências de análise.</b> Todas as baterias recebidas já têm destino definido.</div>';
  const filters=[["pending",`Pendentes (${pending.length})`],["recharge","Recarga"],["factory","Fábrica"],["all","Todas"]];warrantyStatusFilters.innerHTML=filters.map(([v,l])=>`<button class="filter-btn ${warrantyStatusFilter===v?"active":""}" onclick="setWarrantyStatusFilter('${v}')">${l}</button>`).join("");
  let list=warrantyStatusFilter==="all"?all:all.filter(w=>(w.batteryDisposition||"pending")===warrantyStatusFilter);if(!list.length){warrantyList.innerHTML='<div class="empty">Nenhuma garantia nesse filtro.</div>';return}
- warrantyList.innerHTML=list.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),p=state.products.find(p=>p.id===w.productId),ws=warrantyStats(w.clientId,365),code=warrantyCodeStatus(w),disp=w.batteryDisposition||"pending",solution=(w.solution||w.resolution)==="credit"?"Crédito ao cliente":"Troca por bateria",value=warrantyValue(w),high=ws.warrantyQty>=2&&ws.incidence>=10;let codeMeta=code.valid?`Fabricação: semana ${String(code.week).padStart(2,"0")}/${code.year} • modelo ${code.model} • seq. ${code.sequence} • garantia até ${fmt(code.warrantyUntil)}`:"Código antigo ou fora do padrão PRO";if(code.withinWarranty===false)codeMeta+=' • fora dos 9 meses';return `<div class="card ${high?"warranty-critical":""}"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">${esc(p?.name||w.model||"Produto")} • entrada ${fmt(w.collect)} • 1 bateria</div></div><span class="badge ${disp==="pending"?"warn":disp==="factory"?"bad":"good"}">${warrantyDispositionLabel(disp)}</span></div><div class="warranty-code-hero"><small>Código da garantia</small><b>${esc(w.code||"SEM CÓDIGO")}</b><div class="warranty-code-meta">${esc(codeMeta)}</div></div><div class="warranty-card-main"><div><div class="muted">Atendimento ao cliente: <b>${solution}</b></div><div class="muted" style="margin-top:4px">12 meses: ${ws.warrantyQty} garantia(s) / ${ws.purchasedQty} bateria(s) compradas • incidência ${ws.incidence.toFixed(1)}%</div></div><div class="warranty-value">${brl(value)}<small>valor da bateria</small></div></div>${high?'<div class="notice" style="margin-top:8px"><b>Atenção ao giro:</b> frequência de garantia elevada em relação às unidades compradas. Vale revisar idade de estoque e perfil do cliente.</div>':""}<div class="warranty-destination-actions"><button class="btn ${disp==="recharge"?"good active":"secondary"}" onclick="setWarrantyDisposition('${w.id}','recharge')">🔋 Recarga</button><button class="btn ${disp==="factory"?"danger active":"secondary"}" onclick="setWarrantyDisposition('${w.id}','factory')">🏭 Fábrica</button></div><div class="actions" style="margin-top:8px"><button class="btn secondary" onclick="openWarrantySheet('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWarranty('${w.id}')">Excluir</button></div></div>`}).join("")
+ warrantyList.innerHTML=list.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),p=state.products.find(p=>p.id===w.productId),ws=warrantyStats(w.clientId,365),code=warrantyCodeStatus(w),disp=w.batteryDisposition||"pending",solution=(w.solution||w.resolution)==="credit"?"Crédito ao cliente":"Troca por bateria",value=warrantyValue(w),high=ws.warrantyQty>=2&&ws.incidence>=10,expired=code.valid&&code.withinWarranty===false;let codeMeta=code.valid?`Fabricação: semana ${String(code.week).padStart(2,"0")}/${code.year} • modelo ${code.model} • seq. ${code.sequence} • ${expired?`GARANTIA VENCIDA em ${fmt(code.warrantyUntil)}`:`garantia até ${fmt(code.warrantyUntil)}`}`:"Código antigo ou fora do padrão PRO";return `<div class="card ${high?"warranty-critical":""}"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")}</h3><div class="muted">${esc(p?.name||w.model||"Produto")} • entrada ${fmt(w.collect)} • 1 bateria</div></div><span class="badge ${expired?"bad":disp==="pending"?"warn":disp==="factory"?"bad":"good"}">${expired?"Garantia vencida":warrantyDispositionLabel(disp)}</span></div><div class="warranty-code-hero ${expired?"expired":""}"><small>Código da garantia</small><b>${esc(w.code||"SEM CÓDIGO")}</b><div class="warranty-code-meta ${expired?"bad":""}">${esc(codeMeta)}</div></div><div class="warranty-card-main"><div><div class="muted">Atendimento ao cliente: <b>${solution}</b></div><div class="muted" style="margin-top:4px">12 meses: ${ws.warrantyQty} garantia(s) / ${ws.purchasedQty} bateria(s) compradas • incidência ${ws.incidence.toFixed(1)}%</div></div><div class="warranty-value">${brl(value)}<small>valor da bateria</small></div></div>${high?'<div class="notice" style="margin-top:8px"><b>Atenção ao giro:</b> frequência de garantia elevada em relação às unidades compradas. Vale revisar idade de estoque e perfil do cliente.</div>':""}<div class="warranty-destination-actions"><button class="btn ${disp==="recharge"?"good active":"secondary"}" onclick="setWarrantyDisposition('${w.id}','recharge')">🔋 Recarga</button><button class="btn ${disp==="factory"?"danger active":"secondary"}" onclick="setWarrantyDisposition('${w.id}','factory')">🏭 Fábrica</button></div><div class="actions" style="margin-top:8px"><button class="btn secondary" onclick="openWarrantySheet('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWarranty('${w.id}')">Excluir</button></div></div>`}).join("")
 }
 function renderSettings(){
- ensureState();ensureConfig();
- cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgSellerName.value=state.config.sellerName||"Alex";
- cfgTaxRate.value=Number(state.config.taxRate||0);cfgMinRentability.value=Number(state.config.orderRentabilityReference??12);
- cfgFeePix.value=Number(state.config.paymentFees?.PIX||0);cfgFeeCash.value=Number(state.config.paymentFees?.Dinheiro||0);cfgFeeCheque.value=Number(state.config.paymentFees?.Cheque||0);cfgFeeBoleto.value=Number(state.config.paymentFees?.Boleto||0);cfgFeeCard.value=Number(state.config.paymentFees?.["Cartão"]||0);cfgTollPass.value=state.config.tollPass??"BR_SEM_PARAR";
- const f=state.config.fixedCosts||{};
- cfgFixedProLabore.value=Number(f.proLabore||0);cfgFixedAccountant.value=Number(f.accountant||0);cfgFixedPhone.value=Number(f.phone||0);cfgFixedInsurance.value=Number(f.insurance||0);cfgFixedSystems.value=Number(f.systems||0);cfgFixedRent.value=Number(f.rent||0);cfgFixedOther.value=Number(f.other||0);cfgMonthlyProfitTarget.value=Number(state.config.monthlyProfitTarget||0);updateFixedCostsPreview();
+ ensureState();ensureConfig();cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgSellerName.value=state.config.sellerName||"Alex";cfgMinRentability.value=Number(state.config.orderRentabilityReference??12);cfgTollPass.value=state.config.tollPass??"BR_SEM_PARAR";
+ const f=state.config.fixedCosts||{};cfgFixedProLabore.value=Number(f.proLabore||0);cfgFixedAccountant.value=Number(f.accountant||0);cfgFixedPhone.value=Number(f.phone||0);cfgFixedInsurance.value=Number(f.insurance||0);cfgFixedSystems.value=Number(f.systems||0);cfgFixedRent.value=Number(f.rent||0);cfgFixedOther.value=Number(f.other||0);cfgMonthlyProfitTarget.value=Number(state.config.monthlyProfitTarget||0);updateFixedCostsPreview();
+ if(window.cfgTaxMonthReal&&!cfgTaxMonthReal.value)cfgTaxMonthReal.value=monthKeySP();if(window.cfgPeriodExpenseDate&&!cfgPeriodExpenseDate.value)cfgPeriodExpenseDate.value=today();renderRealCostHistory();renderSystemUpdateInfo();
  cfgMapsKey.value=state.config.googleMapsApiKey||"";mapsStatus.textContent=mapsConfigured()?"configurado":"não configurado";mapsStatus.className="badge "+(mapsConfigured()?"good":"warn")
+}
+function periodExpenseLabel(type){return {pixbank:"Taxas PIX / bancárias",cardbank:"Taxas cartão / maquininha",other:"Outro custo variável"}[type]||"Outro custo variável"}
+function saveRealTax(){
+ const month=cfgTaxMonthReal.value,amount=Number(cfgTaxAmountReal.value||0);if(!month||amount<=0){alert("Informe a competência e o valor real do imposto.");return}
+ const existing=(state.taxRecords||[]).find(r=>r.month===month),data={month,amount,note:cfgTaxNoteReal.value.trim(),updatedAt:nowIsoSP()};if(existing)Object.assign(existing,data);else state.taxRecords.push({id:uid(),...data});
+ cfgTaxAmountReal.value="";cfgTaxNoteReal.value="";save()
+}
+function deleteTaxRecord(id){if(!confirm("Excluir este imposto registrado?"))return;state.taxRecords=state.taxRecords.filter(r=>r.id!==id);save()}
+function addPeriodExpense(){
+ const amount=Number(cfgPeriodExpenseAmount.value||0),date=cfgPeriodExpenseDate.value||today();if(amount<=0){alert("Informe o valor real do custo.");return}
+ state.periodExpenses.push({id:uid(),type:cfgPeriodExpenseType.value,date,amount,note:cfgPeriodExpenseNote.value.trim(),createdAt:nowIsoSP()});
+ cfgPeriodExpenseAmount.value="";cfgPeriodExpenseNote.value="";save()
+}
+function deletePeriodExpense(id){if(!confirm("Excluir este custo real?"))return;state.periodExpenses=state.periodExpenses.filter(e=>e.id!==id);save()}
+function renderRealCostHistory(){
+ if(!window.realCostHistory)return;const taxes=[...(state.taxRecords||[])].sort((a,b)=>(b.month||"").localeCompare(a.month||"")).slice(0,6),expenses=[...(state.periodExpenses||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,8);
+ realCostHistory.innerHTML=`<div class="real-cost-title">Últimos valores registrados</div>${taxes.map(r=>`<div class="real-cost-row"><div><b>Imposto • ${esc(r.month)}</b><small>${esc(r.note||"Valor real mensal")}</small></div><strong>${brl(r.amount)}</strong><button class="btn secondary" onclick="deleteTaxRecord('${r.id}')">×</button></div>`).join("")}${expenses.map(e=>`<div class="real-cost-row"><div><b>${periodExpenseLabel(e.type)}</b><small>${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></div><strong>${brl(e.amount)}</strong><button class="btn secondary" onclick="deletePeriodExpense('${e.id}')">×</button></div>`).join("")}${!taxes.length&&!expenses.length?'<div class="empty">Nenhum imposto/taxa real registrado ainda.</div>':""}`
+}
+function renderSystemUpdateInfo(){
+ if(!window.systemVersionInstalled)return;systemVersionInstalled.textContent=`v${AX_APP_VERSION}`;systemReleaseDate.textContent=fmt(AX_RELEASE_DATE);systemUpdateBadge.textContent=`v${AX_APP_VERSION}`;
+ const last=localStorage.getItem("ax_last_update_check");systemLastUpdateCheck.textContent=last?formatDateTimeSP(last):"Nunca"
+}
+async function forceSystemUpdate(){
+ const btn=document.getElementById("systemUpdateBtn"),msg=document.getElementById("systemUpdateMessage");if(btn)btn.disabled=true;if(msg)msg.textContent="Buscando a versão publicada…";
+ try{
+   const url=new URL("./index.html",window.location.href);url.searchParams.set("ax_refresh",Date.now());
+   const res=await fetch(url.toString(),{cache:"no-store"});if(!res.ok)throw new Error("Não foi possível acessar o arquivo publicado.");
+   const body=await res.text(),m=body.match(/<meta name="ax-version" content="([^"]+)"/i),remote=m?.[1]||"desconhecida",stamp=nowIsoSP();localStorage.setItem("ax_last_update_check",stamp);
+   if(msg)msg.textContent=`Versão publicada encontrada: v${remote}. Recarregando sem cache…`;renderSystemUpdateInfo();
+   setTimeout(()=>{window.location.href=url.toString()},450)
+ }catch(e){if(msg)msg.textContent="Falha ao verificar atualização. Confira a internet e tente novamente.";alert(e.message||"Não foi possível atualizar.")}finally{if(btn)btn.disabled=false}
 }
 function updateFixedCostsPreview(){
  if(!window.cfgFixedCostsTotalPreview)return;
@@ -2265,11 +2364,19 @@ function updateFixedCostsPreview(){
 }
 function renderAll(){ensureState();fillSelects();renderHome();renderSales();renderRoutes();renderCollections();renderClients();renderPriceTables();renderProducts();renderWarranties();renderScrap();renderMonth();renderSettings()}
 function updateSale(){
- let subtotal=0,cost=0;document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);subtotal+=line;cost+=p?Number(p.cost||0)*q:0});let scrapDiscount=0;document.querySelectorAll(".scrapRow").forEach(r=>{const t=state.scrapTypes.find(t=>t.id===r.querySelector(".sst").value),q=Number(r.querySelector(".ssq").value||0),d=t?Number(t.value||0)*q:0;r.querySelector(".scrapDiscount").textContent=`- ${brl(d)}`;scrapDiscount+=d});const freeAdjustment=currentFreeAdjustment(),commercialRevenue=Math.max(0,subtotal-scrapDiscount-freeAdjustment),warrantyCredit=previewSelectedWarrantyCredit(commercialRevenue),currentOrderTotal=Math.max(0,Math.round((commercialRevenue-warrantyCredit)*100)/100),renegotiatedDebt=selectedRenegotiatedDebtTotal(),collectionTotal=Math.round((currentOrderTotal+renegotiatedDebt)*100)/100;
- let fullPaymentFee=0;if(sPaymentSplitMode.value==="multiple"){fullPaymentFee=[...paymentRows.querySelectorAll(".payment-row")].reduce((sum,row)=>sum+Number(row.querySelector(".pm-amount").value||0)*paymentFeeRate(row.querySelector(".pm-method").value)/100,0);updateMultiPaymentSummary(collectionTotal)}else fullPaymentFee=collectionTotal*paymentFeeRate(sMethod.value)/100;const paymentFee=collectionTotal>0?fullPaymentFee*(currentOrderTotal/collectionTotal):0,taxRate=Number(state.config?.taxRate||0),tax=currentOrderTotal*taxRate/100,routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),variableCosts=cost+paymentFee+tax+routeCost+otherCost,commercialResult=commercialRevenue-variableCosts,commercialRent=commercialRevenue>0?commercialResult/commercialRevenue*100:0,cls=rentabilityClass(commercialRent),exchangeWarrantyImpact=pendingSaleWarrantyDrafts.filter(w=>w.solution==="exchange").reduce((a,w)=>a+Number(w.unitCostSnapshot||0),0),warrantyImpactValue=warrantyCredit+exchangeWarrantyImpact,economicResult=commercialResult-warrantyImpactValue;
+ let subtotal=0,cost=0;
+ document.querySelectorAll(".saleRow").forEach(r=>{const p=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0),line=p?Number((p.prices||[])[Number(sTable.value)]||0)*q:0;r.querySelector(".lineTotal").textContent=brl(line);subtotal+=line;cost+=p?Number(p.cost||0)*q:0});
+ let scrapDiscount=0;document.querySelectorAll(".scrapRow").forEach(r=>{const t=state.scrapTypes.find(t=>t.id===r.querySelector(".sst").value),q=Number(r.querySelector(".ssq").value||0),d=t?Number(t.value||0)*q:0;r.querySelector(".scrapDiscount").textContent=`- ${brl(d)}`;scrapDiscount+=d});
+ const freeAdjustment=currentFreeAdjustment(),commercialRevenue=Math.max(0,subtotal-scrapDiscount-freeAdjustment),warrantyCredit=previewSelectedWarrantyCredit(commercialRevenue),currentOrderTotal=Math.max(0,Math.round((commercialRevenue-warrantyCredit)*100)/100),renegotiatedDebt=selectedRenegotiatedDebtTotal(),collectionTotal=Math.round((currentOrderTotal+renegotiatedDebt)*100)/100;
+ if(sPaymentSplitMode.value==="multiple")updateMultiPaymentSummary(collectionTotal);
+ const commercialMargin=commercialRevenue-cost,commercialRent=commercialRevenue>0?commercialMargin/commercialRevenue*100:0,cls=rentabilityClass(commercialRent),exchangeWarrantyImpact=pendingSaleWarrantyDrafts.filter(w=>w.solution==="exchange").reduce((a,w)=>a+Number(w.unitCostSnapshot||0),0),warrantyImpactValue=warrantyCredit+exchangeWarrantyImpact,economicResult=commercialMargin-warrantyImpactValue;
  saleSubtotalPreview.textContent=brl(subtotal);saleScrapDiscountPreview.textContent=`- ${brl(scrapDiscount+freeAdjustment)}`;saleWarrantyCreditPreview.textContent=`- ${brl(warrantyCredit)}`;saleDebtPreview.textContent=brl(renegotiatedDebt);saleTotal.textContent=brl(collectionTotal);
- if(commercialRevenue>0){const good=commercialRent>=Number(state.config?.orderRentabilityReference??SALE_RENTABILITY_THUMB_THRESHOLD);saleRentabilityThumb.textContent=good?"🟢":"🔴";saleRentabilityThumb.setAttribute("aria-label",good?"Rentabilidade do pedido adequada":"Rentabilidade do pedido abaixo da referência");saleRentabilityThumb.title=good?"Rentabilidade do pedido adequada":"Rentabilidade do pedido abaixo da referência"}else{saleRentabilityThumb.textContent="";saleRentabilityThumb.removeAttribute("aria-label");saleRentabilityThumb.removeAttribute("title")}
- saleCostPreview.textContent=brl(cost);salePaymentFeePreview.textContent=brl(paymentFee);saleTaxPreview.textContent=brl(tax);saleExtraCostsPreview.textContent=brl(routeCost+otherCost);saleGrossProfitPreview.textContent=brl(commercialRevenue-cost);saleTotalCostsPreview.textContent=brl(variableCosts);saleProfitPreview.textContent=brl(commercialResult);saleRentabilityPreview.textContent=commercialRent.toFixed(1)+"%";saleWarrantyImpactAdminPreview.textContent=`- ${brl(warrantyImpactValue)}`;saleEconomicResultPreview.textContent=brl(economicResult);saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;saleEconomicResultBox.className=`mini ${economicResult<0?"rent-panel-bad":"rent-panel-good"}`;saleEconomicResultPreview.className=`rent-value rent-${economicResult<0?"bad":"good"}`;saleRentabilityAlert.className=`notice rent-panel-${cls}`;saleRentabilityAlert.innerHTML=`<b>${rentabilityText(commercialRent)}</b> • Rentabilidade comercial ${commercialRent.toFixed(1)}%. ${freeAdjustment>0?`Desconto/crédito livre: ${brl(freeAdjustment)}. `:""}${warrantyImpactValue>0?`A garantia consome ${brl(warrantyImpactValue)} desta operação; resultado após garantia: <b>${brl(economicResult)}</b>.`:"Não há impacto de garantia nesta operação."}${renegotiatedDebt>0?` <br><b>${brl(renegotiatedDebt)} de saldo anterior foi incorporado somente à cobrança e não entra na rentabilidade.</b>`:""}`;saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
+ if(commercialRevenue>0){const good=commercialRent>=Number(state.config?.orderRentabilityReference??SALE_RENTABILITY_THUMB_THRESHOLD);saleRentabilityThumb.textContent=good?"🟢":"🔴";saleRentabilityThumb.setAttribute("aria-label",good?"Margem comercial adequada":"Margem comercial abaixo da referência");saleRentabilityThumb.title=good?"Margem comercial adequada":"Margem comercial abaixo da referência"}else{saleRentabilityThumb.textContent="";saleRentabilityThumb.removeAttribute("aria-label");saleRentabilityThumb.removeAttribute("title")}
+ saleCostPreview.textContent=brl(cost);saleCommercialRevenuePreview.textContent=brl(commercialRevenue);saleProfitPreview.textContent=brl(commercialMargin);saleRentabilityPreview.textContent=commercialRent.toFixed(1)+"%";saleWarrantyImpactAdminPreview.textContent=`- ${brl(warrantyImpactValue)}`;saleEconomicResultPreview.textContent=brl(economicResult);
+ saleOperationalResultBox.className=`mini rent-panel-${cls}`;saleRentabilityBox.className=`mini rent-panel-${cls}`;saleProfitPreview.className=`rent-value rent-${cls}`;saleRentabilityPreview.className=`rent-value rent-${cls}`;saleEconomicResultBox.className=`mini ${economicResult<0?"rent-panel-bad":"rent-panel-good"}`;saleEconomicResultPreview.className=`rent-value rent-${economicResult<0?"bad":"good"}`;
+ saleRentabilityAlert.className=`notice rent-panel-${cls}`;
+ saleRentabilityAlert.innerHTML=`<b>${rentabilityText(commercialRent)}</b> • Margem comercial ${commercialRent.toFixed(1)}%. ${freeAdjustment>0?`Desconto/crédito livre: ${brl(freeAdjustment)}. `:""}${warrantyImpactValue>0?`A garantia é mostrada separadamente e consome ${brl(warrantyImpactValue)}; margem após garantia: <b>${brl(economicResult)}</b>.`:"Garantia não está afetando esta venda."}${renegotiatedDebt>0?`<br><b>${brl(renegotiatedDebt)}</b> de saldo anterior está apenas na nova cobrança, fora do faturamento e da margem.`:""}`;
+ saleScrapNotice.textContent=state.scrapTypes.length?`Desconto calculado pela tabela de sucata cadastrada em Mais → Sucata.`:"Cadastre os tipos e valores em Mais → Sucata antes de usar o desconto."
 }
 function addSaleItem(productId="",qty=1){
  const row=document.createElement("div");row.className="saleRow";
@@ -2290,9 +2397,9 @@ function commitPendingSaleWarranties(savedSale){
 saleForm.addEventListener("submit",e=>{
  e.preventDefault();ensureState();const c=state.clients.find(c=>c.id===sClient.value);if(!c){alert("Digite e selecione um cliente cadastrado.");return}const original=state.sales.find(s=>s.id===sId.value),restored={};if(original)(original.items||[]).forEach(i=>restored[i.productId]=(restored[i.productId]||0)+Number(i.qty));const items=[];let subtotal=0,cost=0;for(const r of document.querySelectorAll(".saleRow")){const prod=state.products.find(p=>p.id===r.querySelector(".sp").value),q=Number(r.querySelector(".sq").value||0);if(!prod||q<=0)continue;const available=Number(prod.qty)+(restored[prod.id]||0);if(available<q){alert(`Estoque insuficiente de ${prod.name}. Disponível para esta edição: ${available}.`);return}const unit=Number((prod.prices||[])[Number(sTable.value)]||0);items.push({productId:prod.id,name:prod.name,qty:q,unit,line:unit*q,cost:Number(prod.cost||0)*q});subtotal+=unit*q;cost+=Number(prod.cost||0)*q}if(!items.length){alert("Adicione pelo menos um item.");return}const scrapItems=collectSaleScrapItems(),scrapDiscount=scrapItems.reduce((a,i)=>a+Number(i.discount||0),0),freeAdjustmentValue=currentFreeAdjustment();if(scrapDiscount+freeAdjustmentValue>subtotal){alert("Os descontos não podem ser maiores que o subtotal dos produtos.");return}if(!canReplaceSaleScrap(original?.id||"",scrapItems)){alert("Não é possível reduzir essa sucata porque parte dela já foi revendida. Confira o estoque de sucata antes de editar a venda.");return}const exchangeNeeds={};pendingSaleWarrantyDrafts.filter(w=>w.solution==="exchange").forEach(w=>exchangeNeeds[w.productId]=(exchangeNeeds[w.productId]||0)+1);for(const [pid,q] of Object.entries(exchangeNeeds)){const p=state.products.find(p=>p.id===pid),saleQty=items.filter(i=>i.productId===pid).reduce((a,i)=>a+Number(i.qty||0),0),available=Number(p?.qty||0)+(restored[pid]||0)-saleQty;if(available<q){alert(`Estoque insuficiente de ${p?.name||"produto"} para atender a troca da garantia além dos itens vendidos.`);return}}
  const commercialRevenue=Math.max(0,subtotal-scrapDiscount-freeAdjustmentValue),warrantyCredits=buildWarrantyCreditsForSale(commercialRevenue),warrantyCreditTotal=warrantyCredits.reduce((a,x)=>a+Number(x.amount||0),0),currentOrderTotal=Math.max(0,Math.round((commercialRevenue-warrantyCreditTotal)*100)/100),renegotiatedDebts=buildRenegotiatedDebts(),renegotiatedDebtTotal=Math.round(renegotiatedDebts.reduce((a,x)=>a+Number(x.amount||0),0)*100)/100,collectionTotal=Math.round((currentOrderTotal+renegotiatedDebtTotal)*100)/100;let plan;try{plan=paymentPlanFromForm(collectionTotal,original)}catch(err){alert(err.message);return}if(original&&(original.installments||[]).some(p=>p.paid)&&Math.abs(Number(original.collectionTotal??original.total)-collectionTotal)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor da cobrança mudou. Deseja continuar e recalcular os pagamentos?"))return;
- const routeCost=Number(sRouteCost.value||0),otherCost=Number(sOtherCost.value||0),fullPaymentFee=paymentFeeFromPlan(plan),paymentFeeValue=collectionTotal>0?fullPaymentFee*(currentOrderTotal/collectionTotal):0,taxRateSnapshot=Number(state.config?.taxRate||0),taxValue=currentOrderTotal*taxRateSnapshot/100,totalCosts=cost+paymentFeeValue+taxValue+routeCost+otherCost,commercialResult=commercialRevenue-totalCosts,commercialRentability=commercialRevenue>0?commercialResult/commercialRevenue*100:0,operationalResult=commercialResult,operationalRentability=commercialRentability;let savedSale;
- const common={clientId:c.id,date:sDate.value,method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,freeAdjustmentType:freeAdjustmentValue>0?sFreeAdjustmentType.value:"",freeAdjustmentValue,freeAdjustmentReason:freeAdjustmentValue>0?sFreeAdjustmentReason.value.trim():"",warrantyCredits,warrantyCreditTotal,total:currentOrderTotal,currentOrderTotal,renegotiatedDebts,renegotiatedDebtTotal,collectionTotal,marginValue:commercialRevenue-cost,commercialRevenue,commercialResult,commercialRentability,routeCost,otherCost,paymentFeeRate:null,paymentFeeValue,taxRate:taxRateSnapshot,taxValue,totalCosts,operationalResult,operationalRentability,installments:plan.installments};
- if(original){(original.items||[]).forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)+Number(i.qty)});items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});Object.assign(original,common,{sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id});savedSale=original}else{const sale={id:uid(),createdAt:new Date().toISOString(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),...common};state.sales.push(sale);items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale}
+ const commercialMargin=commercialRevenue-cost,commercialRentability=commercialRevenue>0?commercialMargin/commercialRevenue*100:0;let savedSale;
+ const common={clientId:c.id,date:sDate.value,method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,freeAdjustmentType:freeAdjustmentValue>0?sFreeAdjustmentType.value:"",freeAdjustmentValue,freeAdjustmentReason:freeAdjustmentValue>0?sFreeAdjustmentReason.value.trim():"",warrantyCredits,warrantyCreditTotal,total:currentOrderTotal,currentOrderTotal,renegotiatedDebts,renegotiatedDebtTotal,collectionTotal,marginValue:commercialMargin,commercialRevenue,commercialResult:commercialMargin,commercialMargin,commercialRentability,routeCost:Number(original?.routeCost||0),otherCost:Number(original?.otherCost||0),paymentFeeRate:null,paymentFeeValue:Number(original?.paymentFeeValue||0),taxRate:Number(original?.taxRate||0),taxValue:Number(original?.taxValue||0),totalCosts:cost,operationalResult:commercialMargin,operationalRentability:commercialRentability,installments:plan.installments};
+ if(original){(original.items||[]).forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)+Number(i.qty)});items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});Object.assign(original,common,{sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id});savedSale=original}else{const sale={id:uid(),createdAt:nowIsoSP(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),...common};state.sales.push(sale);items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale}
  try{commitPendingSaleWarranties(savedSale)}catch(err){alert(err.message);return}syncSaleScrapTransactions(savedSale);syncWarrantyCreditApplications(savedSale);syncRenegotiatedDebtLinks(savedSale);pendingSaleWarrantyDrafts=[];pendingRenegotiatedDebts=[];smartRoutePlan=null;closeSheet("saleSheet");save();setTimeout(()=>openReceipt(savedSale.id),60)
 });
 swqProduct.addEventListener("change",()=>{if(swqResolution.value==="credit")fillSaleWarrantySuggestedCredit(true);renderWarrantyCodeHint("quick")});
@@ -2305,7 +2412,7 @@ wCreditDestination.addEventListener("change",updateWarrantyOpenSales);
 warrantyForm.addEventListener("submit",e=>{
  e.preventDefault();ensureState();const c=state.clients.find(c=>c.id===wClient.value),prod=state.products.find(p=>p.id===wProduct.value);if(!c||!prod){alert("Selecione cliente e produto.");return}const code=parseWarrantyCode(wCode.value);if(!code.valid){alert("Confira o código da garantia. "+code.error);wCode.focus();return}const w=state.warranties.find(w=>w.id===wId.value);if(w&&warrantyApplications(w).length){alert("Esta garantia já possui crédito aplicado e não pode ser alterada. Isso preserva o histórico financeiro.");return}const qty=w?Number(w.qty||1):1,oldExchange=!!(w&&(w.solution==="exchange"||w.resolution==="exchange")),oldProduct=oldExchange?state.products.find(p=>p.id===w.productId):null,oldQty=oldExchange?Number(w.qty||1):0,solution=wResolution.value,batteryValue=Number(wCreditValue.value||0),creditValue=solution==="credit"?batteryValue:0,availableForExchange=Number(prod.qty||0)+(oldExchange&&oldProduct?.id===prod.id?oldQty:0);if(solution==="exchange"&&availableForExchange<1){alert(`Estoque insuficiente de ${prod.name} para registrar a troca.`);return}if(batteryValue<=0){alert("Informe o valor desta bateria.");return}let applications=[];if(solution==="credit"){const [saleId,installmentId]=String(wOpenSale.value||"").split("::"),sale=state.sales.find(s=>s.id===saleId),part=sale&&effectiveInstallments(sale,w?.id||"").find(p=>p.id===installmentId&&!p.renegotiatedToSaleId);if(!sale||!part){alert("Selecione a cobrança em aberto.");return}if(creditValue>Number(part.effectiveAmount||0)+.009){alert(`O crédito é maior que o saldo da cobrança (${brl(part.effectiveAmount)}). Ajuste o valor.`);return}applications=[{id:uid(),saleId:sale.id,installmentId:part.id,amount:creditValue,kind:"collection",date:wCollect.value||today()}]}if(oldExchange&&oldProduct)oldProduct.qty=Number(oldProduct.qty)+oldQty;if(solution==="exchange")prod.qty=Number(prod.qty)-1;const data={clientId:c.id,type:"Garantia",productId:prod.id,model:prod.name,qty:w?qty:1,code:code.raw,mfg:code.mfgWeekStart,collect:wCollect.value||today(),solution,resolution:solution,creditValue,batteryValue,creditDestination:solution==="credit"?"collection":"",applications,note:wNote.value.trim(),unitCostSnapshot:Number(prod.cost||0),batteryDisposition:w?.batteryDisposition||"pending",dispositionDate:w?.dispositionDate||""};if(w)Object.assign(w,data);else state.warranties.push({id:uid(),...data});closeSheet("warrantySheet");smartRoutePlan=null;save()
 });
-routeExpenseForm.addEventListener("submit",e=>{e.preventDefault();const r=state.routeRuns.find(r=>r.id===reRouteId.value),amount=Number(reAmount.value||0);if(!r||amount<=0){alert("Informe o valor da despesa.");return}r.expenses=r.expenses||[];r.expenses.push({id:uid(),category:reCategory.value,amount,date:reDate.value||today(),note:reNote.value.trim(),createdAt:new Date().toISOString()});closeSheet("routeExpenseSheet");save()});
+routeExpenseForm.addEventListener("submit",e=>{e.preventDefault();const r=state.routeRuns.find(r=>r.id===reRouteId.value),amount=Number(reAmount.value||0);if(!r||amount<=0){alert("Informe o valor da despesa.");return}r.expenses=r.expenses||[];r.expenses.push({id:uid(),category:reCategory.value,amount,date:reDate.value||today(),note:reNote.value.trim(),createdAt:nowIsoSP()});closeSheet("routeExpenseSheet");save()});
 scrapTypeForm.addEventListener("submit",e=>{e.preventDefault();let t=state.scrapTypes.find(t=>t.id===stId.value);const data={name:stName.value.trim(),weight:Number(stWeight.value||0),value:Number(stValue.value||0)};if(!data.name){return}if(t)Object.assign(t,data);else{if(state.scrapTypes.length>=11){alert("A tabela já possui os 11 tipos de sucata.");return}state.scrapTypes.push({id:uid(),...data})}closeSheet("scrapTypeSheet");save()});
 srType.addEventListener("change",updateScrapResaleHint);srQty.addEventListener("input",updateScrapResaleHint);
 scrapResaleForm.addEventListener("submit",e=>{e.preventDefault();const t=state.scrapTypes.find(t=>t.id===srType.value);if(!t){alert("Selecione o tipo.");return}const qty=Number(srQty.value||0),weight=Number(srWeight.value||0),st=scrapStock(t.id);if(qty<=0||weight<=0){alert("Informe quantidade e peso.");return}if(qty>st.qty+.0001||weight>st.weight+.0001){alert(`Estoque insuficiente. Disponível: ${st.qty} un. e ${st.weight.toFixed(2)} kg.`);return}state.scrapTransactions.push({id:uid(),direction:"out",source:"resale",typeId:t.id,typeName:t.name,date:srDate.value||today(),qty,weight,resaleValue:Number(srValue.value||0),note:srNote.value.trim()});closeSheet("scrapResaleSheet");save()});
@@ -2333,19 +2440,20 @@ function deleteWarranty(id){
 
 function toggleVisitPriority(cid){const c=state.clients.find(c=>c.id===cid);if(!c)return;c.visitPriority=!c.visitPriority;smartRoutePlan=null;save();if(document.getElementById("clientDetail").classList.contains("active"))showClient(cid)}
 function saveSettings(){
- ensureState();ensureConfig();
- const ref=Number(cfgMinRentability.value||12);
- Object.assign(state.config,{
-   costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim(),sellerName:cfgSellerName.value.trim()||"Alex",
-   taxRate:Number(cfgTaxRate.value||0),minRentability:ref,orderRentabilityReference:ref,
-   paymentFees:{PIX:Number(cfgFeePix.value||0),Dinheiro:Number(cfgFeeCash.value||0),Cheque:Number(cfgFeeCheque.value||0),Boleto:Number(cfgFeeBoleto.value||0),"Cartão":Number(cfgFeeCard.value||0)},
-   tollPass:cfgTollPass.value,
-   fixedCosts:{proLabore:Number(cfgFixedProLabore.value||0),accountant:Number(cfgFixedAccountant.value||0),phone:Number(cfgFixedPhone.value||0),insurance:Number(cfgFixedInsurance.value||0),systems:Number(cfgFixedSystems.value||0),rent:Number(cfgFixedRent.value||0),other:Number(cfgFixedOther.value||0)},
-   monthlyProfitTarget:Number(cfgMonthlyProfitTarget.value||0)
- });
+ ensureState();ensureConfig();const ref=Number(cfgMinRentability.value||12);
+ Object.assign(state.config,{costKm:Number(cfgKm.value||0),window:Number(cfgWindow.value||5),base:cfgBase.value.trim()||"Osasco, SP, Brasil",hotelCost:Number(cfgHotel.value||0),visitMinutes:Number(cfgVisitMinutes.value||35),maxDailyHours:Number(cfgMaxHours.value||9),companyPhone:cfgCompanyPhone.value.trim(),sellerName:cfgSellerName.value.trim()||"Alex",minRentability:ref,orderRentabilityReference:ref,tollPass:cfgTollPass.value,fixedCosts:{proLabore:Number(cfgFixedProLabore.value||0),accountant:Number(cfgFixedAccountant.value||0),phone:Number(cfgFixedPhone.value||0),insurance:Number(cfgFixedInsurance.value||0),systems:Number(cfgFixedSystems.value||0),rent:Number(cfgFixedRent.value||0),other:Number(cfgFixedOther.value||0)},monthlyProfitTarget:Number(cfgMonthlyProfitTarget.value||0)});
  smartRoutePlan=null;save();alert("Configurações salvas.")
 }
 function saveMapsKey(){ensureConfig();state.config.googleMapsApiKey=cfgMapsKey.value.trim();mapsLoaderPromise=null;smartRoutePlan=null;save();alert("Integração de rotas salva.")}
+function csvEscape(v){const s=String(v??"");return /[;"\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
+function downloadCsv(name,headers,rows){
+ const content="\ufeff"+[headers,...rows].map(r=>r.map(csvEscape).join(";")).join("\n"),blob=new Blob([content],{type:"text/csv;charset=utf-8"});triggerBlobDownload(blob,name)
+}
+function exportRouteExpenses(){
+ const rows=[];(state.routeRuns||[]).forEach(r=>(r.expenses||[]).forEach(e=>rows.push([r.date||"",routeExpenseLabel(e.category),Number(e.amount||0).toFixed(2),e.date||"",e.note||"",r.status||"",Number(r.plannedCost||0).toFixed(2),Number(routeRunExpenseTotal(r)||0).toFixed(2)])));
+ if(!rows.length){alert("Ainda não existem despesas reais de rota para exportar.");return}
+ downloadCsv(`AX-Baterias-Despesas-Rotas-${today()}.csv`,["Data da rota","Categoria","Valor","Data da despesa","Observação","Status da rota","Custo planejado","Total real da rota"],rows)
+}
 function receiptFileName(s){return `AX-Baterias-Pedido-${s.orderNumber||"sem-numero"}.png`}
 function formatPhone(v){let d=String(v||"").replace(/\D/g,"");if(d.startsWith("55")&&d.length>=12)d=d.slice(2);if(d.length===11)return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;if(d.length===10)return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;return v||""}
 function currentSellerName(){return (state.config.sellerName||currentUser?.user_metadata?.full_name||currentUser?.email?.split("@")[0]||"Alex").trim()}
