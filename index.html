@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.15">
-<meta name="ax-build" content="2026-09-16-v5.15-sales-client-filter-duplicates">
+<meta name="ax-version" content="5.16">
+<meta name="ax-build" content="2026-09-17-v5.16-kf-segregation">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -105,6 +105,11 @@ body.auth-locked>.appbar,body.auth-locked>.wrap,body.auth-locked>.fab,body.auth-
 .scrapRow{display:grid;grid-template-columns:1.35fr .55fr .8fr auto;gap:7px;margin-bottom:7px}
 .scrapDiscount{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:11px;white-space:nowrap}
 .hidden{display:none!important}
+.kf-sale-flag{display:flex;align-items:flex-start;gap:10px;margin-top:11px;padding:12px 13px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:13px;cursor:pointer}
+.kf-sale-flag input{width:19px;height:19px;margin:1px 0 0;accent-color:#2563eb;flex:0 0 auto}
+.kf-sale-flag span{display:flex;flex-direction:column;gap:3px;min-width:0}.kf-sale-flag b{font-size:12px;color:#1e3a8a}.kf-sale-flag small{font-size:10px;line-height:1.35;color:#475467}
+.badge.kf{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.kf-finance-note{margin-top:8px;padding:9px 10px;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:10px;line-height:1.4}
 .sale-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .sale-summary .mini{background:#f9fafb}
 .scrap-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
@@ -902,7 +907,7 @@ html,body{max-width:100%;overflow-x:hidden}
 }
 
 
-/* v5.15 — filtro de vendas por cliente e duplicidade */
+/* v5.16 — segregação de vendas processadas pela máquina KF */
 .sales-client-filter{
   background:#fff;
   border:1px solid var(--line);
@@ -982,7 +987,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.15</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.16</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -994,8 +999,9 @@ html,body{max-width:100%;overflow-x:hidden}
     <button id="homeFinanceToggle" class="visibility-btn" onclick="toggleHomeFinance()">👁 Ver valores</button>
   </div>
   <div class="hero">
-    <div class="metric"><div class="label">Vendas no mês</div><div class="value" id="hSales">R$ 0</div><div class="sub">faturamento</div></div>
-    <div class="metric"><div class="label">A receber</div><div class="value" id="hOpen">R$ 0</div><div class="sub">parcelas abertas</div></div>
+    <div class="metric"><div class="label">Vendas AX no mês</div><div class="value" id="hSales">R$ 0</div><div class="sub">faturamento da AX</div></div>
+    <div class="metric"><div class="label">Vendas via KF</div><div class="value" id="hKfSales">R$ 0</div><div class="sub">fora do financeiro AX</div></div>
+    <div class="metric"><div class="label">A receber</div><div class="value" id="hOpen">R$ 0</div><div class="sub">parcelas abertas da AX</div></div>
     <div class="metric"><div class="label">Vencido</div><div class="value" id="hOver">R$ 0</div><div class="sub">cobrar</div></div>
     <div class="metric"><div class="label">Garantias 90 dias</div><div class="value" id="hWar">0</div><div class="sub">ocorrências registradas</div></div>
   </div>
@@ -1099,7 +1105,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.15</div>
+  <div class="version-note">AX Baterias • v5.16</div>
 </section>
 
 <section id="clients" class="screen">
@@ -1238,9 +1244,9 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.15</span></div>
-    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.15</b></div>
-    <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">15/09/2026</b></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.16</span></div>
+    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.16</b></div>
+    <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">17/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
     <div id="systemUpdateMessage" class="muted" style="margin-top:8px">O botão busca o index.html publicado sem usar o cache.</div>
     <div style="margin-top:10px"><button id="systemUpdateBtn" class="btn" type="button" onclick="forceSystemUpdate()">↻ Atualizar sistema</button></div>
@@ -1503,6 +1509,11 @@ html,body{max-width:100%;overflow-x:hidden}
       <div id="paymentRows"></div>
       <button class="btn secondary" type="button" onclick="addPaymentRow()">＋ Adicionar forma de pagamento</button><div class="payment-autofill-note">A nova forma recebe automaticamente o valor que ainda falta distribuir.</div>
     </div>
+
+    <label class="kf-sale-flag" for="sKFSale">
+      <input id="sKFSale" type="checkbox" onchange="updateSale()">
+      <span><b>Cartão passado direto na máquina da KF</b><small>Marque quando o pagamento desta venda for processado pela KF. O pedido continua no histórico comercial e movimenta o estoque, mas fica segregado do faturamento, margem, cobranças e Saúde da AX.</small></span>
+    </label>
   </div>
 </div>
 
@@ -1673,8 +1684,8 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.15';
-const AX_RELEASE_DATE='2026-09-15';
+const AX_APP_VERSION='5.16';
+const AX_RELEASE_DATE='2026-09-17';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
 const TEST_MODE=false;
@@ -1721,7 +1732,7 @@ function ensureState(){
  state.collectionTemplates=Object.assign(copy(defaults.collectionTemplates),state.collectionTemplates||{});
  if(state.collectionTemplate&&!state.collectionTemplates.upcoming)state.collectionTemplates.upcoming=state.collectionTemplate;
  state.clients.forEach(c=>{if(c.contact==null)c.contact=""});
- state.sales.forEach(s=>{if(s.freeAdjustmentValue==null)s.freeAdjustmentValue=0;if(!s.renegotiatedDebts)s.renegotiatedDebts=[];if(s.renegotiatedDebtTotal==null)s.renegotiatedDebtTotal=0;if(s.collectionTotal==null)s.collectionTotal=Number(s.total||0)});
+ state.sales.forEach(s=>{if(s.freeAdjustmentValue==null)s.freeAdjustmentValue=0;if(!s.renegotiatedDebts)s.renegotiatedDebts=[];if(s.renegotiatedDebtTotal==null)s.renegotiatedDebtTotal=0;if(s.collectionTotal==null)s.collectionTotal=Number(s.total||0);if(s.isKFSale==null)s.isKFSale=false});
  state.warranties.forEach(w=>{if(w.type==="Sucata")return;if(!w.batteryDisposition)w.batteryDisposition="pending";if(w.batteryValue==null)w.batteryValue=Number(w.creditValue||0)||Number(state.products.find(p=>p.id===w.productId)?.prices?.[Number(state.clients.find(c=>c.id===w.clientId)?.price||0)]||0)});
  state.routeRuns.forEach(r=>{r.expenses=r.expenses||[];r.attendedClientIds=r.attendedClientIds||[];if(!r.source)r.source="smart"});
  migrateOrderNumbers();
@@ -1916,7 +1927,7 @@ function pendingDraftCollectionAmount(saleId,installmentId){return pendingSaleWa
 function renderSaleOpenCollections(){
  if(!window.swqOpenCollections)return;if(swqCreditUse.value!=="collection"){swqOpenCollections.classList.add("hidden");return}
  const clientId=sClient.value;if(!clientId){swqOpenCollections.innerHTML='<div class="sale-credit-empty">Selecione o cliente do pedido.</div>';swqOpenCollections.classList.remove("hidden");return}
- const rows=[];state.sales.filter(s=>s.clientId===clientId&&s.id!==sId.value).forEach(s=>{effectiveInstallments(s).forEach(p=>{const pending=pendingDraftCollectionAmount(s.id,p.id),available=Math.max(0,Number(p.effectiveAmount||0)-pending);if(!p.paid&&!p.renegotiatedToSaleId&&available>.009)rows.push({s,p,available})})});rows.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));
+ const rows=[];state.sales.filter(s=>s.clientId===clientId&&s.id!==sId.value&&isAXFinancialSale(s)).forEach(s=>{effectiveInstallments(s).forEach(p=>{const pending=pendingDraftCollectionAmount(s.id,p.id),available=Math.max(0,Number(p.effectiveAmount||0)-pending);if(!p.paid&&!p.renegotiatedToSaleId&&available>.009)rows.push({s,p,available})})});rows.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));
  if(!rows.length){swqTargetSale.value="";swqTargetInstallment.value="";swqOpenCollections.innerHTML='<div class="sale-credit-empty"><b>Nenhuma cobrança em aberto.</b><br>Este cliente não possui parcela pendente para receber o crédito.</div>';swqOpenCollections.classList.remove("hidden");return}
  const selectedSale=swqTargetSale.value,selectedPart=swqTargetInstallment.value;swqOpenCollections.innerHTML='<div class="quick-destination-title" style="margin-top:0">Escolha a cobrança</div>'+rows.map(({s,p,available})=>{const active=s.id===selectedSale&&p.id===selectedPart,grp=p.groupTotal||s.installments?.length||1;return `<button type="button" class="quick-open-collection ${active?"active":""}" onclick="selectSaleWarrantyOpenCollection('${s.id}','${p.id}')"><div class="quick-open-collection-top"><div><b>Pedido ${esc(s.orderNumber||"—")} • parcela ${p.groupNumber||p.number}/${grp}</b><small>Vencimento ${fmt(p.due)}</small></div><strong>${brl(available)}</strong></div><small>Saldo disponível para abatimento</small></button>`}).join("");swqOpenCollections.classList.remove("hidden")
 }
@@ -1966,7 +1977,7 @@ function addPaymentRow(data={}){
 }
 function setFreeAdjustmentMode(on,silent=false){freeAdjNo.classList.toggle("active",!on);freeAdjYes.classList.toggle("active",on);freeAdjFields.classList.toggle("hidden",!on);if(!on&&!silent){sFreeAdjustmentValue.value="";sFreeAdjustmentReason.value=""}if(!silent)updateSale()}
 function currentFreeAdjustment(){return freeAdjFields.classList.contains("hidden")?0:Math.max(0,Number(sFreeAdjustmentValue.value||0))}
-function debtRowsForClient(clientId,currentSaleId=""){const rows=[];state.sales.filter(s=>s.clientId===clientId&&s.id!==currentSaleId).forEach(s=>effectiveInstallments(s).forEach(p=>{if(p.paid||Number(p.effectiveAmount||0)<=.009)return;if(p.renegotiatedToSaleId&&p.renegotiatedToSaleId!==currentSaleId)return;rows.push({s,p,amount:Number(p.effectiveAmount||0)})}));return rows.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""))}
+function debtRowsForClient(clientId,currentSaleId=""){const rows=[];state.sales.filter(s=>s.clientId===clientId&&s.id!==currentSaleId&&isAXFinancialSale(s)).forEach(s=>effectiveInstallments(s).forEach(p=>{if(p.paid||Number(p.effectiveAmount||0)<=.009)return;if(p.renegotiatedToSaleId&&p.renegotiatedToSaleId!==currentSaleId)return;rows.push({s,p,amount:Number(p.effectiveAmount||0)})}));return rows.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""))}
 function selectedRenegotiatedDebtRows(){const clientId=sClient.value,currentId=sId.value||"",all=debtRowsForClient(clientId,currentId),keys=new Set(pendingRenegotiatedDebts.map(x=>`${x.saleId}::${x.installmentId}`));return all.filter(x=>keys.has(`${x.s.id}::${x.p.id}`))}
 function selectedRenegotiatedDebtTotal(){return Math.round(selectedRenegotiatedDebtRows().reduce((a,x)=>a+x.amount,0)*100)/100}
 function toggleSaleDebtPanel(){const p=document.getElementById("saleDebtPanel");if(p)p.classList.toggle("hidden")}
@@ -2085,26 +2096,28 @@ function fillStandaloneWarrantySuggestedCredit(force=false){
 }
 function updateWarrantyResolutionFields(){const credit=wResolution.value==="credit";wCreditDestinationFields.classList.toggle("hidden",!credit);if(credit)updateWarrantyOpenSales();if(!wId.value||!Number(wCreditValue.value||0))fillStandaloneWarrantySuggestedCredit(true)}
 function updateWarrantyOpenSales(){
- const show=wResolution.value==="credit";wOpenSaleField.classList.toggle("hidden",!show);if(!show)return;const currentWarrantyId=wId.value,rows=[];state.sales.filter(s=>s.clientId===wClient.value).forEach(s=>{effectiveInstallments(s,currentWarrantyId).forEach(p=>{if(!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009)rows.push({s,p})})});rows.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));wOpenSale.innerHTML='<option value="">Selecione</option>'+rows.map(({s,p})=>`<option value="${s.id}::${p.id}">Pedido ${esc(s.orderNumber||"—")} • parcela ${p.groupNumber||p.number}/${p.groupTotal||s.installments.length} • ${fmt(p.due)} • saldo ${brl(p.effectiveAmount)}</option>`).join("");wOpenSaleHint.textContent=rows.length?"O crédito será abatido exatamente desta cobrança.":"Este cliente não possui cobrança em aberto."
+ const show=wResolution.value==="credit";wOpenSaleField.classList.toggle("hidden",!show);if(!show)return;const currentWarrantyId=wId.value,rows=[];state.sales.filter(s=>s.clientId===wClient.value&&isAXFinancialSale(s)).forEach(s=>{effectiveInstallments(s,currentWarrantyId).forEach(p=>{if(!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009)rows.push({s,p})})});rows.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));wOpenSale.innerHTML='<option value="">Selecione</option>'+rows.map(({s,p})=>`<option value="${s.id}::${p.id}">Pedido ${esc(s.orderNumber||"—")} • parcela ${p.groupNumber||p.number}/${p.groupTotal||s.installments.length} • ${fmt(p.due)} • saldo ${brl(p.effectiveAmount)}</option>`).join("");wOpenSaleHint.textContent=rows.length?"O crédito será abatido exatamente desta cobrança.":"Este cliente não possui cobrança em aberto."
 }
 function openSaleSheet(saleId=""){
- pendingSaleWarrantyDrafts=[];pendingRenegotiatedDebts=[];saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=0;sOtherCost.value=0;saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";setFreeAdjustmentMode(Number(s?.freeAdjustmentValue||0)>0,true);sFreeAdjustmentType.value=s?.freeAdjustmentType||"discount";sFreeAdjustmentValue.value=Number(s?.freeAdjustmentValue||0)||"";sFreeAdjustmentReason.value=s?.freeAdjustmentReason||"";pendingRenegotiatedDebts=(s?.renegotiatedDebts||[]).map(x=>({saleId:x.sourceSaleId,installmentId:x.installmentId}));if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));saleWarrantyQuickForm.classList.add("hidden");renderSaleTablePricePreview();renderSaleWarrantyCredits();renderSaleWarrantyDrafts();renderSaleClientDebt();updateSale();openSheet("saleSheet")
+ pendingSaleWarrantyDrafts=[];pendingRenegotiatedDebts=[];saleForm.reset();sId.value=saleId;const s=state.sales.find(s=>s.id===saleId);saleAdminResultVisible=false;toggleSaleAdminResult(false);sRouteCost.value=0;sOtherCost.value=0;saleSheetTitle.textContent=s?"Editar venda":"Nova venda";saleOrderHint.textContent=s?.orderNumber?`Pedido ${s.orderNumber}`:"O número do pedido será criado ao finalizar.";sDate.value=s?.date||today();sTable.value=s?.priceTable||state.clients.find(c=>c.id===s?.clientId)?.price||"0";sNote.value=s?.note||"";sKFSale.checked=!!s?.isKFSale;saleItems.innerHTML="";saleScrapItems.innerHTML="";paymentRows.innerHTML="";sClient.value="";sClientSearch.value="";sClientSelectedHint.textContent="Selecione um cliente cadastrado.";setFreeAdjustmentMode(Number(s?.freeAdjustmentValue||0)>0,true);sFreeAdjustmentType.value=s?.freeAdjustmentType||"discount";sFreeAdjustmentValue.value=Number(s?.freeAdjustmentValue||0)||"";sFreeAdjustmentReason.value=s?.freeAdjustmentReason||"";pendingRenegotiatedDebts=(s?.renegotiatedDebts||[]).map(x=>({saleId:x.sourceSaleId,installmentId:x.installmentId}));if(s?.clientId)selectSaleClient(s.clientId);if(s?.priceTable!=null)sTable.value=String(s.priceTable);const splitMode=s?.paymentSplitMode||(s?.payments?.length>1?"multiple":"single");setPaymentSplitMode(splitMode,true);const mode=s?.paymentMode==="multiple"?"ato":(s?.paymentMode||(s?.installments?.length>1||["Boleto","Cartão"].includes(s?.method)?"prazo":"ato"));setPaymentMode(mode,s?.method==="Múltiplas formas"?"PIX":(s?.method||"PIX"),true);sParts.value=s?.payments?.[0]?.installments?.length||s?.installments?.length||1;sDue.value=s?.payments?.[0]?.installments?.[0]?.due||s?.installments?.[0]?.due||today();sPaid.value=s&&salePaid(s)?"yes":"no";if(splitMode==="multiple"){paymentRows.innerHTML="";(s?.payments||[]).forEach(p=>addPaymentRow({id:p.id,method:p.method,amount:p.amount,mode:p.mode,installments:p.installments,parts:p.installments?.length,due:p.installments?.[0]?.due,paid:p.installments?.every(x=>x.paid)}));if(!paymentRows.children.length)addPaymentRow()}if(s?.items?.length)s.items.forEach(i=>addSaleItem(i.productId,i.qty));else addSaleItem();const scraps=s?.scrapItems||[];setSaleScrapMode(scraps.length>0,true);scraps.forEach(i=>addSaleScrapItem(i.typeId,i.qty));saleWarrantyQuickForm.classList.add("hidden");renderSaleTablePricePreview();renderSaleWarrantyCredits();renderSaleWarrantyDrafts();renderSaleClientDebt();updateSale();openSheet("saleSheet")
 }
 function openWarrantySheet(warrantyId=""){
  warrantyForm.reset();wId.value=warrantyId;const w=state.warranties.find(w=>w.id===warrantyId);warrantySheetTitle.textContent=w?"Editar garantia":"Nova garantia";wClient.value=w?.clientId||"";wProduct.value=w?.productId||state.products.find(p=>p.name===w?.model)?.id||"";wQty.value=Number(w?.qty||1);wCode.value=w?.code||"";wCollect.value=w?.collect||today();wResolution.value=(w?.solution||w?.resolution)==="credit"?"credit":"exchange";wCreditValue.value=Number(w?.batteryValue||w?.creditValue||0);wCreditHint.textContent="";wCreditDestination.value="open";wNote.value=w?.note||"";updateWarrantyResolutionFields();updateWarrantyOpenSales();const a=w?.applications?.find(a=>a.kind==="collection"||a.kind==="open");if(a?.installmentId)wOpenSale.value=`${a.saleId}::${a.installmentId}`;renderWarrantyCodeHint("standalone");openSheet("warrantySheet")
 }
-function saleOpen(s){return Math.max(0,effectiveInstallments(s).reduce((a,p)=>a+(!p.paid&&!p.renegotiatedToSaleId?Number(p.effectiveAmount||0):0),0))}
-function salePaid(s){const parts=effectiveInstallments(s);if(!parts.length)return Number(s.collectionTotal??s.total??0)<=.009;return parts.every(p=>p.paid||Number(p.effectiveAmount||0)<=.009)}
-function saleOverdue(s){return effectiveInstallments(s).some(p=>!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009&&p.due&&p.due<today())}
+function isKFSale(s){return !!s?.isKFSale}
+function isAXFinancialSale(s){return !isKFSale(s)}
+function saleOpen(s){if(isKFSale(s))return 0;return Math.max(0,effectiveInstallments(s).reduce((a,p)=>a+(!p.paid&&!p.renegotiatedToSaleId?Number(p.effectiveAmount||0):0),0))}
+function salePaid(s){if(isKFSale(s))return true;const parts=effectiveInstallments(s);if(!parts.length)return Number(s.collectionTotal??s.total??0)<=.009;return parts.every(p=>p.paid||Number(p.effectiveAmount||0)<=.009)}
+function saleOverdue(s){if(isKFSale(s))return false;return effectiveInstallments(s).some(p=>!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009&&p.due&&p.due<today())}
 function clientStats(id){
- const sales=state.sales.filter(s=>s.clientId===id).sort((a,b)=>a.date.localeCompare(b.date));
+ const sales=state.sales.filter(s=>s.clientId===id).sort((a,b)=>a.date.localeCompare(b.date)),axSales=sales.filter(isAXFinancialSale);
  const ticket=sales.length?sales.reduce((a,s)=>a+Number(s.total),0)/sales.length:0;
- const avgMargin=sales.length?sales.reduce((a,s)=>a+Number(s.marginValue||0),0)/sales.length:0;
+ const avgMargin=axSales.length?axSales.reduce((a,s)=>a+Number(s.marginValue||0),0)/axSales.length:0;
  const dates=[...new Set(sales.map(s=>s.date))];let avgInterval=null;
  if(dates.length>=2){const gaps=[];for(let i=1;i<dates.length;i++)gaps.push(days(dates[i-1],dates[i]));avgInterval=Math.round(gaps.reduce((a,b)=>a+b,0)/gaps.length)}
  const c=state.clients.find(c=>c.id===id);const interval=avgInterval||Number(c?.interval||30);const last=dates.at(-1)||null;const next=last?addDays(last,interval):null;
- const open=sales.reduce((a,s)=>a+saleOpen(s),0);const visits=state.visits.filter(v=>v.clientId===id);const conv=visits.length?visits.filter(v=>v.result==="Venda").length/visits.length:1;
- const ws=warrantyStats(id,365),warrantyPerOrder=ws.salesCount?Number(ws.routeImpact??ws.impact)/ws.salesCount:0,netAvgMargin=Math.max(0,avgMargin-warrantyPerOrder);
+ const open=axSales.reduce((a,s)=>a+saleOpen(s),0);const visits=state.visits.filter(v=>v.clientId===id);const conv=visits.length?visits.filter(v=>v.result==="Venda").length/visits.length:1;
+ const ws=warrantyStats(id,365),warrantyPerOrder=axSales.length?Number(ws.routeImpact??ws.impact)/axSales.length:0,netAvgMargin=Math.max(0,avgMargin-warrantyPerOrder);
  return {ticket,avgMargin,netAvgMargin,warrantyImpactPerOrder:warrantyPerOrder,warrantyStats:ws,avgInterval,interval,last,next,open,orders:sales.length,visits:visits.length,conv}
 }
 function saleCostValue(s){return (s.items||[]).reduce((a,i)=>a+Number(i.cost||0),0)}
@@ -2437,7 +2450,7 @@ function businessHealthAnalysis(){
  ensureConfig();const periods=fortnightFinancialRows(6),active=periods.filter(r=>r.revenue>0),totalRevenue=active.reduce((a,r)=>a+r.revenue,0),totalMargin=active.reduce((a,r)=>a+r.margin,0),avgMargin=totalRevenue>0?totalMargin/totalRevenue*100:0;
  const avgFortnightRevenue=active.length?totalRevenue/active.length:0,expectedRevenue=avgFortnightRevenue*2,avgVariableFortnight=active.length?active.reduce((a,r)=>a+r.variableCosts,0)/active.length:0,avgVariableMonthly=avgVariableFortnight*2,fixedCosts=fixedCostsMonthlyTotal(),target=Number(state.config?.monthlyProfitTarget||0),requiredMargin=expectedRevenue>0?(avgVariableMonthly+fixedCosts+target)/expectedRevenue*100:0,gap=avgMargin-requiredMargin,estimatedMonthlyResult=expectedRevenue*avgMargin/100-avgVariableMonthly-fixedCosts;
  const lowRevenue=active.flatMap(r=>r.ops).filter(o=>o.rentability<Number(state.config?.orderRentabilityReference??12)).reduce((a,o)=>a+o.commercialRevenue,0),lowMarginShare=totalRevenue>0?lowRevenue/totalRevenue*100:0;
- const overdue=state.sales.reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0),overdueRatio=expectedRevenue>0?overdue/expectedRevenue*100:0;
+ const overdue=state.sales.filter(isAXFinancialSale).reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0),overdueRatio=expectedRevenue>0?overdue/expectedRevenue*100:0;
  let status="setup",statusLabel="CONFIGURAR",statusEmoji="⚙️";if(fixedCosts>0&&expectedRevenue>0){if(gap>=2){status="good";statusLabel="BOA";statusEmoji="🟢"}else if(gap>=-2){status="warn";statusLabel="ATENÇÃO";statusEmoji="🟡"}else{status="bad";statusLabel="CRÍTICA";statusEmoji="🔴"}}
  const helping=[],hurting=[];if(avgMargin>=Number(state.config?.orderRentabilityReference??12))helping.push(`A margem média comercial está em <b>${avgMargin.toFixed(1)}%</b>.`);if(lowMarginShare<=25&&totalRevenue>0)helping.push("A maior parte do faturamento recente veio de pedidos com margem adequada.");if(overdueRatio<5&&expectedRevenue>0)helping.push("O valor vencido está controlado em relação ao faturamento esperado.");
  if(lowMarginShare>25)hurting.push(`<b>${lowMarginShare.toFixed(0)}%</b> do faturamento recente veio de pedidos abaixo da referência comercial.`);if(avgVariableMonthly>0)hurting.push(`Os custos variáveis reais equivalem a cerca de <b>${brl(avgVariableMonthly)}</b> por mês no histórico recente.`);if(overdueRatio>=10)hurting.push(`O vencido equivale a cerca de <b>${overdueRatio.toFixed(1)}%</b> do faturamento mensal esperado.`);
@@ -2477,7 +2490,7 @@ function taxForFortnight(period){
 function warrantyImpactBetween(start,end){return warrantyImpactEvents().filter(e=>(e.date||"")>=start&&(e.date||"")<=end).reduce((a,e)=>a+Number(e.amount||0),0)}
 function fortnightFinancialRows(count=6){
  return fortnightPeriods(count).map(p=>{
-   const sales=state.sales.filter(s=>(s.date||"")>=p.start&&(s.date||"")<=p.end),ops=sales.map(s=>saleOperationalBreakdown(s)),revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0),margin=ops.reduce((a,o)=>a+o.commercialMargin,0),marginPct=revenue>0?margin/revenue*100:0;
+   const sales=state.sales.filter(s=>isAXFinancialSale(s)&&(s.date||"")>=p.start&&(s.date||"")<=p.end),ops=sales.map(s=>saleOperationalBreakdown(s)),revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0),margin=ops.reduce((a,o)=>a+o.commercialMargin,0),marginPct=revenue>0?margin/revenue*100:0;
    const routeItems=routeExpensesBetween(p.start,p.end),routeCosts=routeItems.reduce((a,e)=>a+Number(e.amount||0),0),manualItems=manualExpensesBetween(p.start,p.end),manualCosts=manualItems.reduce((a,e)=>a+Number(e.amount||0),0),tax=taxForFortnight(p),warranty=warrantyImpactBetween(p.start,p.end),variableCosts=routeCosts+manualCosts+tax.amount+warranty,net=margin-variableCosts,requiredMarginPct=revenue>0?variableCosts/revenue*100:0;
    const status=revenue<=0?"setup":net<0?"bad":net<Math.max(100,variableCosts*.10)?"warn":"good";
    return {...p,sales,ops,revenue,margin,marginPct,routeItems,routeCosts,manualItems,manualCosts,tax,warranty,variableCosts,net,requiredMarginPct,status}
@@ -2490,7 +2503,7 @@ function variableCostBreakdownLabel(r){
 function financialRange(start,end,monthKey,started=true){
  if(!started)return {start,end,month:monthKey,started:false,revenue:0,margin:0,marginPct:0,routeCosts:0,manualCosts:0,tax:{amount:0,provisional:false,sourceMonth:""},warranty:0,variableCosts:0,net:0,requiredMarginPct:0,status:"future",sales:[]};
  const realEnd=end>today()?today():end;
- const sales=state.sales.filter(s=>(s.date||"")>=start&&(s.date||"")<=realEnd),ops=sales.map(s=>saleOperationalBreakdown(s));
+ const sales=state.sales.filter(s=>isAXFinancialSale(s)&&(s.date||"")>=start&&(s.date||"")<=realEnd),ops=sales.map(s=>saleOperationalBreakdown(s));
  const revenue=ops.reduce((a,o)=>a+o.commercialRevenue,0),margin=ops.reduce((a,o)=>a+o.commercialMargin,0),marginPct=revenue>0?margin/revenue*100:0;
  const routeItems=routeExpensesBetween(start,realEnd),routeCosts=routeItems.reduce((a,e)=>a+Number(e.amount||0),0);
  const manualItems=manualExpensesBetween(start,realEnd),manualCosts=manualItems.reduce((a,e)=>a+Number(e.amount||0),0);
@@ -2557,15 +2570,16 @@ function renderHomeFinanceChart(){
  const detailParts=[];const qs=[cur.q1,cur.q2].filter(q=>q.started);const route=qs.reduce((a,q)=>a+q.routeCosts,0),manual=qs.reduce((a,q)=>a+q.manualCosts,0),tax=qs.reduce((a,q)=>a+q.tax.amount,0),warranty=qs.reduce((a,q)=>a+q.warranty,0);
  if(route>0)detailParts.push(`viagens ${brl(route)}`);if(manual>0)detailParts.push(`taxas/outros ${brl(manual)}`);if(tax>0)detailParts.push(`impostos ${brl(tax)}`);if(warranty>0)detailParts.push(`garantias ${brl(warranty)}`);
  const costDetail=detailParts.length?detailParts.join(" • "):"Nenhum custo variável real registrado no mês até agora.";
- homeFinanceChart.innerHTML=`<div class="month-dashboard"><div class="month-main-head"><div><div class="month-main-title">${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas do mês: ${brl(cur.revenue)}</div></div><span class="month-status ${status}">${emoji} ${statusLabel}</span></div><div class="month-main-kpis"><div class="month-kpi"><span>Margem gerada</span><b>${brl(cur.margin)}</b></div><div class="month-kpi"><span>Custos variáveis</span><b class="${cur.variableCosts>cur.margin?"rent-bad":""}">${brl(cur.variableCosts)}</b></div><div class="month-kpi result ${status}"><span>${cur.net>=0?"Sobra":"Falta"}</span><b>${brl(Math.abs(cur.net))}</b></div></div><div class="month-main-message ${status}">${headline}<div class="muted" style="margin-top:6px">${costDetail}</div></div><div class="month-fortnight-title">Como o mês está se formando</div><div class="month-fortnights">${fortnightMiniCard(cur.q1,"1ª quinzena")}${fortnightMiniCard(cur.q2,"2ª quinzena")}</div><div class="month-reading"><div><span>Margem média das vendas</span><b class="rent-${cur.marginPct>=Number(state.config?.orderRentabilityReference??12)?"good":"bad"}">${cur.marginPct.toFixed(1)}%</b></div><div><span>Margem necessária para cobrir os variáveis</span><b class="rent-${cur.marginPct>=cur.requiredMarginPct?"good":"bad"}">${cur.requiredMarginPct.toFixed(1)}%</b></div></div>${renderMonthEvolution(rows)}</div>`
+ const kfMonthTotal=state.sales.filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===cur.month).reduce((a,s)=>a+Number(s.total||0),0);
+ homeFinanceChart.innerHTML=`<div class="month-dashboard"><div class="month-main-head"><div><div class="month-main-title">${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas AX do mês: ${brl(cur.revenue)}${kfMonthTotal>0?` • via KF: ${brl(kfMonthTotal)} (segregado)`:""}</div></div><span class="month-status ${status}">${emoji} ${statusLabel}</span></div><div class="month-main-kpis"><div class="month-kpi"><span>Margem gerada</span><b>${brl(cur.margin)}</b></div><div class="month-kpi"><span>Custos variáveis</span><b class="${cur.variableCosts>cur.margin?"rent-bad":""}">${brl(cur.variableCosts)}</b></div><div class="month-kpi result ${status}"><span>${cur.net>=0?"Sobra":"Falta"}</span><b>${brl(Math.abs(cur.net))}</b></div></div><div class="month-main-message ${status}">${headline}<div class="muted" style="margin-top:6px">${costDetail}</div></div><div class="month-fortnight-title">Como o mês está se formando</div><div class="month-fortnights">${fortnightMiniCard(cur.q1,"1ª quinzena")}${fortnightMiniCard(cur.q2,"2ª quinzena")}</div><div class="month-reading"><div><span>Margem média das vendas</span><b class="rent-${cur.marginPct>=Number(state.config?.orderRentabilityReference??12)?"good":"bad"}">${cur.marginPct.toFixed(1)}%</b></div><div><span>Margem necessária para cobrir os variáveis</span><b class="rent-${cur.marginPct>=cur.requiredMarginPct?"good":"bad"}">${cur.requiredMarginPct.toFixed(1)}%</b></div></div>${renderMonthEvolution(rows)}</div>`
 }
 function renderHome(){
- const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),
- monthSales=month.reduce((a,s)=>a+Number(s.total),0),
- openValue=state.sales.reduce((a,s)=>a+saleOpen(s),0),
- overValue=state.sales.reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0);
- hSales.textContent=moneyPrivate(monthSales);hOpen.textContent=moneyPrivate(openValue);hOver.textContent=moneyPrivate(overValue);
- hSales.classList.toggle("money-mask",!homeFinanceVisible);hOpen.classList.toggle("money-mask",!homeFinanceVisible);hOver.classList.toggle("money-mask",!homeFinanceVisible);homeFinanceToggle.textContent=homeFinanceVisible?"🙈 Ocultar valores":"👁 Ver valores";
+ const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),monthAX=month.filter(isAXFinancialSale),monthKF=month.filter(isKFSale),
+ monthSales=monthAX.reduce((a,s)=>a+Number(s.total),0),kfMonthSales=monthKF.reduce((a,s)=>a+Number(s.total),0),
+ openValue=state.sales.filter(isAXFinancialSale).reduce((a,s)=>a+saleOpen(s),0),
+ overValue=state.sales.filter(isAXFinancialSale).reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0);
+ hSales.textContent=moneyPrivate(monthSales);hKfSales.textContent=moneyPrivate(kfMonthSales);hOpen.textContent=moneyPrivate(openValue);hOver.textContent=moneyPrivate(overValue);
+ hSales.classList.toggle("money-mask",!homeFinanceVisible);hKfSales.classList.toggle("money-mask",!homeFinanceVisible);hOpen.classList.toggle("money-mask",!homeFinanceVisible);hOver.classList.toggle("money-mask",!homeFinanceVisible);homeFinanceToggle.textContent=homeFinanceVisible?"🙈 Ocultar valores":"👁 Ver valores";
 
  const warranty90Start=addDays(today(),-90),
  warranty90=state.warranties.filter(w=>w.type!=="Sucata"&&(w.collect||"")>=warranty90Start),
@@ -2813,8 +2827,8 @@ function renderWarranties(){
  warrantyList.innerHTML=state.warranties.map(w=>{const c=state.clients.find(c=>c.id===w.clientId),limit=w.type==="Garantia"&&w.mfg?addMonths(w.mfg,9):null,left=limit?days(today(),limit):null;return `<div class="listitem"><div><div class="title">${esc(c?.name||"Cliente")} • ${esc(w.model)}</div><div class="meta">${esc(w.type)} • coleta ${fmt(w.collect)} ${limit?`• limite ${fmt(limit)}`:""}</div></div><div style="text-align:right"><span class="badge ${left!=null&&left<=30?"warn":"good"}">${esc(w.status)}</span><div class="actions" style="justify-content:flex-end;margin-top:6px"><button class="btn secondary" onclick="openWarrantySheet('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWarranty('${w.id}')">Excluir</button></div></div></div>`}).join("")
 }
 function renderMonth(){
- const m=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),sold=m.reduce((a,s)=>a+Number(s.total),0),open=m.reduce((a,s)=>a+saleOpen(s),0);
- monthReport.innerHTML=`<div class="kpis3"><div class="mini"><b>${brl(sold)}</b><span>Vendas</span></div><div class="mini"><b>${brl(sold-open)}</b><span>Recebido</span></div><div class="mini"><b>${brl(open)}</b><span>A receber</span></div></div>`
+ const m=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),ax=m.filter(isAXFinancialSale),kf=m.filter(isKFSale),sold=ax.reduce((a,s)=>a+Number(s.total),0),kfSold=kf.reduce((a,s)=>a+Number(s.total),0),open=ax.reduce((a,s)=>a+saleOpen(s),0);
+ monthReport.innerHTML=`<div class="kpis3"><div class="mini"><b>${brl(sold)}</b><span>Vendas AX</span></div><div class="mini"><b>${brl(kfSold)}</b><span>Vendas via KF</span></div><div class="mini"><b>${brl(open)}</b><span>A receber AX</span></div></div><div class="kf-finance-note"><b>Venda KF fica no histórico comercial</b>, mas não compõe faturamento, margem, cobranças nem Saúde da AX.</div>`
 }
 function renderSettings(){ensureConfig();cfgKm.value=state.config.costKm;cfgWindow.value=state.config.window;cfgBase.value=state.config.base||"Osasco, SP, Brasil";cfgHotel.value=state.config.hotelCost;cfgVisitMinutes.value=state.config.visitMinutes;cfgMaxHours.value=state.config.maxDailyHours;cfgCompanyPhone.value=state.config.companyPhone||"";cfgMapsKey.value=state.config.googleMapsApiKey||"";mapsStatus.textContent=mapsConfigured()?"configurado":"não configurado";mapsStatus.className="badge "+(mapsConfigured()?"good":"warn")}
 
@@ -2859,19 +2873,20 @@ function renderSales(){
        </div>
        <div class="sales-card-badges">
          ${duplicate?'<span class="badge bad">⚠ Possível duplicidade</span>':""}
-         <span class="badge ${status[0]}">${status[1]}</span>
+         ${isKFSale(s)?'<span class="badge kf">KF • fora da AX</span>':""}
+         <span class="badge ${status[0]}">${isKFSale(s)?"Liquidação KF":status[1]}</span>
        </div>
      </div>
      ${duplicate?'<div class="sale-duplicate-warning"><b>Atenção:</b> existe outro pedido deste cliente, na mesma data, com os mesmos produtos, quantidades e valor. Confira antes de manter os dois.</div>':""}
      <div style="font-size:20px;font-weight:850">${brl(s.total)}</div>
      <div class="muted" style="margin-top:4px">Venda atual${disc?` • descontos -${brl(disc)}`:""}${Number(s.warrantyCreditTotal||0)?` • garantia -${brl(s.warrantyCreditTotal)}`:""} • em aberto ${brl(saleOpen(s))}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior renegociado ${brl(s.renegotiatedDebtTotal)} • total da cobrança ${brl(collectionTotal)}`:""}</div>
-     <div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">Custo das baterias: ${brl(op.productCost)} • Margem comercial: <b class="rent-${cls}">${brl(op.commercialMargin)}</b> • Margem do pedido: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b>${op.warrantyImpact>0?`<br>Impacto da garantia: <b>- ${brl(op.warrantyImpact)}</b> • Margem após garantia: <b class="rent-${op.economicResult<0?"bad":"good"}">${brl(op.economicResult)}</b>`:""}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior: <b>${brl(s.renegotiatedDebtTotal)}</b> — fora do faturamento e da margem.`:""}<br><span class="muted">Impostos, taxas e despesas de viagem são analisados no mês.</span></div></div>
+     <div id="saleResult_${s.id}" class="sensitive-card-result hidden"><div class="muted">${isKFSale(s)?'<div class="kf-finance-note"><b>Venda processada pela KF.</b> Valores abaixo ficam apenas para histórico comercial e não entram no financeiro da AX.</div>':""}Custo das baterias: ${brl(op.productCost)} • Margem comercial: <b class="rent-${cls}">${brl(op.commercialMargin)}</b> • Margem do pedido: <b class="rent-${cls}">${op.rentability.toFixed(1)}%</b>${op.warrantyImpact>0?`<br>Impacto da garantia: <b>- ${brl(op.warrantyImpact)}</b> • Margem após garantia: <b class="rent-${op.economicResult<0?"bad":"good"}">${brl(op.economicResult)}</b>`:""}${Number(s.renegotiatedDebtTotal||0)>0?`<br>Saldo anterior: <b>${brl(s.renegotiatedDebtTotal)}</b> — fora do faturamento e da margem.`:""}<br><span class="muted">Impostos, taxas e despesas de viagem são analisados no mês.</span></div></div>
      <div class="actions" style="margin-top:11px"><button class="btn blue" onclick="openReceipt('${s.id}')">Recibo</button><button class="btn secondary" onclick="toggleSaleCardResult('${s.id}',this)">👁 Resultado</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar</button><button class="btn danger" onclick="deleteSale('${s.id}')">Excluir</button></div>
    </div>`
  }).join("")
 }
 function renderCollections(){
- ensureState();collectionStatusFilters.innerHTML=[["all","Tudo"],["upcoming","A vencer"],["late","Atrasado"],["sent","Enviado"]].map(([k,l])=>`<button class="filter-btn ${collectionStatusFilter===k?"active":""}" onclick="setCollectionStatusFilter('${k}')">${l}</button>`).join("");const rows=[];state.sales.forEach(s=>effectiveInstallments(s).forEach(p=>{if(!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009)rows.push({s,p:{...p,amount:p.effectiveAmount}})}));let filtered=rows;if(collectionStatusFilter==="upcoming")filtered=rows.filter(x=>collectionStatus(x.p)==="upcoming");if(collectionStatusFilter==="late")filtered=rows.filter(x=>collectionStatus(x.p)==="late");if(collectionStatusFilter==="sent")filtered=rows.filter(x=>x.p.sent);filtered.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));if(!filtered.length){collectionsList.innerHTML='<div class="empty">Nenhuma cobrança nesse filtro.</div>'}else{collectionsList.innerHTML=filtered.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c),late=collectionStatus(p)==="late",grp=p.groupTotal||s.installments.length,hasWarranty=Number(p.warrantyCreditApplied||0)>.009;return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${c?.contact?`${esc(c.contact)} • `:""}${p.paymentMethod?esc(p.paymentMethod)+" • ":""}Parcela ${p.groupNumber||p.number}/${grp} • ${fmt(p.due)}</div></div><div class="actions"><span class="badge ${late?"bad":"warn"}">${late?"Atrasado":"A vencer"}</span>${p.sent?'<span class="badge good">Enviado</span>':""}</div></div><div class="muted" style="font-size:9px">Saldo a cobrar</div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div>${hasWarranty?`<div class="collection-credit-detail"><span>Valor original <b>${brl(p.originalAmount)}</b></span><span>Crédito de garantia <b>- ${brl(p.warrantyCreditApplied)}</b></span></div>`:""}<div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar venda</button></div></div>`}).join("")}collectionUpcomingTemplate.value=state.collectionTemplates.upcoming;collectionLateTemplate.value=state.collectionTemplates.late
+ ensureState();collectionStatusFilters.innerHTML=[["all","Tudo"],["upcoming","A vencer"],["late","Atrasado"],["sent","Enviado"]].map(([k,l])=>`<button class="filter-btn ${collectionStatusFilter===k?"active":""}" onclick="setCollectionStatusFilter('${k}')">${l}</button>`).join("");const rows=[];state.sales.filter(isAXFinancialSale).forEach(s=>effectiveInstallments(s).forEach(p=>{if(!p.paid&&!p.renegotiatedToSaleId&&Number(p.effectiveAmount||0)>.009)rows.push({s,p:{...p,amount:p.effectiveAmount}})}));let filtered=rows;if(collectionStatusFilter==="upcoming")filtered=rows.filter(x=>collectionStatus(x.p)==="upcoming");if(collectionStatusFilter==="late")filtered=rows.filter(x=>collectionStatus(x.p)==="late");if(collectionStatusFilter==="sent")filtered=rows.filter(x=>x.p.sent);filtered.sort((a,b)=>(a.p.due||"").localeCompare(b.p.due||""));if(!filtered.length){collectionsList.innerHTML='<div class="empty">Nenhuma cobrança nesse filtro.</div>'}else{collectionsList.innerHTML=filtered.map(({s,p})=>{const c=state.clients.find(c=>c.id===s.clientId),msg=collectionMsg(s,p,c),late=collectionStatus(p)==="late",grp=p.groupTotal||s.installments.length,hasWarranty=Number(p.warrantyCreditApplied||0)>.009;return `<div class="card"><div class="cardhead"><div><h3>${esc(c?.name||"Cliente")} <span class="order-tag">Pedido ${esc(s.orderNumber||"—")}</span></h3><div class="muted">${c?.contact?`${esc(c.contact)} • `:""}${p.paymentMethod?esc(p.paymentMethod)+" • ":""}Parcela ${p.groupNumber||p.number}/${grp} • ${fmt(p.due)}</div></div><div class="actions"><span class="badge ${late?"bad":"warn"}">${late?"Atrasado":"A vencer"}</span>${p.sent?'<span class="badge good">Enviado</span>':""}</div></div><div class="muted" style="font-size:9px">Saldo a cobrar</div><div style="font-size:20px;font-weight:850">${brl(p.amount)}</div>${hasWarranty?`<div class="collection-credit-detail"><span>Valor original <b>${brl(p.originalAmount)}</b></span><span>Crédito de garantia <b>- ${brl(p.warrantyCreditApplied)}</b></span></div>`:""}<div class="notice" style="margin:10px 0">${esc(msg)}</div><div class="actions"><button class="btn blue" onclick="openCollectionWhats('${s.id}','${p.id}')">WhatsApp</button><button class="btn secondary" onclick="toggleSent('${s.id}','${p.id}')">${p.sent?"Desmarcar envio":"Marcar enviado"}</button><button class="btn good" onclick="markPaid('${s.id}','${p.id}')">Recebido</button><button class="btn secondary" onclick="openSaleSheet('${s.id}')">Editar venda</button></div></div>`}).join("")}collectionUpcomingTemplate.value=state.collectionTemplates.upcoming;collectionLateTemplate.value=state.collectionTemplates.late
 }
 function renderClients(){
  const q=(clientSearch?.value||"").toLowerCase().trim(),list=state.clients.filter(c=>!q||c.name.toLowerCase().includes(q)||c.city.toLowerCase().includes(q)||(c.contact||"").toLowerCase().includes(q));
@@ -2975,9 +2990,11 @@ saleForm.addEventListener("submit",e=>{
    const proceed=confirm(`⚠ POSSÍVEL PEDIDO DUPLICADO\n\nJá existe o Pedido ${possibleDuplicate.orderNumber||"—"} para ${duplicateClient?.name||c.name}, em ${fmt(possibleDuplicate.date)}, com os mesmos produtos, quantidades e valor (${brl(possibleDuplicate.currentOrderTotal??possibleDuplicate.total)}).\n\nConfira se este pedido já foi lançado.\n\nDeseja salvar uma segunda venda mesmo assim?`);
    if(!proceed)return
  }
- let plan;try{plan=paymentPlanFromForm(collectionTotal,original)}catch(err){alert(err.message);return}if(original&&(original.installments||[]).some(p=>p.paid)&&Math.abs(Number(original.collectionTotal??original.total)-collectionTotal)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor da cobrança mudou. Deseja continuar e recalcular os pagamentos?"))return;
+ let plan;try{plan=paymentPlanFromForm(collectionTotal,original)}catch(err){alert(err.message);return}
+ const isKFSaleFlag=!!sKFSale.checked;if(isKFSaleFlag&&!(plan.payments||[]).some(p=>p.method==="Cartão")){alert("A marcação KF deve ser usada quando houver pagamento por Cartão. Selecione Cartão ou desmarque a opção da máquina KF.");return}
+ if(original&&(original.installments||[]).some(p=>p.paid)&&Math.abs(Number(original.collectionTotal??original.total)-collectionTotal)>.009&&!confirm("Esta venda já possui recebimento registrado e o valor da cobrança mudou. Deseja continuar e recalcular os pagamentos?"))return;
  const commercialMargin=commercialRevenue-cost,commercialRentability=commercialRevenue>0?commercialMargin/commercialRevenue*100:0;let savedSale;
- const common={clientId:c.id,date:sDate.value,method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),items,subtotal,scrapItems,scrapDiscount,freeAdjustmentType:freeAdjustmentValue>0?sFreeAdjustmentType.value:"",freeAdjustmentValue,freeAdjustmentReason:freeAdjustmentValue>0?sFreeAdjustmentReason.value.trim():"",warrantyCredits,warrantyCreditTotal,total:currentOrderTotal,currentOrderTotal,renegotiatedDebts,renegotiatedDebtTotal,collectionTotal,marginValue:commercialMargin,commercialRevenue,commercialResult:commercialMargin,commercialMargin,commercialRentability,routeCost:Number(original?.routeCost||0),otherCost:Number(original?.otherCost||0),paymentFeeRate:null,paymentFeeValue:Number(original?.paymentFeeValue||0),taxRate:Number(original?.taxRate||0),taxValue:Number(original?.taxValue||0),totalCosts:cost,operationalResult:commercialMargin,operationalRentability:commercialRentability,installments:plan.installments};
+ const common={clientId:c.id,date:sDate.value,method:plan.method,paymentMode:plan.paymentMode,paymentSplitMode:plan.paymentSplitMode,payments:plan.payments,priceTable:sTable.value,note:sNote.value.trim(),isKFSale:isKFSaleFlag,items,subtotal,scrapItems,scrapDiscount,freeAdjustmentType:freeAdjustmentValue>0?sFreeAdjustmentType.value:"",freeAdjustmentValue,freeAdjustmentReason:freeAdjustmentValue>0?sFreeAdjustmentReason.value.trim():"",warrantyCredits,warrantyCreditTotal,total:currentOrderTotal,currentOrderTotal,renegotiatedDebts,renegotiatedDebtTotal,collectionTotal,marginValue:commercialMargin,commercialRevenue,commercialResult:commercialMargin,commercialMargin,commercialRentability,routeCost:Number(original?.routeCost||0),otherCost:Number(original?.otherCost||0),paymentFeeRate:null,paymentFeeValue:Number(original?.paymentFeeValue||0),taxRate:Number(original?.taxRate||0),taxValue:Number(original?.taxValue||0),totalCosts:cost,operationalResult:commercialMargin,operationalRentability:commercialRentability,installments:plan.installments};
  if(original){(original.items||[]).forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)+Number(i.qty)});items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});Object.assign(original,common,{sellerName:original.sellerName||currentSellerName(),orderNumber:original.orderNumber||nextOrderNumber(sDate.value)});const v=state.visits.find(v=>v.saleId===original.id);if(v){v.clientId=c.id;v.date=sDate.value}else state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:original.id});savedSale=original}else{const sale={id:uid(),createdAt:nowIsoSP(),orderNumber:nextOrderNumber(sDate.value),sellerName:currentSellerName(),...common};state.sales.push(sale);items.forEach(i=>{const prod=state.products.find(p=>p.id===i.productId);if(prod)prod.qty=Number(prod.qty)-Number(i.qty)});state.visits.push({id:uid(),clientId:c.id,date:sDate.value,result:"Venda",saleId:sale.id});savedSale=sale}
  try{commitPendingSaleWarranties(savedSale)}catch(err){alert(err.message);return}syncSaleScrapTransactions(savedSale);syncWarrantyCreditApplications(savedSale);syncRenegotiatedDebtLinks(savedSale);pendingSaleWarrantyDrafts=[];pendingRenegotiatedDebts=[];smartRoutePlan=null;closeSheet("saleSheet");save();setTimeout(()=>openReceipt(savedSale.id),60)
 });
