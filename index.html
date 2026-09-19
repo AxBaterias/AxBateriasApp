@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.19">
-<meta name="ax-build" content="2026-09-18-v5.19-ux-routes-sales-health">
+<meta name="ax-version" content="5.20">
+<meta name="ax-build" content="2026-09-18-v5.20-home-health-sales-clean">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -1037,6 +1037,24 @@ html,body{max-width:100%;overflow-x:hidden}
  .sales-filter-compact{padding:9px}.sales-page-head .btn{padding:10px 12px}
 }
 
+
+
+/* v5.20 — home mais equilibrada, saúde visual e filtros de vendas sempre visíveis */
+.home-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:10px}.home-kpi-grid .metric{min-height:112px;display:flex;flex-direction:column;justify-content:center}.home-actions-title{font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:var(--muted);margin:3px 1px 7px}.home-quick-actions{margin-bottom:14px;gap:8px}.home-quick-actions button{padding:11px 12px;min-height:58px;display:flex;align-items:center;gap:9px}.home-quick-actions button span{display:inline-block;font-size:17px;margin:0}.home-quick-actions button b{font-size:10.5px;line-height:1.15}.health-card{padding-bottom:13px}
+
+/* Saúde: para onde foi o faturamento */
+.health-flow-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-top:2px}.health-flow-head b{display:block;font-size:13px}.health-flow-head span{display:block;font-size:8.5px;color:var(--muted);margin-top:2px;text-transform:capitalize}.health-flow-head strong{font-size:19px;white-space:nowrap}.health-sales-bar,.health-margin-bar{height:10px;border-radius:999px;overflow:hidden;display:flex;background:#f2f4f7;margin-top:9px}.health-sales-bar i,.health-margin-bar i{display:block;height:100%}.health-sales-bar .cost{background:#98a2b3}.health-sales-bar .margin{background:#12b76a}.health-margin-bar{height:8px;margin-top:9px}.health-margin-bar .variable{background:#f79009}.health-margin-bar .remain{background:#12b76a}.health-bar-legend{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:7.8px;color:#667085}.health-bar-legend.compact{font-size:7.5px}.health-bar-legend span{display:flex;align-items:center;gap:4px}.health-bar-legend .dot{width:7px;height:7px;border-radius:50%;display:inline-block}.health-bar-legend .dot.cost{background:#98a2b3}.health-bar-legend .dot.margin,.health-bar-legend .dot.remain{background:#12b76a}.health-bar-legend .dot.variable{background:#f79009}.health-money-flow{margin-top:10px;border-top:1px solid #eef0f2}.health-money-flow>div{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #eef0f2;font-size:8.8px}.health-money-flow>div:last-child{border-bottom:0}.health-money-flow .emphasis span,.health-money-flow .emphasis b{font-weight:900}.health-money-flow b{font-size:10px;text-align:right;white-space:nowrap}.health-money-flow b.negative{color:#b42318}.health-money-flow b.positive{color:#067647}.health-money-flow.compact{margin-top:5px}.health-balance-note{margin-top:9px;border-radius:11px;padding:9px 10px;font-size:9px;line-height:1.4;font-weight:700}.health-balance-note.warn{background:#fffaeb;color:#b54708;border:1px solid #fedf89}.health-balance-note.good{background:#ecfdf3;color:#067647;border:1px solid #abefc6}.health-target-note{font-size:8px;color:#667085;margin:7px 2px 0}.health-net-section{border-top:1px solid var(--line);margin-top:13px;padding-top:11px}.health-net-title{display:flex;justify-content:space-between;gap:8px;align-items:center}.health-net-title b{font-size:10px}.health-net-title span{font-size:7.5px;color:var(--muted)}.health-net-chart{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:7px}.health-net-col{text-align:center;min-width:0}.health-net-value{font-size:8px;font-weight:900;white-space:nowrap}.health-net-value.pos{color:#067647}.health-net-value.neg{color:#b42318}.health-net-zone{height:90px;position:relative;margin:3px 8px}.health-net-zero{position:absolute;left:0;right:0;top:50%;height:1px;background:#d0d5dd}.health-net-bar{position:absolute;left:50%;width:24px;transform:translateX(-50%);border-radius:6px}.health-net-bar.pos{bottom:50%;background:#12b76a;border-radius:6px 6px 0 0}.health-net-bar.neg{top:50%;background:#f04438;border-radius:0 0 6px 6px}.health-net-month{font-size:8px;font-weight:850;text-transform:capitalize}.health-net-note{font-size:7.4px;color:var(--muted);margin-top:6px;line-height:1.35}
+
+/* Desempenho: apenas visão por quinzena */
+.month-dashboard-v520 .month-main-head{align-items:center}.month-view-chip{border-radius:999px;background:#eef4ff;color:#175cd3;padding:5px 7px;font-size:7.5px;font-weight:850;white-space:nowrap}.month-reading-v520{margin-top:9px}.month-v520-note{font-size:7.6px;color:var(--muted);line-height:1.4;margin-top:8px;padding-top:8px;border-top:1px solid #eef0f2}
+
+/* Vendas: filtros sempre visíveis */
+.sales-filter-visible{padding:10px 11px 11px}.sales-filter-visible .sales-filter-toolbar{margin-top:7px;padding:0 1px}.sales-visible-filters{display:grid;gap:7px;border-top:1px solid #eef0f2;margin-top:8px;padding-top:8px}.sales-visible-filter-group{display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:6px}.sales-filter-label{font-size:8px;font-weight:900;color:#667085;text-transform:uppercase;letter-spacing:.05em}.sales-filter-visible .filter-row{gap:5px;padding:0}.sales-filter-visible .filter-btn{padding:6px 9px;font-size:8.8px;flex:0 0 auto}.sales-filter-visible .sales-filter-link{font-size:8.5px;color:#667085;text-decoration:underline;text-underline-offset:2px}.sales-filter-visible .sales-filter-summary{font-size:8.5px}.sales-filter-visible .sales-filter-summary b{font-size:10.5px}.sales-filter-visible .sales-search-compact{background:#fff}.sales-filter-visible .sales-search-compact input{min-height:40px}
+
+@media(max-width:520px){
+ .home-kpi-grid .metric{min-height:105px;padding:12px}.home-kpi-grid .metric .value{font-size:20px}.home-quick-actions button{min-height:54px;padding:10px}.health-flow-head strong{font-size:17px}.health-net-zone{margin-left:4px;margin-right:4px}.health-net-bar{width:20px}.sales-visible-filter-group{grid-template-columns:36px minmax(0,1fr)}.sales-filter-visible .filter-btn{padding:6px 8px;font-size:8.4px}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -1062,7 +1080,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.19</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.20</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -1073,24 +1091,24 @@ html,body{max-width:100%;overflow-x:hidden}
     <div><h1>Olá, Alex</h1><div class="muted">O que precisa da sua atenção hoje.</div></div>
     <button id="homeFinanceToggle" class="visibility-btn" onclick="toggleHomeFinance()">👁 Ver valores</button>
   </div>
-  <div class="hero">
+  <div class="hero home-kpi-grid">
     <div class="metric"><div class="label">Vendas AX no mês</div><div class="value" id="hSales">R$ 0</div><div class="sub">faturamento da AX</div></div>
     <div class="metric"><div class="label">Vendas via KF</div><div class="value" id="hKfSales">R$ 0</div><div class="sub">fora do financeiro AX</div></div>
     <div class="metric"><div class="label">A receber</div><div class="value" id="hOpen">R$ 0</div><div class="sub">parcelas abertas da AX</div></div>
     <div class="metric"><div class="label">Vencido</div><div class="value" id="hOver">R$ 0</div><div class="sub">cobrar</div></div>
-    <div class="metric"><div class="label">Garantias 90 dias</div><div class="value" id="hWar">0</div><div class="sub">ocorrências registradas</div></div>
   </div>
 
-  <div class="quick">
-    <button onclick="openSaleSheet()"><span>＋</span>Nova venda</button>
-    <button onclick="go('routes')"><span>🗺️</span>Planejar rota</button>
-    <button onclick="go('collections')"><span>💰</span>Cobranças</button>
-    <button onclick="go('warranties')"><span>🛡️</span>Garantias</button>
+  <div class="home-actions-title">Ações rápidas</div>
+  <div class="quick home-quick-actions">
+    <button onclick="openSaleSheet()"><span>＋</span><b>Nova venda</b></button>
+    <button onclick="go('routes')"><span>🗺️</span><b>Planejar rota</b></button>
+    <button onclick="go('collections')"><span>💰</span><b>Cobranças</b></button>
+    <button onclick="go('warranties')"><span>🛡️</span><b>Garantias</b></button>
   </div>
 
   <div class="card health-card">
     <div class="cardhead">
-      <div><h2>Saúde da AX</h2><div class="muted">Uma leitura simples do negócio, não só do faturamento.</div></div>
+      <div><h2>Saúde da AX</h2><div class="muted">Entenda para onde foi o faturamento e como o resultado está evoluindo.</div></div>
       <span id="homeHealthBadge" class="badge">oculto</span>
     </div>
     <div id="homeHealthContent"></div>
@@ -1098,7 +1116,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
   <div class="card">
     <div class="cardhead">
-      <div><h2>Desempenho do mês</h2><div class="muted">Quinzenas para acompanhar. Últimos 3 meses para enxergar a evolução.</div></div>
+      <div><h2>Desempenho por quinzena</h2><div class="muted">Compare a 1ª e a 2ª quinzena sem misturar com a leitura de saúde.</div></div>
       <span id="homeChartPrivacyBadge" class="badge">oculto</span>
     </div>
     <div id="homeFinanceChart"></div>
@@ -1117,7 +1135,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <section id="sales" class="screen">
   <div class="cardhead sales-page-head"><div><h1>Vendas</h1><div class="muted">Pedidos e recebimentos dos últimos 3 meses.</div></div><button class="btn" onclick="openSaleSheet()">＋ Nova venda</button></div>
-  <div class="sales-filter-compact">
+  <div class="sales-filter-compact sales-filter-visible">
     <div class="sales-search-compact">
       <span aria-hidden="true">🔎</span>
       <input id="salesClientSearch" type="search" autocomplete="off" placeholder="Buscar cliente ou razão social" oninput="renderSales()">
@@ -1125,22 +1143,15 @@ html,body{max-width:100%;overflow-x:hidden}
     </div>
     <div class="sales-filter-toolbar">
       <div id="salesFilterSummary" class="sales-filter-summary"></div>
-      <div class="sales-filter-actions">
-        <button id="salesClearFiltersBtn" class="sales-filter-link hidden" type="button" onclick="clearAllSalesFilters()">Limpar</button>
-        <button id="salesActiveFilterBtn" class="sales-filter-main-btn" type="button" onclick="openSalesFilterSheet()">⚙️ Filtrar</button>
-      </div>
+      <button id="salesClearFiltersBtn" class="sales-filter-link hidden" type="button" onclick="clearAllSalesFilters()">Limpar filtros</button>
     </div>
-    <div id="salesActiveChips" class="sales-active-chips"></div>
+    <div class="sales-visible-filters">
+      <div class="sales-visible-filter-group"><div class="sales-filter-label">Mês</div><div id="salesMonthFilters" class="filter-row"></div></div>
+      <div class="sales-visible-filter-group"><div class="sales-filter-label">Status</div><div id="salesStatusFilters" class="filter-row"></div></div>
+    </div>
   </div>
   <div id="salesList"></div>
 </section>
-
-<div class="sheet" id="salesFilterSheet"><div class="sheetpanel sales-filter-sheet-panel"><div class="sheetbar"></div>
-  <div class="cardhead"><div><h2>Filtrar vendas</h2><div class="muted">Escolha mês e status. A lista atualiza na hora.</div></div><button class="btn secondary" onclick="closeSheet('salesFilterSheet')">Fechar</button></div>
-  <div class="sales-filter-sheet-group"><div class="filter-caption">Mês da venda</div><div id="salesMonthFilters" class="filter-row sales-sheet-filter-row"></div></div>
-  <div class="sales-filter-sheet-group"><div class="filter-caption">Status</div><div id="salesStatusFilters" class="filter-row sales-sheet-filter-row"></div></div>
-  <div class="sales-filter-sheet-footer"><button class="btn secondary" type="button" onclick="clearAllSalesFilters()">Limpar filtros</button><button class="btn" type="button" onclick="closeSheet('salesFilterSheet')">Concluir</button></div>
-</div></div>
 
 <section id="routes" class="screen">
   <div class="cardhead route-screen-head">
@@ -1189,7 +1200,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.19</div>
+  <div class="version-note">AX Baterias • v5.20</div>
 </section>
 
 <section id="clients" class="screen">
@@ -1328,7 +1339,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.19</span></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.20</span></div>
     <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.17</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">17/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
@@ -1772,7 +1783,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.19';
+const AX_APP_VERSION='5.20';
 const AX_RELEASE_DATE='2026-09-18';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
@@ -2614,19 +2625,37 @@ function businessHealthAnalysis(){
  const helping=[],watch=[];if(operatingAfterVariable>=0)helping.push(`As vendas e a sucata estão cobrindo os custos variáveis; sobra <b>${brl(operatingAfterVariable)}</b> antes da estrutura fixa.`);if(avgMargin>=Number(state.config?.orderRentabilityReference??12))helping.push(`A margem média comercial das vendas está em <b>${avgMargin.toFixed(1)}%</b>.`);if(scrapProfit>0)helping.push(`A revenda de sucata acrescentou <b>${brl(scrapProfit)}</b> de resultado neste mês.`);if(lowMarginShare>25)watch.push(`<b>${lowMarginShare.toFixed(0)}%</b> das vendas do mês vieram de pedidos abaixo da referência comercial.`);if(variableCosts>0)watch.push(`Custos variáveis registrados no mês: <b>${brl(variableCosts)}</b>.`);if(overdueRatio>=10)watch.push(`O vencido equivale a cerca de <b>${overdueRatio.toFixed(1)}%</b> das vendas AX do mês.`);if(target>0&&gapToTarget>0)watch.push(`Faltam <b>${brl(gapToTarget)}</b> de resultado líquido para a meta mensal.`);
  return {cur,revenue,margin,scrapProfit,variableCosts,fixedCosts,target,avgMargin,equilibriumPct,operatingAfterVariable,netAfterFixed,marginNeededAmount,requiredMargin,gapToTarget,lowMarginShare,overdue,overdueRatio,status,statusLabel,statusEmoji,helping:helping.slice(0,3),watch:watch.slice(0,3)}
 }
+function healthNetBars(rows){
+ const ordered=[...rows].reverse(),max=Math.max(1,...ordered.map(r=>Math.abs(Number(r.afterFixed||0))));
+ return `<div class="health-net-section"><div class="health-net-title"><b>Resultado após estrutura fixa</b><span>Últimos 3 meses</span></div><div class="health-net-chart">${ordered.map(r=>{const v=Number(r.afterFixed||0),h=Math.max(6,Math.round(Math.abs(v)/max*42)),cls=v>=0?"pos":"neg";return `<div class="health-net-col"><div class="health-net-value ${cls}">${v>=0?"+":"-"}${brl(Math.abs(v))}</div><div class="health-net-zone"><span class="health-net-zero"></span><i class="health-net-bar ${cls}" style="height:${h}px"></i></div><div class="health-net-month">${esc(r.label)}${r.isPartial?"*":""}</div></div>`}).join("")}</div>${rows[0]?.isPartial?'<div class="health-net-note">* mês atual em andamento; o valor é uma posição parcial, não o fechamento.</div>':""}</div>`
+}
 function renderHomeHealth(){
  homeHealthBadge.textContent=homeFinanceVisible?"visível":"oculto";homeHealthBadge.className="badge "+(homeFinanceVisible?"good":"");
- if(!homeFinanceVisible){homeHealthContent.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Saúde financeira oculta</b><span>Toque em “Ver valores” para acompanhar como a AX está neste mês.</span></div>';return}
- const h=businessHealthAnalysis();
- if(h.fixedCosts<=0){homeHealthBadge.textContent="configurar";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-explanation setup"><b>⚙️ Falta cadastrar a estrutura mensal.</b><br>Cadastre os custos fixos para o sistema mostrar equilíbrio e meta de forma completa.</div><button class="btn secondary health-setup-btn" onclick="go('settings')">Configurar estrutura mensal</button>`;return}
- if(h.revenue<=0){homeHealthBadge.textContent="sem vendas";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-explanation ${h.variableCosts>0?"bad":"setup"}"><b>${h.variableCosts>0?"Já existem custos no mês, mas ainda não há vendas AX.":"Ainda não há vendas AX neste mês."}</b><br>Quando as vendas entrarem, a leitura é atualizada automaticamente.</div>`;return}
- homeHealthBadge.textContent=h.status==="bad"?"atenção":h.status==="warn"?"em andamento":"saudável";homeHealthBadge.className="badge "+(h.status==="good"?"good":h.status==="warn"?"warn":"bad");
- const structureCovered=h.netAfterFixed>=0,targetHit=h.target<=0?h.netAfterFixed>=0:h.netAfterFixed>=h.target,variableCovered=h.operatingAfterVariable>=0;
- let sentence="";if(h.status==="good")sentence=`A AX já pagou os custos variáveis, a estrutura fixa e ${h.target>0?"atingiu a meta do mês.":"está com resultado positivo."}`;else if(h.operatingAfterVariable<0)sentence=`A margem gerada ainda não cobre os custos variáveis. Faltam <b>${brl(Math.abs(h.operatingAfterVariable))}</b> para chegar à primeira etapa de equilíbrio.`;else if(!structureCovered)sentence=`A operação já cobre os custos do dia a dia. Faltam <b>${brl(Math.abs(h.netAfterFixed))}</b> para pagar toda a estrutura fixa do mês.`;else sentence=`A operação já cobre custos variáveis e estrutura fixa. Agora faltam <b>${brl(h.gapToTarget)}</b> para a meta líquida.`;
- homeHealthContent.innerHTML=`<div class="health-exec-head"><div class="health-exec-status ${h.status}">${h.statusEmoji} ${esc(h.statusLabel)}</div><div class="health-exec-copy">${sentence}</div></div>
- <div class="health-stage-pills"><span class="${variableCovered?"done":"alert"}">${variableCovered?"✓":"!"} Variáveis ${variableCovered?"cobertos":"não cobertos"}</span><span class="${structureCovered?"done":"pending"}">${structureCovered?"✓":"○"} Estrutura ${structureCovered?"coberta":"a cobrir"}</span><span class="${targetHit?"done":"pending"}">${targetHit?"✓":"○"} Meta ${targetHit?"atingida":"em aberto"}</span></div>
- <div class="health-exec-metrics"><div><span>Margem atual</span><b>${h.avgMargin.toFixed(1)}%</b><small>${brl(h.margin)} gerados no mês</small></div><div><span>Equilíbrio da operação</span><b>${h.equilibriumPct.toFixed(1)}%</b><small>≈ ${brl(h.variableCosts)} para os variáveis</small></div><div><span>Meta do mês</span><b>${h.requiredMargin.toFixed(1)}%</b><small>${brl(h.marginNeededAmount)} de margem necessária • meta líquida ${brl(h.target)}</small></div></div>
- <div class="health-exec-foot"><b>Resultado após variáveis + estrutura fixa: <span class="${h.netAfterFixed>=0?"rent-good":"rent-warn"}">${brl(h.netAfterFixed)}</span></b>${h.target>0?`<span>${h.gapToTarget>0?`Faltam ${brl(h.gapToTarget)} para a meta.`:"Meta mensal atingida."}</span>`:""}</div>`
+ if(!homeFinanceVisible){homeHealthContent.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Saúde financeira oculta</b><span>Toque em “Ver valores” para acompanhar o mês.</span></div>';return}
+ const h=businessHealthAnalysis(),rows=monthFinancialRows(3),cur=rows[0];
+ if(h.fixedCosts<=0){homeHealthBadge.textContent="configurar";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-explanation setup"><b>⚙️ Falta cadastrar a estrutura mensal.</b><br>Cadastre os custos fixos para o sistema mostrar o caminho completo do faturamento.</div><button class="btn secondary health-setup-btn" onclick="go('settings')">Configurar estrutura mensal</button>`;return}
+ if(h.revenue<=0){homeHealthBadge.textContent="sem vendas";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-explanation ${h.variableCosts>0?"bad":"setup"}"><b>${h.variableCosts>0?"Já existem custos no mês, mas ainda não há vendas AX.":"Ainda não há vendas AX neste mês."}</b><br>Quando as vendas entrarem, a leitura é atualizada automaticamente.</div>${healthNetBars(rows)}`;return}
+ homeHealthBadge.textContent=cur.isPartial?"mês em andamento":"mês fechado";homeHealthBadge.className="badge "+(cur.isPartial?"warn":(h.netAfterFixed>=0?"good":"bad"));
+ const productCost=Math.max(0,h.revenue-h.margin),costPct=h.revenue>0?productCost/h.revenue*100:0,marginPct=h.revenue>0?h.margin/h.revenue*100:0,varShare=h.margin>0?Math.min(100,h.variableCosts/h.margin*100):0,remainShare=Math.max(0,100-varShare),balanceGap=Math.max(0,h.fixedCosts-h.operatingAfterVariable),structureCovered=h.netAfterFixed>=0;
+ const balanceText=structureCovered?`A estrutura fixa do mês já está coberta. Resultado após estrutura: <b>${brl(h.netAfterFixed)}</b>.`:`Faltam <b>${brl(balanceGap)}</b> para cobrir toda a estrutura fixa do mês.`;
+ homeHealthContent.innerHTML=`<div class="health-flow-head"><div><b>Para onde foi o faturamento?</b><span>${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</span></div><strong>${brl(h.revenue)}</strong></div>
+ <div class="health-sales-bar"><i class="cost" style="width:${costPct.toFixed(1)}%"></i><i class="margin" style="width:${marginPct.toFixed(1)}%"></i></div>
+ <div class="health-bar-legend"><span><i class="dot cost"></i>Custo das baterias <b>${costPct.toFixed(1)}%</b></span><span><i class="dot margin"></i>Margem <b>${marginPct.toFixed(1)}%</b></span></div>
+ <div class="health-money-flow">
+   <div><span>Custo das baterias</span><b class="negative">- ${brl(productCost)}</b></div>
+   <div class="emphasis"><span>Margem comercial que sobrou</span><b>${brl(h.margin)} · ${h.avgMargin.toFixed(1)}%</b></div>
+ </div>
+ <div class="health-margin-bar"><i class="variable" style="width:${varShare.toFixed(1)}%"></i><i class="remain" style="width:${remainShare.toFixed(1)}%"></i></div>
+ <div class="health-bar-legend compact"><span><i class="dot variable"></i>Custos variáveis ${brl(h.variableCosts)}</span><span><i class="dot remain"></i>Sobra operacional ${brl(h.operatingAfterVariable)}</span></div>
+ <div class="health-money-flow compact">
+   <div><span>Custos variáveis</span><b class="negative">- ${brl(h.variableCosts)}</b></div>
+   ${Number(h.scrapProfit||0)!==0?`<div><span>Resultado da sucata</span><b class="${h.scrapProfit>=0?"positive":"negative"}">${h.scrapProfit>=0?"+ ":"- "}${brl(Math.abs(h.scrapProfit))}</b></div>`:""}
+   <div><span>Sobra para pagar a estrutura</span><b class="positive">${brl(h.operatingAfterVariable)}</b></div>
+   <div><span>Estrutura fixa do mês</span><b>${brl(h.fixedCosts)}</b></div>
+ </div>
+ <div class="health-balance-note ${structureCovered?"good":"warn"}">${structureCovered?"✅":"🟡"} ${balanceText}</div>
+ ${h.target>0?`<div class="health-target-note">Depois do equilíbrio, a meta líquida configurada é <b>${brl(h.target)}</b>.</div>`:""}
+ ${healthNetBars(rows)}`
 }
 function fortnightPeriods(count=6){
  let anchor=today(),out=[];
@@ -2723,16 +2752,13 @@ function monthlyFinancialSummary(){return monthFinancialRows(3)}
 function renderFortnightHistory(rows){return renderMonthEvolution(monthFinancialRows(3))}
 function renderHomeFinanceChart(){
  homeChartPrivacyBadge.textContent=homeFinanceVisible?"visível":"oculto";homeChartPrivacyBadge.className="badge "+(homeFinanceVisible?"good":"");
- if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para acompanhar o mês e a evolução recente.</span></div>';return}
- const rows=monthFinancialRows(3),cur=rows[0],status=cur.status,emoji=monthStatusEmoji(status),statusLabel=currentMonthStageLabel(cur),kfMonthTotal=state.sales.filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===cur.month).reduce((a,s)=>a+Number(s.total||0),0);
- const variableCovered=cur.net>=0,structureCovered=cur.afterFixed>=0,targetHit=cur.target<=0?structureCovered:cur.afterFixed>=cur.target;
- const route=[cur.q1,cur.q2].filter(q=>q.started).reduce((a,q)=>a+q.routeCosts,0),manual=[cur.q1,cur.q2].filter(q=>q.started).reduce((a,q)=>a+q.manualCosts,0),tax=[cur.q1,cur.q2].filter(q=>q.started).reduce((a,q)=>a+q.tax.amount,0),warranty=[cur.q1,cur.q2].filter(q=>q.started).reduce((a,q)=>a+q.warranty,0),parts=[];if(route>0)parts.push(`viagens ${brl(route)}`);if(manual>0)parts.push(`taxas/outros ${brl(manual)}`);if(tax>0)parts.push(`impostos ${brl(tax)}`);if(warranty>0)parts.push(`garantias ${brl(warranty)}`);
- homeFinanceChart.innerHTML=`<div class="month-dashboard month-dashboard-v519"><div class="month-main-head"><div><div class="month-main-title">${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas AX: ${brl(cur.revenue)}${kfMonthTotal>0?` • KF ${brl(kfMonthTotal)} segregado`:""}</div></div><span class="month-status ${status}">${emoji} ${statusLabel}</span></div>
- <div class="month-stage-flow"><div class="month-stage"><span>1. Margem gerada</span><b>${brl(cur.margin)}</b>${Number(cur.scrapProfit||0)!==0?`<small>Sucata ${cur.scrapProfit>=0?"+":""}${brl(cur.scrapProfit)}</small>`:""}</div><div class="month-stage ${variableCovered?"done":"alert"}"><span>2. Após custos variáveis</span><b>${cur.net>=0?"+":"-"}${brl(Math.abs(cur.net))}</b><small>Variáveis: ${brl(cur.variableCosts)}</small></div><div class="month-stage ${structureCovered?"done":"pending"}"><span>3. Após estrutura fixa</span><b>${cur.afterFixed>=0?"+":"-"}${brl(Math.abs(cur.afterFixed))}</b><small>Estrutura: ${brl(cur.fixedCosts)}</small></div><div class="month-stage ${targetHit?"done":"pending"}"><span>4. Meta líquida</span><b>${brl(cur.target)}</b><small>${cur.target>0?(cur.gapToTarget>0?`Faltam ${brl(cur.gapToTarget)}`:"Atingida"):'Sem meta configurada'}</small></div></div>
- <div class="month-stage-pills"><span class="${variableCovered?"done":"alert"}">${variableCovered?"✓":"!"} Variáveis</span><span class="${structureCovered?"done":"pending"}">${structureCovered?"✓":"○"} Estrutura</span><span class="${targetHit?"done":"pending"}">${targetHit?"✓":"○"} Meta</span></div>
- ${parts.length?`<div class="month-cost-line">Custos variáveis registrados: ${parts.join(" • ")}</div>`:""}
- <details class="month-details"><summary>Como o mês está se formando</summary><div class="month-fortnights">${fortnightMiniCard(cur.q1,"1ª quinzena")}${fortnightMiniCard(cur.q2,"2ª quinzena")}</div><div class="month-reading"><div><span>Margem média das vendas</span><b>${cur.marginPct.toFixed(1)}%</b></div><div><span>Margem para cobrir variáveis</span><b>${cur.requiredMarginPct.toFixed(1)}%</b></div></div></details>
- <details class="month-details"><summary>Evolução dos últimos 3 meses</summary>${renderMonthEvolution(rows)}</details></div>`
+ if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para acompanhar as quinzenas.</span></div>';return}
+ const cur=monthFinancialRows(1)[0],kfMonthTotal=state.sales.filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===cur.month).reduce((a,s)=>a+Number(s.total||0),0);
+ homeFinanceChart.innerHTML=`<div class="month-dashboard month-dashboard-v520"><div class="month-main-head"><div><div class="month-main-title">${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas AX: ${brl(cur.revenue)}${kfMonthTotal>0?` • KF ${brl(kfMonthTotal)} segregado`:""}</div></div><span class="month-view-chip">visão por quinzena</span></div>
+ <div class="month-fortnight-title">Como o mês está se formando</div>
+ <div class="month-fortnights">${fortnightMiniCard(cur.q1,"1ª quinzena")}${fortnightMiniCard(cur.q2,"2ª quinzena")}</div>
+ <div class="month-reading month-reading-v520"><div><span>Margem média das vendas</span><b>${cur.marginPct.toFixed(1)}%</b></div><div><span>Custos variáveis no mês</span><b>${brl(cur.variableCosts)}</b></div></div>
+ <div class="month-v520-note">A Saúde da AX mostra estrutura fixa, equilíbrio e evolução dos últimos 3 meses. Aqui o foco é comparar as quinzenas.</div></div>`
 }
 function renderHome(){
  const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),monthAX=month.filter(isAXFinancialSale),monthKF=month.filter(isKFSale),
@@ -2745,7 +2771,7 @@ function renderHome(){
  const warranty90Start=addDays(today(),-90),
  warranty90=state.warranties.filter(w=>w.type!=="Sucata"&&(w.collect||"")>=warranty90Start),
  recurringWarrantyClients=state.clients.map(c=>({c,ws:warrantyStats(c.id,365)})).filter(x=>x.ws.warrantyQty>=2&&x.ws.incidence>=10);
- hWar.textContent=warranty90.reduce((a,w)=>a+Number(w.qty||1),0);
+ const warranty90Qty=warranty90.reduce((a,w)=>a+Number(w.qty||1),0);
 
  const critical=criticalClients();
  if(smartRoutePlan?.routes?.length){
@@ -2758,7 +2784,8 @@ function renderHome(){
  const low=state.products.filter(p=>Number(p.qty)<=Number(p.min)).length,list=[];
  if(overValue)list.push(`<div class="listitem"><div><div class="title">${homeFinanceVisible?brl(overValue)+" vencidos":"Há valores vencidos"}</div><div class="meta">Prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);
  if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);
- if(recurringWarrantyClients.length)list.push(`<div class="listitem"><div><div class="title">${recurringWarrantyClients.length} cliente(s) com recorrência alta de garantia</div><div class="meta">Revisar incidência, idade do produto e giro do cliente</div></div><span class="badge warn">Garantia</span></div>`);
+ if(warranty90Qty)list.push(`<div class="listitem"><div><div class="title">${warranty90Qty} ocorrência(s) de garantia nos últimos 90 dias</div><div class="meta">Acompanhar trocas, créditos e recorrência</div></div><span class="badge ${warranty90Qty>=3?"warn":""}">Garantia</span></div>`);
+ if(recurringWarrantyClients.length)list.push(`<div class="listitem"><div><div class="title">${recurringWarrantyClients.length} cliente(s) com recorrência alta de garantia</div><div class="meta">Revisar incidência, idade do produto e giro do cliente</div></div><span class="badge warn">Recorrência</span></div>`);
  homeAlerts.innerHTML=list.length?list.join(""):'<div class="empty">Nada crítico agora.</div>';
  renderHomeHealth();renderHomeFinanceChart()
 }
@@ -3025,7 +3052,7 @@ function renderSettings(){ensureConfig();cfgKm.value=state.config.costKm;cfgWind
 
 function renderSales(){
  ensureState();
- if(window.salesMonthFilters)salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");
+ if(window.salesMonthFilters)salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label.charAt(0).toUpperCase()+m.label.slice(1)])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");
  if(window.salesStatusFilters)salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");
 
  const clientQuery=normalizeSaleSearch(window.salesClientSearch?.value||"");
@@ -3045,12 +3072,10 @@ function renderSales(){
 
  list.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||String(b.createdAt||"").localeCompare(String(a.createdAt||"")));
  if(window.salesFilterSummary){
-   const monthLabelActive=recentMonths().find(m=>m.key===salesMonthFilter)?.label||salesMonthFilter,statusLabelActive={open:"A receber",late:"Vencido",paid:"Recebido"}[salesStatusFilter]||"Tudo",activeCount=Number(salesMonthFilter!=="all")+Number(salesStatusFilter!=="all");
-   salesFilterSummary.innerHTML=`<b>${list.length}</b> venda(s)`;
-   if(window.salesActiveFilterBtn)salesActiveFilterBtn.textContent=activeCount?`⚙️ Filtros · ${activeCount}`:"⚙️ Filtrar";
+   const activeCount=Number(salesMonthFilter!=="all")+Number(salesStatusFilter!=="all");
+   salesFilterSummary.innerHTML=`<b>${list.length}</b> venda(s) encontrada(s)`;
    if(window.salesClearFiltersBtn)salesClearFiltersBtn.classList.toggle("hidden",!(activeCount||clientQuery));
    if(window.salesSearchClearBtn)salesSearchClearBtn.classList.toggle("hidden",!clientQuery);
-   if(window.salesActiveChips)salesActiveChips.innerHTML=`${salesMonthFilter!=="all"?`<button onclick="setSalesMonthFilter('all')">Mês: ${esc(monthLabelActive)} ×</button>`:""}${salesStatusFilter!=="all"?`<button onclick="setSalesStatusFilter('all')">${esc(statusLabelActive)} ×</button>`:""}`;
  }
  if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda encontrada com esses filtros.</div>';return}
 
