@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.18">
-<meta name="ax-build" content="2026-09-17-v5.18-scrap-depot-health-routes">
+<meta name="ax-version" content="5.19">
+<meta name="ax-build" content="2026-09-18-v5.19-ux-routes-sales-health">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -1001,6 +1001,42 @@ html,body{max-width:100%;overflow-x:hidden}
   .sales-card-badges{max-width:46%}
 }
 
+
+
+/* v5.19 — UX/UI: clientes, vendas, rotas e leitura financeira */
+/* Vendas: busca e filtros compactos */
+.sales-page-head{align-items:center}
+.sales-filter-compact{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 11px;margin:10px 0 12px;box-shadow:0 1px 2px rgba(16,24,40,.03)}
+.sales-search-compact{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:7px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:0 9px;background:#f9fafb}
+.sales-search-compact>span{font-size:13px}.sales-search-compact input{border:0;background:transparent;min-height:42px;padding:8px 2px;box-shadow:none!important}.sales-search-clear{border:0;background:#e4e7ec;color:#475467;border-radius:999px;width:24px;height:24px;font-size:17px;line-height:20px}
+.sales-filter-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px}.sales-filter-summary{font-size:10px;color:var(--muted)}.sales-filter-summary b{font-size:12px;color:var(--text)}
+.sales-filter-actions{display:flex;align-items:center;gap:7px}.sales-filter-main-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:9.5px;font-weight:900;color:#344054}.sales-filter-link{border:0;background:transparent;color:var(--bad);font-size:9px;font-weight:850;padding:5px}
+.sales-active-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.sales-active-chips:empty{display:none}.sales-active-chips button{border:0;background:#f2f4f7;border-radius:999px;padding:5px 8px;font-size:8.5px;color:#475467;font-weight:800}
+.sales-filter-sheet-panel{padding-bottom:18px}.sales-filter-sheet-group{margin:12px 0}.sales-sheet-filter-row{flex-wrap:wrap;overflow:visible}.sales-filter-sheet-footer{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+
+/* Clientes de rota: lista compacta para decisão */
+.route-candidate-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.candidate-controls{margin-top:10px;border-top:1px solid #eef0f2;padding-top:9px}.candidate-control-label{font-size:8px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:900;margin-bottom:5px}
+.candidate-sort-row,.candidate-filter-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.candidate-sort-row::-webkit-scrollbar,.candidate-filter-row::-webkit-scrollbar{display:none}.candidate-sort,.candidate-filter{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 9px;font-size:8.5px;font-weight:850;color:#475467}.candidate-sort.active{background:var(--nav);border-color:var(--nav);color:#fff}.candidate-filter-row{margin-top:7px}.candidate-filter.active{background:#eef4ff;border-color:#b2ccff;color:#175cd3}
+.candidate-legend{font-size:7.8px;line-height:1.35;color:var(--muted);margin:6px 1px}.candidate-legend b{color:#475467}.route-candidate-list{margin-top:8px;border-top:1px solid #eef0f2}.route-candidate-row{display:grid;grid-template-columns:32px minmax(0,1fr);gap:9px;align-items:start;padding:10px 2px;border-bottom:1px solid #eef0f2}.candidate-star{border:1px solid var(--line);background:#fff;border-radius:10px;width:32px;height:32px;font-size:18px;color:#98a2b3}.candidate-star.active{background:#fff7ed;color:#f79009;border-color:#fedf89}.route-candidate-name{font-size:11.5px;font-weight:900;line-height:1.2}.route-candidate-sub{font-size:8.5px;color:var(--muted);margin-top:2px}.route-candidate-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.candidate-chip{border-radius:999px;padding:4px 6px;background:#f2f4f7;color:#475467;font-size:7.8px;font-weight:800}.candidate-chip.overdue{background:#fff1f0;color:#b42318}.candidate-chip.due{background:#fffaeb;color:#b54708}.candidate-chip.return{background:#ecfdf3;color:#067647}.candidate-chip.neutral{background:#f9fafb;color:#667085}
+
+/* Rotas: abertas em destaque, histórico compacto e exclusão de despesas */
+.route-section-head{display:flex;justify-content:space-between;align-items:flex-start;margin:6px 0 9px}.route-section-head h2{margin:0;font-size:16px}.route-section-head span{display:block;color:var(--muted);font-size:8.5px;margin-top:2px}.route-history-section{margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}
+.route-expense-value{display:flex;align-items:center;gap:7px}.route-expense-delete{border:0;background:#fff1f0;color:#b42318;border-radius:8px;width:28px;height:28px;font-size:12px}.route-history-month{border:1px solid var(--line);border-radius:15px;background:#fff;margin-bottom:10px;overflow:hidden}.route-history-month-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 12px;background:#f9fafb;border-bottom:1px solid #eef0f2}.route-history-month-head b{text-transform:capitalize;font-size:12px}.route-history-month-head span,.route-history-month-head small{display:block;color:var(--muted);font-size:8px;margin-top:2px}.route-history-month-head strong{font-size:11px}.route-history-month-head>div:last-child{text-align:right}
+.route-history-run{border-bottom:1px solid #eef0f2}.route-history-run:last-child{border-bottom:0}.route-history-run-head{width:100%;border:0;background:#fff;padding:10px 12px;display:flex;justify-content:space-between;gap:10px;text-align:left;color:var(--text)}.route-history-run-head b{display:block;font-size:10.5px}.route-history-run-head span{display:block;font-size:8px;color:var(--muted);margin-top:3px}.route-history-chevron{font-size:15px!important;color:#667085!important}.route-history-expanded{padding:0 9px 10px;background:#f9fafb}.route-history-expanded>.route-run-card{box-shadow:none;margin:0;border-radius:12px}.route-history-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:9px 2px}.route-history-kpis span{font-size:7.5px;color:var(--muted)}.route-history-kpis b{display:block;font-size:9.5px;color:var(--text);margin-top:2px}
+
+/* Saúde: resumo executivo */
+.health-exec-head{border-radius:14px;padding:11px 12px;background:#f9fafb;border:1px solid var(--line)}.health-exec-status{font-size:16px;font-weight:950;line-height:1.2}.health-exec-status.good{color:var(--good)}.health-exec-status.warn{color:#b54708}.health-exec-status.bad{color:var(--bad)}.health-exec-copy{font-size:9.5px;line-height:1.45;color:#475467;margin-top:5px}.health-stage-pills,.month-stage-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.health-stage-pills span,.month-stage-pills span{border-radius:999px;padding:5px 7px;font-size:7.8px;font-weight:850;background:#f2f4f7;color:#667085}.health-stage-pills .done,.month-stage-pills .done{background:#ecfdf3;color:#067647}.health-stage-pills .alert,.month-stage-pills .alert{background:#fff1f0;color:#b42318}.health-stage-pills .pending,.month-stage-pills .pending{background:#fffaeb;color:#b54708}
+.health-exec-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}.health-exec-metrics>div{border:1px solid var(--line);border-radius:12px;padding:9px;min-width:0}.health-exec-metrics span{display:block;font-size:7.5px;font-weight:850;color:var(--muted)}.health-exec-metrics b{display:block;font-size:15px;margin-top:3px}.health-exec-metrics small{display:block;font-size:7.5px;color:var(--muted);line-height:1.35;margin-top:3px}.health-exec-foot{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;padding:8px 9px;border-radius:10px;background:#f9fafb;font-size:8px;color:#475467}.health-exec-foot>b{font-size:8.5px}.health-exec-foot>span{text-align:right}
+
+/* Desempenho: escada financeira e detalhes recolhíveis */
+.month-dashboard-v519 .month-main-head{align-items:center}.month-dashboard-v519 .month-status{max-width:48%;white-space:normal;text-align:center;justify-content:center}.month-stage-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:11px}.month-stage{border:1px solid var(--line);border-radius:12px;padding:9px;min-width:0;background:#fff}.month-stage span{display:block;font-size:7px;text-transform:uppercase;font-weight:900;color:var(--muted);line-height:1.25}.month-stage b{display:block;font-size:12.5px;margin-top:4px}.month-stage small{display:block;font-size:7px;color:var(--muted);line-height:1.3;margin-top:3px}.month-stage.done{border-color:#abefc6;background:#f6fef9}.month-stage.alert{border-color:#fecdca;background:#fffbfa}.month-stage.pending{border-color:#fedf89;background:#fffaeb}.month-cost-line{font-size:8px;color:var(--muted);margin-top:8px;line-height:1.4}.month-details{border-top:1px solid var(--line);margin-top:10px;padding-top:9px}.month-details summary{cursor:pointer;font-size:9.5px;font-weight:900;list-style:none;display:flex;justify-content:space-between;align-items:center}.month-details summary::-webkit-details-marker{display:none}.month-details summary:after{content:'⌄';color:var(--muted);font-size:13px}.month-details[open] summary:after{content:'⌃'}.month-details .month-fortnights,.month-details .month-reading,.month-details .month-trend{margin-top:9px}
+
+@media(max-width:520px){
+ .health-exec-metrics{grid-template-columns:1fr 1fr}.health-exec-metrics>div:last-child{grid-column:1/-1}.health-exec-foot{align-items:flex-start;flex-direction:column}.health-exec-foot>span{text-align:left}
+ .month-stage-flow{grid-template-columns:1fr 1fr}.route-history-kpis{grid-template-columns:1fr 1fr 1fr}
+ .sales-filter-compact{padding:9px}.sales-page-head .btn{padding:10px 12px}
+}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -1026,7 +1062,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.18</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.19</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -1080,22 +1116,31 @@ html,body{max-width:100%;overflow-x:hidden}
 </section>
 
 <section id="sales" class="screen">
-  <div class="cardhead"><div><h1>Vendas</h1><div class="muted">Pedidos e recebimentos dos últimos 3 meses.</div></div><button class="btn" onclick="openSaleSheet()">＋ Nova venda</button></div>
-  <div class="sales-client-filter">
-    <label for="salesClientSearch">Cliente / Razão social</label>
-    <div class="sales-client-search-row">
-      <span class="sales-client-search-icon">⌕</span>
-      <input id="salesClientSearch" type="search" autocomplete="off" placeholder="Digite o nome ou razão social" oninput="renderSales()">
-      <button class="btn secondary sales-clear-search" type="button" onclick="clearSalesClientFilter()" aria-label="Limpar filtro">Limpar</button>
+  <div class="cardhead sales-page-head"><div><h1>Vendas</h1><div class="muted">Pedidos e recebimentos dos últimos 3 meses.</div></div><button class="btn" onclick="openSaleSheet()">＋ Nova venda</button></div>
+  <div class="sales-filter-compact">
+    <div class="sales-search-compact">
+      <span aria-hidden="true">🔎</span>
+      <input id="salesClientSearch" type="search" autocomplete="off" placeholder="Buscar cliente ou razão social" oninput="renderSales()">
+      <button id="salesSearchClearBtn" class="sales-search-clear hidden" type="button" onclick="clearSalesClientFilter()" aria-label="Limpar busca">×</button>
     </div>
-    <div id="salesFilterSummary" class="muted sales-filter-summary"></div>
-  </div>
-  <div class="filter-stack">
-    <div><div class="filter-caption">Mês da venda</div><div id="salesMonthFilters" class="filter-row"></div></div>
-    <div><div class="filter-caption">Status</div><div id="salesStatusFilters" class="filter-row"></div></div>
+    <div class="sales-filter-toolbar">
+      <div id="salesFilterSummary" class="sales-filter-summary"></div>
+      <div class="sales-filter-actions">
+        <button id="salesClearFiltersBtn" class="sales-filter-link hidden" type="button" onclick="clearAllSalesFilters()">Limpar</button>
+        <button id="salesActiveFilterBtn" class="sales-filter-main-btn" type="button" onclick="openSalesFilterSheet()">⚙️ Filtrar</button>
+      </div>
+    </div>
+    <div id="salesActiveChips" class="sales-active-chips"></div>
   </div>
   <div id="salesList"></div>
 </section>
+
+<div class="sheet" id="salesFilterSheet"><div class="sheetpanel sales-filter-sheet-panel"><div class="sheetbar"></div>
+  <div class="cardhead"><div><h2>Filtrar vendas</h2><div class="muted">Escolha mês e status. A lista atualiza na hora.</div></div><button class="btn secondary" onclick="closeSheet('salesFilterSheet')">Fechar</button></div>
+  <div class="sales-filter-sheet-group"><div class="filter-caption">Mês da venda</div><div id="salesMonthFilters" class="filter-row sales-sheet-filter-row"></div></div>
+  <div class="sales-filter-sheet-group"><div class="filter-caption">Status</div><div id="salesStatusFilters" class="filter-row sales-sheet-filter-row"></div></div>
+  <div class="sales-filter-sheet-footer"><button class="btn secondary" type="button" onclick="clearAllSalesFilters()">Limpar filtros</button><button class="btn" type="button" onclick="closeSheet('salesFilterSheet')">Concluir</button></div>
+</div></div>
 
 <section id="routes" class="screen">
   <div class="cardhead route-screen-head">
@@ -1144,7 +1189,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.18</div>
+  <div class="version-note">AX Baterias • v5.19</div>
 </section>
 
 <section id="clients" class="screen">
@@ -1283,7 +1328,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.18</span></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.19</span></div>
     <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.17</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">17/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
@@ -1727,8 +1772,8 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.18';
-const AX_RELEASE_DATE='2026-09-17';
+const AX_APP_VERSION='5.19';
+const AX_RELEASE_DATE='2026-09-18';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
 const TEST_MODE=false;
@@ -1745,6 +1790,8 @@ const defaults={
 let state=loadCache();
 let currentPriceTable=0;
 let salesMonthFilter="all",salesStatusFilter="all",collectionStatusFilter="all",warrantyStatusFilter="pending";
+let routeCandidateSort="recommended",routeCandidateFilter="all";
+let expandedRouteHistory=new Set();
 let pendingRenegotiatedDebts=[];
 let routeRunEditStops=[];
 let smartRoutePlan=null;
@@ -1787,7 +1834,7 @@ function ensureState(){
    s.commercialRevenue=commercialRevenue;s.currentOrderTotal=currentOrderTotal;s.total=currentOrderTotal;s.collectionTotal=collectionTotal;s.financialCollectionTotal=financialCollectionTotal;s.marginValue=commercialRevenue-productCost;s.commercialMargin=s.marginValue;s.commercialResult=s.marginValue;s.commercialRentability=commercialRevenue>0?s.marginValue/commercialRevenue*100:0;
  });
  state.warranties.forEach(w=>{if(w.type==="Sucata")return;if(!w.batteryDisposition)w.batteryDisposition="pending";if(w.batteryValue==null)w.batteryValue=Number(w.creditValue||0)||Number(state.products.find(p=>p.id===w.productId)?.prices?.[Number(state.clients.find(c=>c.id===w.clientId)?.price||0)]||0)});
- state.routeRuns.forEach(r=>{r.expenses=r.expenses||[];r.attendedClientIds=r.attendedClientIds||[];if(!r.source)r.source="smart"});
+ state.routeRuns.forEach(r=>{r.expenses=r.expenses||[];r.expenses.forEach(e=>{if(!e.id)e.id=uid()});r.attendedClientIds=r.attendedClientIds||[];if(!r.source)r.source="smart"});
  migrateOrderNumbers();
 }
 function loadCache(){
@@ -2388,6 +2435,12 @@ function clearSalesClientFilter(){
  if(window.salesClientSearch)salesClientSearch.value="";
  renderSales()
 }
+function openSalesFilterSheet(){openSheet("salesFilterSheet")}
+function clearAllSalesFilters(){
+ salesMonthFilter="all";salesStatusFilter="all";
+ if(window.salesClientSearch)salesClientSearch.value="";
+ renderSales()
+}
 function saleItemsFingerprint(items){
  return (items||[]).map(i=>({productId:String(i.productId||""),qty:Number(i.qty||0)}))
    .filter(i=>i.productId&&i.qty>0)
@@ -2557,7 +2610,7 @@ function scrapResaleCashBetween(start,end){return (state.scrapResales||[]).filte
 function businessHealthAnalysis(){
  ensureConfig();const cur=monthFinancialRows(1)[0],fixedCosts=fixedCostsMonthlyTotal(),target=Number(state.config?.monthlyProfitTarget||0),revenue=Number(cur?.revenue||0),margin=Number(cur?.margin||0),scrapProfit=Number(cur?.scrapProfit||0),variableCosts=Number(cur?.variableCosts||0),avgMargin=revenue>0?margin/revenue*100:0,equilibriumPct=revenue>0?variableCosts/revenue*100:0,operatingAfterVariable=margin+scrapProfit-variableCosts,netAfterFixed=operatingAfterVariable-fixedCosts,marginNeededAmount=Math.max(0,variableCosts+fixedCosts+target-scrapProfit),requiredMargin=revenue>0?marginNeededAmount/revenue*100:0,gapToTarget=Math.max(0,target-netAfterFixed);
  const lowRevenue=(cur?.ops||[]).filter(o=>o.rentability<Number(state.config?.orderRentabilityReference??12)).reduce((a,o)=>a+o.commercialRevenue,0),lowMarginShare=revenue>0?lowRevenue/revenue*100:0,overdue=state.sales.filter(isAXFinancialSale).reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0),overdueRatio=revenue>0?overdue/revenue*100:0;
- let status="setup",statusLabel="Configurar",statusEmoji="⚙️";if(fixedCosts>0&&revenue>0){if(netAfterFixed<0){status="bad";statusLabel="Precisa de atenção";statusEmoji="🔴"}else if(target>0&&netAfterFixed<target){status="warn";statusLabel="No caminho";statusEmoji="🟡"}else{status="good";statusLabel="Saudável";statusEmoji="🟢"}}
+ let status="setup",statusLabel="Configurar",statusEmoji="⚙️";if(fixedCosts>0&&revenue>0){if(operatingAfterVariable<0){status="bad";statusLabel="Custos ainda não cobertos";statusEmoji="🔴"}else if(netAfterFixed<0){status="warn";statusLabel=`Falta ${brl(Math.abs(netAfterFixed))} para o equilíbrio`;statusEmoji="🟡"}else if(target>0&&netAfterFixed<target){status="warn";statusLabel="Estrutura coberta • rumo à meta";statusEmoji="🟡"}else{status="good";statusLabel=target>0?"Meta atingida":"Saudável";statusEmoji="🟢"}}
  const helping=[],watch=[];if(operatingAfterVariable>=0)helping.push(`As vendas e a sucata estão cobrindo os custos variáveis; sobra <b>${brl(operatingAfterVariable)}</b> antes da estrutura fixa.`);if(avgMargin>=Number(state.config?.orderRentabilityReference??12))helping.push(`A margem média comercial das vendas está em <b>${avgMargin.toFixed(1)}%</b>.`);if(scrapProfit>0)helping.push(`A revenda de sucata acrescentou <b>${brl(scrapProfit)}</b> de resultado neste mês.`);if(lowMarginShare>25)watch.push(`<b>${lowMarginShare.toFixed(0)}%</b> das vendas do mês vieram de pedidos abaixo da referência comercial.`);if(variableCosts>0)watch.push(`Custos variáveis registrados no mês: <b>${brl(variableCosts)}</b>.`);if(overdueRatio>=10)watch.push(`O vencido equivale a cerca de <b>${overdueRatio.toFixed(1)}%</b> das vendas AX do mês.`);if(target>0&&gapToTarget>0)watch.push(`Faltam <b>${brl(gapToTarget)}</b> de resultado líquido para a meta mensal.`);
  return {cur,revenue,margin,scrapProfit,variableCosts,fixedCosts,target,avgMargin,equilibriumPct,operatingAfterVariable,netAfterFixed,marginNeededAmount,requiredMargin,gapToTarget,lowMarginShare,overdue,overdueRatio,status,statusLabel,statusEmoji,helping:helping.slice(0,3),watch:watch.slice(0,3)}
 }
@@ -2565,12 +2618,15 @@ function renderHomeHealth(){
  homeHealthBadge.textContent=homeFinanceVisible?"visível":"oculto";homeHealthBadge.className="badge "+(homeFinanceVisible?"good":"");
  if(!homeFinanceVisible){homeHealthContent.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Saúde financeira oculta</b><span>Toque em “Ver valores” para acompanhar como a AX está neste mês.</span></div>';return}
  const h=businessHealthAnalysis();
- if(h.fixedCosts<=0){homeHealthBadge.textContent="configurar";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-question">Como está a AX este mês?</div><div class="health-status-row"><div><div class="health-status-title setup">⚙️ Falta cadastrar a estrutura mensal</div></div></div><div class="health-explanation setup"><b>As vendas e custos variáveis já podem ser acompanhados.</b><br>Cadastre pró-labore, contador, telefone, seguro e demais custos fixos para a Saúde da AX mostrar equilíbrio e meta de forma completa.</div><button class="btn secondary health-setup-btn" onclick="go('settings')">Configurar estrutura mensal</button>`;return}
- if(h.revenue<=0){homeHealthBadge.textContent="sem vendas";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-question">Como está a AX este mês?</div><div class="health-explanation ${h.variableCosts>0?"bad":"setup"}"><b>${h.variableCosts>0?"Já existem custos registrados no mês, mas ainda não há vendas AX.":"Ainda não há vendas AX neste mês."}</b><br>Quando as vendas entrarem, o sistema compara margem, custos, estrutura e meta automaticamente.</div>`;return}
- homeHealthBadge.textContent=h.statusLabel.toLowerCase();homeHealthBadge.className="badge "+(h.status==="good"?"good":h.status==="warn"?"warn":"bad");
- let sentence="";if(h.status==="good")sentence=`<b>A AX está saudável neste mês.</b> A operação cobre os custos, a estrutura fixa e já alcançou a meta de resultado configurada.`;else if(h.status==="warn")sentence=`<b>A AX está gerando resultado e está no caminho.</b> A operação cobre os custos e a estrutura, mas ainda faltam ${brl(h.gapToTarget)} para chegar à meta mensal.`;else sentence=`<b>Este mês precisa de atenção.</b> Depois dos custos variáveis e da estrutura fixa, o resultado está em ${brl(h.netAfterFixed)}. O foco agora é recuperar margem, vendas ou reduzir despesas.`;
- const helping=h.helping.length?h.helping:["Ainda não há um destaque positivo forte neste mês."],watch=h.watch.length?h.watch:["Nenhum ponto importante de atenção apareceu nos dados atuais."];
- homeHealthContent.innerHTML=`<div class="health-question">Como está a AX este mês?</div><div class="health-status-row"><div><div class="health-status-title ${h.status}">${h.statusEmoji} ${h.statusLabel}</div></div></div><div class="health-explanation ${h.status}">${sentence}</div><div class="health-friendly-grid"><div class="health-friendly-card"><span>Margem atual</span><b>${h.avgMargin.toFixed(1)}%</b><small>${brl(h.margin)} gerados nas vendas do mês${h.scrapProfit?` • sucata +${brl(h.scrapProfit)}`:""}</small></div><div class="health-friendly-card"><span>Equilíbrio da operação</span><b>${h.equilibriumPct.toFixed(1)}%</b><small>≈ ${brl(h.variableCosts)} para cobrir os custos variáveis</small></div><div class="health-friendly-card"><span>Meta do mês</span><b>${h.requiredMargin.toFixed(1)}%</b><small>${brl(h.marginNeededAmount)} de margem necessária<br>Meta de resultado líquido: <b style="display:inline;font-size:inherit">${brl(h.target)}</b></small></div></div><div class="health-goal-gap">${h.target>0?(h.gapToTarget>0?`🎯 <b>Faltam ${brl(h.gapToTarget)} para atingir a meta.</b>`:`🎯 <b>Meta mensal atingida.</b>`):`🎯 <b>Nenhuma meta de resultado líquido foi configurada.</b> Você pode definir uma em Configurações.`}<br>Resultado após custos variáveis + estrutura fixa: <b>${brl(h.netAfterFixed)}</b>.</div><div class="health-drivers"><div class="health-driver"><h4>👍 O que está indo bem</h4>${helping.map(x=>`<div class="health-driver-item">${x}</div>`).join("")}</div><div class="health-driver"><h4>👀 O que acompanhar</h4>${watch.map(x=>`<div class="health-driver-item">${x}</div>`).join("")}</div></div><div class="health-meaning"><b>Como ler:</b> margem atual = resultado comercial das vendas. Equilíbrio = custos variáveis reais do mês. Meta = margem necessária para pagar variáveis + estrutura fixa + a meta líquida, considerando também o resultado das revendas de sucata.</div>`
+ if(h.fixedCosts<=0){homeHealthBadge.textContent="configurar";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-explanation setup"><b>⚙️ Falta cadastrar a estrutura mensal.</b><br>Cadastre os custos fixos para o sistema mostrar equilíbrio e meta de forma completa.</div><button class="btn secondary health-setup-btn" onclick="go('settings')">Configurar estrutura mensal</button>`;return}
+ if(h.revenue<=0){homeHealthBadge.textContent="sem vendas";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-explanation ${h.variableCosts>0?"bad":"setup"}"><b>${h.variableCosts>0?"Já existem custos no mês, mas ainda não há vendas AX.":"Ainda não há vendas AX neste mês."}</b><br>Quando as vendas entrarem, a leitura é atualizada automaticamente.</div>`;return}
+ homeHealthBadge.textContent=h.status==="bad"?"atenção":h.status==="warn"?"em andamento":"saudável";homeHealthBadge.className="badge "+(h.status==="good"?"good":h.status==="warn"?"warn":"bad");
+ const structureCovered=h.netAfterFixed>=0,targetHit=h.target<=0?h.netAfterFixed>=0:h.netAfterFixed>=h.target,variableCovered=h.operatingAfterVariable>=0;
+ let sentence="";if(h.status==="good")sentence=`A AX já pagou os custos variáveis, a estrutura fixa e ${h.target>0?"atingiu a meta do mês.":"está com resultado positivo."}`;else if(h.operatingAfterVariable<0)sentence=`A margem gerada ainda não cobre os custos variáveis. Faltam <b>${brl(Math.abs(h.operatingAfterVariable))}</b> para chegar à primeira etapa de equilíbrio.`;else if(!structureCovered)sentence=`A operação já cobre os custos do dia a dia. Faltam <b>${brl(Math.abs(h.netAfterFixed))}</b> para pagar toda a estrutura fixa do mês.`;else sentence=`A operação já cobre custos variáveis e estrutura fixa. Agora faltam <b>${brl(h.gapToTarget)}</b> para a meta líquida.`;
+ homeHealthContent.innerHTML=`<div class="health-exec-head"><div class="health-exec-status ${h.status}">${h.statusEmoji} ${esc(h.statusLabel)}</div><div class="health-exec-copy">${sentence}</div></div>
+ <div class="health-stage-pills"><span class="${variableCovered?"done":"alert"}">${variableCovered?"✓":"!"} Variáveis ${variableCovered?"cobertos":"não cobertos"}</span><span class="${structureCovered?"done":"pending"}">${structureCovered?"✓":"○"} Estrutura ${structureCovered?"coberta":"a cobrir"}</span><span class="${targetHit?"done":"pending"}">${targetHit?"✓":"○"} Meta ${targetHit?"atingida":"em aberto"}</span></div>
+ <div class="health-exec-metrics"><div><span>Margem atual</span><b>${h.avgMargin.toFixed(1)}%</b><small>${brl(h.margin)} gerados no mês</small></div><div><span>Equilíbrio da operação</span><b>${h.equilibriumPct.toFixed(1)}%</b><small>≈ ${brl(h.variableCosts)} para os variáveis</small></div><div><span>Meta do mês</span><b>${h.requiredMargin.toFixed(1)}%</b><small>${brl(h.marginNeededAmount)} de margem necessária • meta líquida ${brl(h.target)}</small></div></div>
+ <div class="health-exec-foot"><b>Resultado após variáveis + estrutura fixa: <span class="${h.netAfterFixed>=0?"rent-good":"rent-warn"}">${brl(h.netAfterFixed)}</span></b>${h.target>0?`<span>${h.gapToTarget>0?`Faltam ${brl(h.gapToTarget)} para a meta.`:"Meta mensal atingida."}</span>`:""}</div>`
 }
 function fortnightPeriods(count=6){
  let anchor=today(),out=[];
@@ -2637,13 +2693,14 @@ function monthFinancialRows(count=3){
    const endDay=daysInMonthKey(month),q1Start=`${month}-01`,q1End=`${month}-15`,q2Start=`${month}-16`,q2End=`${month}-${String(endDay).padStart(2,"0")}`,isCurrent=month===currentMonth;
    const q1Started=!isCurrent||currentDay>=1,q2Started=!isCurrent||currentDay>=16;
    const q1=financialRange(q1Start,q1End,month,q1Started),q2=financialRange(q2Start,q2End,month,q2Started),periods=[q1,q2].filter(q=>q.started);
-   const revenue=periods.reduce((a,q)=>a+q.revenue,0),margin=periods.reduce((a,q)=>a+q.margin,0),variableCosts=periods.reduce((a,q)=>a+q.variableCosts,0),scrapProfit=periods.reduce((a,q)=>a+Number(q.scrapProfit||0),0),scrapCash=periods.reduce((a,q)=>a+Number(q.scrapCash||0),0),net=margin+scrapProfit-variableCosts,marginPct=revenue>0?margin/revenue*100:0,requiredMarginPct=revenue>0?variableCosts/revenue*100:0,afterVariablePct=revenue>0?net/revenue*100:0;
-   let status="setup";if(revenue<=0&&variableCosts>0)status="bad";else if(revenue<=0)status="setup";else if(net<0)status="bad";else if(net<Math.max(150,variableCosts*.10))status="warn";else status="good";
-   return {month,label:monthLabel(month),longLabel:monthLabel(month,true),isCurrent,isPartial:isCurrent&&currentDay<endDay,q1,q2,revenue,margin,variableCosts,scrapProfit,scrapCash,net,marginPct,requiredMarginPct,afterVariablePct,status,ops:periods.flatMap(q=>q.ops||[])}
+   const revenue=periods.reduce((a,q)=>a+q.revenue,0),margin=periods.reduce((a,q)=>a+q.margin,0),variableCosts=periods.reduce((a,q)=>a+q.variableCosts,0),scrapProfit=periods.reduce((a,q)=>a+Number(q.scrapProfit||0),0),scrapCash=periods.reduce((a,q)=>a+Number(q.scrapCash||0),0),net=margin+scrapProfit-variableCosts,marginPct=revenue>0?margin/revenue*100:0,requiredMarginPct=revenue>0?variableCosts/revenue*100:0,afterVariablePct=revenue>0?net/revenue*100:0,fixedCosts=fixedCostsMonthlyTotal(),afterFixed=net-fixedCosts,target=Number(state.config?.monthlyProfitTarget||0),gapToTarget=Math.max(0,target-afterFixed);
+   let status="setup";if(revenue<=0&&variableCosts>0)status="bad";else if(revenue<=0)status="setup";else if(net<0)status="bad";else if(afterFixed<0)status="warn";else if(target>0&&afterFixed<target)status="warn";else status="good";
+   return {month,label:monthLabel(month),longLabel:monthLabel(month,true),isCurrent,isPartial:isCurrent&&currentDay<endDay,q1,q2,revenue,margin,variableCosts,scrapProfit,scrapCash,net,fixedCosts,afterFixed,target,gapToTarget,marginPct,requiredMarginPct,afterVariablePct,status,ops:periods.flatMap(q=>q.ops||[])}
  })
 }
-function monthStatusLabel(status){return status==="good"?"BOM":status==="warn"?"ATENÇÃO":status==="bad"?"CRÍTICO":"SEM MOVIMENTO"}
+function monthStatusLabel(status){return status==="good"?"SAUDÁVEL":status==="warn"?"EM ANDAMENTO":status==="bad"?"PRECISA DE ATENÇÃO":"SEM MOVIMENTO"}
 function monthStatusEmoji(status){return status==="good"?"🟢":status==="warn"?"🟡":status==="bad"?"🔴":"⚪"}
+function currentMonthStageLabel(cur){if(cur.revenue<=0)return monthStatusLabel(cur.status);if(cur.net<0)return `Faltam ${brl(Math.abs(cur.net))} p/ cobrir variáveis`;if(cur.afterFixed<0)return `Faltam ${brl(Math.abs(cur.afterFixed))} p/ equilíbrio`;if(cur.target>0&&cur.afterFixed<cur.target)return `Estrutura coberta • rumo à meta`;return cur.target>0?"Meta atingida":"Saudável"}
 function fortnightMiniCard(q,label){
  if(!q.started)return `<div class="month-fortnight-card future"><div class="month-fortnight-head"><b>${label}</b><span>⚪</span></div><div class="month-fortnight-message">Ainda não iniciada.</div></div>`;
  if(q.revenue<=0&&q.variableCosts<=0)return `<div class="month-fortnight-card setup"><div class="month-fortnight-head"><b>${label}</b><span>⚪</span></div><div class="month-fortnight-message">Sem movimento registrado.</div></div>`;
@@ -2667,17 +2724,15 @@ function renderFortnightHistory(rows){return renderMonthEvolution(monthFinancial
 function renderHomeFinanceChart(){
  homeChartPrivacyBadge.textContent=homeFinanceVisible?"visível":"oculto";homeChartPrivacyBadge.className="badge "+(homeFinanceVisible?"good":"");
  if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para acompanhar o mês e a evolução recente.</span></div>';return}
- const rows=monthFinancialRows(3),cur=rows[0],status=cur.status,statusLabel=monthStatusLabel(status),emoji=monthStatusEmoji(status);
- let headline="";
- if(cur.revenue<=0&&cur.variableCosts<=0)headline=`<b>Ainda não há movimento financeiro neste mês.</b> Assim que vendas e despesas forem registradas, o sistema começa a acompanhar as quinzenas.`;
- else if(cur.net<0)headline=`<b>O resultado das vendas${Number(cur.scrapProfit||0)!==0?" + sucata":""} ainda não está pagando os custos variáveis do mês.</b> Até agora, faltam ${brl(Math.abs(cur.net))}.`;
- else if(status==="warn")headline=`<b>O mês está positivo, mas com pouca folga.</b> Depois dos custos variáveis, sobraram ${brl(cur.net)} para ajudar a pagar a estrutura fixa.`;
- else headline=`<b>O mês está indo bem.</b> O resultado das vendas${Number(cur.scrapProfit||0)!==0?" + sucata":""} cobre os custos variáveis e deixa ${brl(cur.net)} para ajudar a pagar a estrutura fixa.`;
- const detailParts=[];const qs=[cur.q1,cur.q2].filter(q=>q.started);const route=qs.reduce((a,q)=>a+q.routeCosts,0),manual=qs.reduce((a,q)=>a+q.manualCosts,0),tax=qs.reduce((a,q)=>a+q.tax.amount,0),warranty=qs.reduce((a,q)=>a+q.warranty,0);
- if(route>0)detailParts.push(`viagens ${brl(route)}`);if(manual>0)detailParts.push(`taxas/outros ${brl(manual)}`);if(tax>0)detailParts.push(`impostos ${brl(tax)}`);if(warranty>0)detailParts.push(`garantias ${brl(warranty)}`);if(Number(cur.scrapProfit||0)!==0)detailParts.push(`resultado sucata ${cur.scrapProfit>=0?"+":""}${brl(cur.scrapProfit)}`);
- const costDetail=detailParts.length?detailParts.join(" • "):"Nenhum custo variável real registrado no mês até agora.";
- const kfMonthTotal=state.sales.filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===cur.month).reduce((a,s)=>a+Number(s.total||0),0);
- homeFinanceChart.innerHTML=`<div class="month-dashboard"><div class="month-main-head"><div><div class="month-main-title">${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas AX do mês: ${brl(cur.revenue)}${kfMonthTotal>0?` • via KF: ${brl(kfMonthTotal)} (segregado)`:""}</div></div><span class="month-status ${status}">${emoji} ${statusLabel}</span></div><div class="month-main-kpis"><div class="month-kpi"><span>Margem vendas</span><b>${brl(cur.margin)}</b></div><div class="month-kpi"><span>Custos variáveis</span><b class="${cur.variableCosts>cur.margin+Number(cur.scrapProfit||0)?"rent-bad":""}">${brl(cur.variableCosts)}</b></div><div class="month-kpi"><span>Resultado sucata</span><b class="${Number(cur.scrapProfit||0)<0?"rent-bad":"rent-good"}">${cur.scrapProfit>=0?"+":""}${brl(cur.scrapProfit||0)}</b></div><div class="month-kpi result ${status}"><span>${cur.net>=0?"Sobra":"Falta"}</span><b>${brl(Math.abs(cur.net))}</b></div></div><div class="month-main-message ${status}">${headline}<div class="muted" style="margin-top:6px">${costDetail}</div></div><div class="month-fortnight-title">Como o mês está se formando</div><div class="month-fortnights">${fortnightMiniCard(cur.q1,"1ª quinzena")}${fortnightMiniCard(cur.q2,"2ª quinzena")}</div><div class="month-reading"><div><span>Margem média das vendas</span><b class="rent-${cur.marginPct>=Number(state.config?.orderRentabilityReference??12)?"good":"bad"}">${cur.marginPct.toFixed(1)}%</b></div><div><span>Margem necessária para cobrir os variáveis</span><b class="rent-${cur.marginPct>=cur.requiredMarginPct?"good":"bad"}">${cur.requiredMarginPct.toFixed(1)}%</b></div></div>${renderMonthEvolution(rows)}</div>`
+ const rows=monthFinancialRows(3),cur=rows[0],status=cur.status,emoji=monthStatusEmoji(status),statusLabel=currentMonthStageLabel(cur),kfMonthTotal=state.sales.filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===cur.month).reduce((a,s)=>a+Number(s.total||0),0);
+ const variableCovered=cur.net>=0,structureCovered=cur.afterFixed>=0,targetHit=cur.target<=0?structureCovered:cur.afterFixed>=cur.target;
+ const route=[cur.q1,cur.q2].filter(q=>q.started).reduce((a,q)=>a+q.routeCosts,0),manual=[cur.q1,cur.q2].filter(q=>q.started).reduce((a,q)=>a+q.manualCosts,0),tax=[cur.q1,cur.q2].filter(q=>q.started).reduce((a,q)=>a+q.tax.amount,0),warranty=[cur.q1,cur.q2].filter(q=>q.started).reduce((a,q)=>a+q.warranty,0),parts=[];if(route>0)parts.push(`viagens ${brl(route)}`);if(manual>0)parts.push(`taxas/outros ${brl(manual)}`);if(tax>0)parts.push(`impostos ${brl(tax)}`);if(warranty>0)parts.push(`garantias ${brl(warranty)}`);
+ homeFinanceChart.innerHTML=`<div class="month-dashboard month-dashboard-v519"><div class="month-main-head"><div><div class="month-main-title">${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas AX: ${brl(cur.revenue)}${kfMonthTotal>0?` • KF ${brl(kfMonthTotal)} segregado`:""}</div></div><span class="month-status ${status}">${emoji} ${statusLabel}</span></div>
+ <div class="month-stage-flow"><div class="month-stage"><span>1. Margem gerada</span><b>${brl(cur.margin)}</b>${Number(cur.scrapProfit||0)!==0?`<small>Sucata ${cur.scrapProfit>=0?"+":""}${brl(cur.scrapProfit)}</small>`:""}</div><div class="month-stage ${variableCovered?"done":"alert"}"><span>2. Após custos variáveis</span><b>${cur.net>=0?"+":"-"}${brl(Math.abs(cur.net))}</b><small>Variáveis: ${brl(cur.variableCosts)}</small></div><div class="month-stage ${structureCovered?"done":"pending"}"><span>3. Após estrutura fixa</span><b>${cur.afterFixed>=0?"+":"-"}${brl(Math.abs(cur.afterFixed))}</b><small>Estrutura: ${brl(cur.fixedCosts)}</small></div><div class="month-stage ${targetHit?"done":"pending"}"><span>4. Meta líquida</span><b>${brl(cur.target)}</b><small>${cur.target>0?(cur.gapToTarget>0?`Faltam ${brl(cur.gapToTarget)}`:"Atingida"):'Sem meta configurada'}</small></div></div>
+ <div class="month-stage-pills"><span class="${variableCovered?"done":"alert"}">${variableCovered?"✓":"!"} Variáveis</span><span class="${structureCovered?"done":"pending"}">${structureCovered?"✓":"○"} Estrutura</span><span class="${targetHit?"done":"pending"}">${targetHit?"✓":"○"} Meta</span></div>
+ ${parts.length?`<div class="month-cost-line">Custos variáveis registrados: ${parts.join(" • ")}</div>`:""}
+ <details class="month-details"><summary>Como o mês está se formando</summary><div class="month-fortnights">${fortnightMiniCard(cur.q1,"1ª quinzena")}${fortnightMiniCard(cur.q2,"2ª quinzena")}</div><div class="month-reading"><div><span>Margem média das vendas</span><b>${cur.marginPct.toFixed(1)}%</b></div><div><span>Margem para cobrir variáveis</span><b>${cur.requiredMarginPct.toFixed(1)}%</b></div></div></details>
+ <details class="month-details"><summary>Evolução dos últimos 3 meses</summary>${renderMonthEvolution(rows)}</details></div>`
 }
 function renderHome(){
  const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),monthAX=month.filter(isAXFinancialSale),monthKF=month.filter(isKFSale),
@@ -2738,35 +2793,47 @@ function findRouteRunForSale(clientId,date,existingId=""){
  return [...(state.routeRuns||[])].filter(r=>String(r.date||"")===String(date||"")&&(r.currentClientIds||[]).includes(clientId)).sort((a,b)=>String(b.createdAt||"").localeCompare(String(a.createdAt||"")))[0]||null
 }
 function chooseSmartRoute(index){const p=smartRoutePlan,r=p?.routes?.[index];if(!r)return;const ids=r.order.map(i=>p.candidates[i-1]?.c?.id).filter(Boolean),run={id:uid(),date:today(),createdAt:nowIsoSP(),status:"planned",plannedClientIds:[...ids],currentClientIds:[...ids],plannedKm:Number(r.km||0),plannedMinutes:Number(r.minutes||0),plannedToll:Number(r.toll||0),plannedCost:Number(r.travelCost||0),plannedRevenue:Number(r.revenue||0),plannedReturn:Number(r.grossProfit||0),plannedResult:Number(r.result||0),currentKm:Number(r.km||0),currentMinutes:Number(r.minutes||0),currentToll:Number(r.toll||0),currentEstimatedCost:Number(r.travelCost||0),expenses:[],attendedClientIds:[],source:"smart",edited:false};state.routeRuns.unshift(run);save();setTimeout(()=>openRouteRunEditor(run.id),40)}
+function routeRunSalesStats(r){
+ const sales=state.sales.filter(s=>isAXFinancialSale(s)&&s.routeRunId===r.id),revenue=sales.reduce((a,s)=>a+Number(s.total||0),0),margin=sales.reduce((a,s)=>a+Number(saleOperationalBreakdown(s).commercialMargin||0),0);
+ return {count:sales.length,revenue,margin}
+}
+function toggleRouteHistoryRun(id){expandedRouteHistory.has(id)?expandedRouteHistory.delete(id):expandedRouteHistory.add(id);renderRouteRuns()}
+function deleteRouteExpense(routeId,expenseId){
+ const r=state.routeRuns.find(x=>x.id===routeId);if(!r)return;const e=(r.expenses||[]).find(x=>x.id===expenseId);if(!e)return;
+ if(!confirm(`Excluir ${routeExpenseLabel(e.category)} de ${brl(e.amount)}?`))return;
+ r.expenses=(r.expenses||[]).filter(x=>x.id!==expenseId);r.updatedAt=nowIsoSP();save()
+}
+function routeExpenseListHtml(r){
+ const expenses=r.expenses||[];if(!expenses.length)return '<div class="muted" style="margin-top:8px">Nenhuma despesa real lançada.</div>';
+ return `<div class="route-expense-list">${expenses.map(e=>`<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></span><div class="route-expense-value"><b>${brl(e.amount)}</b><button class="route-expense-delete" type="button" onclick="deleteRouteExpense('${r.id}','${e.id}')" aria-label="Excluir despesa">🗑️</button></div></div>`).join("")}</div>`
+}
+function routeRunFullCard(r,idx=0){
+ const manual=r.source==="manual",expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),hasExpenses=expenses.length>0,status=r.status==="completed"?"Concluída":"Em andamento",ids=r.currentClientIds||[],attended=r.attendedClientIds||[],changed=manual||r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids),ca=r.continuationAnalysis;
+ const currentEstimate=Number(r.currentEstimatedCost||0),comparisonBase=manual?currentEstimate:planned,diff=actual-comparisonBase;
+ const diffHtml=hasExpenses&&comparisonBase>0?`<b>${diff>=0?"+ ":"- "}${brl(Math.abs(diff))}</b><span>${diff>=0?"Acima da estimativa":"Abaixo da estimativa"}</span>`:manual?`<b>${brl(actual)}</b><span>Total realizado</span>`:`<b>—</b><span>Comparação após lançamentos</span>`;
+ const manualEstimate=Number(r.currentKm||0)>0?`<div class="route-estimate-rich"><b>${brl(currentEstimate)}</b><span>${Number(r.currentKm||0).toFixed(0)} km • ${fmtHours(r.currentMinutes||0)}</span><span>Pedágio: ${r.currentTollAvailable?brl(r.currentToll||0):r.currentTollError?"indisponível no cálculo":"sem valor retornado"} • Custo/km: ${brl(Number(state.config.costKm||0))}</span></div>`:`<b>${ids.length?'Toque em “Recalcular trajeto completo” para calcular.':'Adicione clientes para gerar a estimativa.'}</b>`;
+ const planHtml=manual?`<div class="route-plan-compare manual"><div><small>Origem</small><b>Viagem manual</b></div><div><small>Estimativa da viagem</small>${manualEstimate}</div></div>`:`<div class="route-plan-compare"><div><small>Planejado pelo sistema</small><b>${brl(planned)} • ${Number(r.plannedKm||0).toFixed(0)} km</b></div><div><small>Estimativa da rota atual</small><b>${brl(Number(r.currentEstimatedCost??planned))} • ${Number(r.currentKm??r.plannedKm??0).toFixed(0)} km</b></div></div>`;
+ return `<div class="card route-run-card"><div class="cardhead"><div><h3>${manual?"Viagem manual":"Rota"} ${fmt(r.date)}${idx===0&&r.status!=="completed"?" • mais recente":""}</h3><div class="muted">${ids.length} cliente(s) • ${attended.length} atendido(s) • ${manual?"registrada pelo Alex":changed?"rota editada":"rota conforme sugestão"}</div></div><span class="badge ${r.status==="completed"?"good":"warn"}">${status}</span></div>
+ ${ids.length?routeClientSequence(ids):'<div class="notice"><b>Sem clientes vinculados.</b> Você ainda pode usar esta viagem para registrar despesas reais.</div>'}${planHtml}
+ ${ca?`<div class="route-continue-box ${ca.status}"><div class="route-continue-head"><b>${ca.status==="good"?"🟢":ca.status==="bad"?"🔴":"🟡"} ${esc(ca.label)}</b><small>${ca.remainingClients} cliente(s) restantes</small></div><div>${esc(ca.message)}</div>${ca.remainingClients?`<div class="route-continue-kpis"><span>Custo para continuar <b>${brl(ca.travelCost)}</b></span><span>Retorno comercial esperado <b>${brl(ca.potentialReturn)}</b></span><span>Resultado estimado <b>${brl(ca.estimatedResult)}</b></span><span>${Number(ca.km||0).toFixed(0)} km • ${fmtHours(ca.minutes||0)}</span></div>`:""}</div>`:""}
+ <div class="route-expense-summary"><div class="mini"><b>${brl(actual)}</b><span>Despesas reais</span></div><div class="mini">${diffHtml}</div><div class="mini"><b>${expenses.length}</b><span>Lançamentos</span></div></div>${routeExpenseListHtml(r)}
+ <div class="route-run-actions"><button class="btn secondary" onclick="openRouteRunEditor('${r.id}')">✏️ Editar / atendidos</button>${ids.length?`<button class="btn secondary" onclick="recalculateRouteRun('${r.id}')">↻ Recalcular trajeto completo</button><button class="btn ${attended.length?"good":"secondary"}" onclick="recalculateRouteFromHere('${r.id}')">📍 Recalcular a partir daqui</button>`:""}<button class="btn" onclick="openRouteExpense('${r.id}')">＋ Despesa</button><button class="btn ${r.status==="completed"?"secondary":"good"}" onclick="toggleRouteRunStatus('${r.id}')">${r.status==="completed"?"Reabrir":"Finalizar rota"}</button><button class="btn danger" onclick="deleteRouteRun('${r.id}')">Excluir rota</button></div></div>`
+}
+function routeHistoryCompactRow(r){
+ const expanded=expandedRouteHistory.has(r.id),stats=routeRunSalesStats(r),actual=routeRunExpenseTotal(r),ids=r.currentClientIds||[],manual=r.source==="manual";
+ return `<div class="route-history-run"><button class="route-history-run-head" type="button" onclick="toggleRouteHistoryRun('${r.id}')"><div><b>${manual?"Viagem manual":"Rota"} • ${fmt(r.date)}</b><span>${ids.length} cliente(s) • despesas ${brl(actual)}${stats.count?` • ${stats.count} venda(s)`:""}</span></div><span class="route-history-chevron">${expanded?"⌃":"⌄"}</span></button>${expanded?`<div class="route-history-expanded"><div class="route-history-kpis"><span>Vendas vinculadas <b>${brl(stats.revenue)}</b></span><span>Margem gerada <b>${brl(stats.margin)}</b></span><span>Despesas reais <b>${brl(actual)}</b></span></div>${routeRunFullCard(r)}</div>`:""}</div>`
+}
 function renderRouteRuns(){
  if(!window.routeRunsList)return;
- const runs=[...(state.routeRuns||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
- if(!runs.length){
-   routeRunsList.innerHTML='<div class="card"><div class="cardhead"><div><h2>Rotas e viagens</h2><div class="muted">Você pode escolher uma rota sugerida ou registrar uma viagem manual para lançar despesas.</div></div></div><div class="empty">Nenhuma rota/viagem registrada ainda.</div></div>';
-   return
- }
- routeRunsList.innerHTML='<div class="cardhead"><div><h2>Rotas e viagens realizadas</h2><div class="muted">Compare o custo estimado com o que realmente foi gasto.</div></div></div>'+runs.map((r,idx)=>{
-   const manual=r.source==="manual",expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),hasExpenses=expenses.length>0,status=r.status==="completed"?"Concluída":"Em andamento",ids=r.currentClientIds||[],attended=r.attendedClientIds||[],changed=manual||r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids),ca=r.continuationAnalysis;
-   const currentEstimate=Number(r.currentEstimatedCost||0),comparisonBase=manual?currentEstimate:planned,diff=actual-comparisonBase;
-   const diffHtml=hasExpenses&&comparisonBase>0
-     ? `<b>${diff>=0?"+ ":"- "}${brl(Math.abs(diff))}</b><span>${diff>=0?"Acima da estimativa":"Abaixo da estimativa"}</span>`
-     : manual?`<b>${brl(actual)}</b><span>Total realizado</span>`:`<b>—</b><span>Comparação após lançamentos</span>`;
-   const manualEstimate=Number(r.currentKm||0)>0
-     ? `<div class="route-estimate-rich"><b>${brl(currentEstimate)}</b><span>${Number(r.currentKm||0).toFixed(0)} km • ${fmtHours(r.currentMinutes||0)}</span><span>Pedágio: ${r.currentTollAvailable?brl(r.currentToll||0):r.currentTollError?"indisponível no cálculo":"sem valor retornado"} • Custo/km: ${brl(Number(state.config.costKm||0))}</span></div>`
-     : `<b>${ids.length?"Toque em “Recalcular trajeto completo” para calcular.":"Adicione clientes para gerar a estimativa."}</b>`;
-   const planHtml=manual
-     ? `<div class="route-plan-compare manual"><div><small>Origem</small><b>Viagem manual</b></div><div><small>Estimativa da viagem</small>${manualEstimate}</div></div>`
-     : `<div class="route-plan-compare"><div><small>Planejado pelo sistema</small><b>${brl(planned)} • ${Number(r.plannedKm||0).toFixed(0)} km</b></div><div><small>Estimativa da rota atual</small><b>${brl(Number(r.currentEstimatedCost??planned))} • ${Number(r.currentKm??r.plannedKm??0).toFixed(0)} km</b></div></div>`;
-   return `<div class="card route-run-card">
-     <div class="cardhead"><div><h3>${manual?"Viagem manual":"Rota"} ${fmt(r.date)}${idx===0?" • mais recente":""}</h3><div class="muted">${ids.length} cliente(s) • ${attended.length} atendido(s) • ${manual?"registrada pelo Alex":changed?"rota editada":"rota conforme sugestão"}</div></div><span class="badge ${r.status==="completed"?"good":"warn"}">${status}</span></div>
-     ${ids.length?routeClientSequence(ids):'<div class="notice"><b>Sem clientes vinculados.</b> Você ainda pode usar esta viagem para registrar despesas reais.</div>'}
-     ${planHtml}
-     ${ca?`<div class="route-continue-box ${ca.status}"><div class="route-continue-head"><b>${ca.status==="good"?"🟢":ca.status==="bad"?"🔴":"🟡"} ${esc(ca.label)}</b><small>${ca.remainingClients} cliente(s) restantes</small></div><div>${esc(ca.message)}</div>${ca.remainingClients?`<div class="route-continue-kpis"><span>Custo para continuar <b>${brl(ca.travelCost)}</b></span><span>Retorno comercial esperado <b>${brl(ca.potentialReturn)}</b></span><span>Resultado estimado <b>${brl(ca.estimatedResult)}</b></span><span>${Number(ca.km||0).toFixed(0)} km • ${fmtHours(ca.minutes||0)}</span></div>`:""}</div>`:""}
-     <div class="route-expense-summary"><div class="mini"><b>${brl(actual)}</b><span>Despesas reais</span></div><div class="mini">${diffHtml}</div><div class="mini"><b>${expenses.length}</b><span>Lançamentos</span></div></div>
-     ${hasExpenses?`<div class="route-expense-list">${expenses.map(e=>`<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></span><b>${brl(e.amount)}</b></div>`).join("")}</div>`:'<div class="muted" style="margin-top:8px">Nenhuma despesa real lançada.</div>'}
-     <div class="route-run-actions"><button class="btn secondary" onclick="openRouteRunEditor('${r.id}')">✏️ Editar / atendidos</button>${ids.length?`<button class="btn secondary" onclick="recalculateRouteRun('${r.id}')">↻ Recalcular trajeto completo</button><button class="btn ${attended.length?"good":"secondary"}" onclick="recalculateRouteFromHere('${r.id}')">📍 Recalcular a partir daqui</button>`:""}<button class="btn" onclick="openRouteExpense('${r.id}')">＋ Despesa</button><button class="btn ${r.status==="completed"?"secondary":"good"}" onclick="toggleRouteRunStatus('${r.id}')">${r.status==="completed"?"Reabrir":"Finalizar rota"}</button><button class="btn danger" onclick="deleteRouteRun('${r.id}')">Excluir rota</button></div>
-   </div>`
- }).join("")
+ const runs=[...(state.routeRuns||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||"")),open=runs.filter(r=>r.status!=="completed"),completed=runs.filter(r=>r.status==="completed");
+ if(!runs.length){routeRunsList.innerHTML='<div class="card"><div class="cardhead"><div><h2>Rotas e viagens</h2><div class="muted">Você pode escolher uma rota sugerida ou registrar uma viagem manual para lançar despesas.</div></div></div><div class="empty">Nenhuma rota/viagem registrada ainda.</div></div>';return}
+ let h="";
+ if(open.length)h+=`<div class="route-current-section"><div class="route-section-head"><div><h2>Em andamento</h2><span>${open.length} rota(s)/viagem(ns) aberta(s)</span></div></div>${open.map((r,i)=>routeRunFullCard(r,i)).join("")}</div>`;
+ const recentMonthsSet=new Set(monthKeys(3)),visible=completed.filter(r=>recentMonthsSet.has(String(r.date||"").slice(0,7))),groups={};visible.forEach(r=>{const k=String(r.date||"").slice(0,7);(groups[k]||(groups[k]=[])).push(r)});
+ h+=`<div class="route-history-section"><div class="route-section-head"><div><h2>Histórico de rotas</h2><span>Últimos 3 meses • concluídas e minimizadas</span></div></div>`;
+ const keys=monthKeys(3).filter(k=>groups[k]?.length);if(!keys.length)h+='<div class="empty">Nenhuma rota concluída nos últimos 3 meses.</div>';
+ else h+=keys.map(k=>{const rs=groups[k],expenses=rs.reduce((a,r)=>a+routeRunExpenseTotal(r),0),stats=rs.reduce((a,r)=>{const s=routeRunSalesStats(r);a.revenue+=s.revenue;a.margin+=s.margin;a.sales+=s.count;return a},{revenue:0,margin:0,sales:0});return `<div class="route-history-month"><div class="route-history-month-head"><div><b>${monthLabel(k,true)}</b><span>${rs.length} rota(s) • ${stats.sales} venda(s)${stats.sales?` • vendas ${brl(stats.revenue)} • margem ${brl(stats.margin)}`:""}</span></div><div><strong>${brl(expenses)}</strong><small>despesas</small></div></div>${rs.map(routeHistoryCompactRow).join("")}</div>`}).join("");
+ h+='</div>';routeRunsList.innerHTML=h
 }
 function openRouteRunEditor(id){
  const r=state.routeRuns.find(r=>r.id===id);if(!r)return;
@@ -2851,9 +2918,28 @@ function toggleRouteRunStatus(id){const r=state.routeRuns.find(r=>r.id===id);if(
 function openRouteExpense(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;routeExpenseForm.reset();reRouteId.value=id;reDate.value=today();selectRouteExpenseCategory("fuel");openSheet("routeExpenseSheet")}
 function selectRouteExpenseCategory(cat){reCategory.value=cat;document.querySelectorAll(".expense-category-btn").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));reAmount.focus()}
 function candidateTimingText(x){if(!x.st.orders)return "sem histórico";const when=x.st.next?fmt(x.st.next):"—",late=x.delta!=null&&x.delta<0?` • ${Math.abs(x.delta)}d atrasado`:"";return `próx. ${when}${late}`}
+function setRouteCandidateSort(v){routeCandidateSort=v;renderRoutes()}
+function setRouteCandidateFilter(v){routeCandidateFilter=v;renderRoutes()}
+function candidateSortRows(rows){
+ let list=[...rows];
+ if(routeCandidateFilter==="overdue")list=list.filter(x=>Number(x.overdueDays||0)>0);
+ if(routeCandidateFilter==="priority")list=list.filter(x=>x.manual);
+ const cmp={
+  overdue:(a,b)=>Number(b.overdueDays||0)-Number(a.overdueDays||0)||Number(b.st.netAvgMargin||0)-Number(a.st.netAvgMargin||0),
+  return:(a,b)=>Number(b.st.netAvgMargin||0)-Number(a.st.netAvgMargin||0)||Number(b.overdueDays||0)-Number(a.overdueDays||0),
+  ticket:(a,b)=>Number(b.st.ticket||0)-Number(a.st.ticket||0)||Number(b.overdueDays||0)-Number(a.overdueDays||0),
+  recommended:(a,b)=>smartCandidateScore(b,1)-smartCandidateScore(a,1)||Number(b.manual)-Number(a.manual)||Number(b.overdueDays||0)-Number(a.overdueDays||0)
+ }[routeCandidateSort]||(()=>0);return list.sort(cmp)
+}
+function candidateUrgencyChip(x){if(!x.st.orders)return '<span class="candidate-chip neutral">Novo</span>';if(Number(x.overdueDays||0)>0)return `<span class="candidate-chip overdue">${x.overdueDays}d atrasado</span>`;return `<span class="candidate-chip due">${x.delta===0?"Hoje":"Na janela"}</span>`}
+function renderRouteCandidates(crit){
+ const rows=candidateSortRows(crit),sorts=[["recommended","Recomendado"],["overdue","Mais atrasados"],["return","Maior retorno"],["ticket","Maior ticket"]],filters=[["all","Todos"],["overdue","Atrasados"],["priority","Priorizados"]];
+ routeCandidates.innerHTML=`<div class="route-candidate-head"><div><h2>Clientes que precisam de visita</h2><div class="muted">${crit.length} cliente(s) dentro da janela ou marcados como prioridade.</div></div></div>
+ <div class="candidate-controls"><div class="candidate-control-label">Ordenar por</div><div class="candidate-sort-row">${sorts.map(([k,l])=>`<button class="candidate-sort ${routeCandidateSort===k?"active":""}" onclick="setRouteCandidateSort('${k}')">${l}</button>`).join("")}</div><div class="candidate-legend"><b>Ticket:</b> clientes que compram mais. <b>Retorno:</b> clientes que geram mais margem.</div><div class="candidate-filter-row">${filters.map(([k,l])=>`<button class="candidate-filter ${routeCandidateFilter===k?"active":""}" onclick="setRouteCandidateFilter('${k}')">${l}</button>`).join("")}</div></div>
+ ${rows.length?`<div class="route-candidate-list">${rows.map(x=>`<div class="route-candidate-row"><button class="candidate-star ${x.manual?"active":""}" onclick="toggleVisitPriority('${x.c.id}')" aria-label="${x.manual?"Retirar prioridade":"Priorizar cliente"}">${x.manual?"★":"☆"}</button><div class="route-candidate-main"><div class="route-candidate-name">${esc(x.c.name)}</div><div class="route-candidate-sub">${esc(x.c.city)} • ${x.st.next?`próx. ${fmt(x.st.next)}`:"sem histórico"}</div><div class="route-candidate-chips">${candidateUrgencyChip(x)}${x.st.orders?`<span class="candidate-chip">Ticket ${brl(x.st.ticket)}</span><span class="candidate-chip return">Retorno ${brl(x.st.netAvgMargin||0)}</span>`:'<span class="candidate-chip neutral">Sem histórico</span>'}</div></div></div>`).join("")}</div>`:'<div class="empty">Nenhum cliente encontrado com este filtro.</div>'}`
+}
 function renderRoutes(){
- renderRouteRuns();const crit=criticalClients();
- routeCandidates.innerHTML=`<div class="cardhead"><div><h2>Clientes que precisam de visita</h2><div class="muted">${crit.length} cliente(s) dentro da janela ou marcados como prioridade.</div></div></div>`+(crit.length?`<div class="route-candidate-grid">${crit.map(x=>`<div class="route-candidate-card"><div class="title">${x.manual?'<span class="priority-dot"></span>':""}${esc(x.c.name)}</div><div class="meta">${esc(x.c.city)}<br>${candidateTimingText(x)}<br>${x.st.orders?`ticket médio <b>${brl(x.st.ticket)}</b>`:"cliente novo"}</div><button class="btn secondary" onclick="toggleVisitPriority('${x.c.id}')">${x.manual?"Retirar prioridade":"Priorizar"}</button></div>`).join("")}</div>`:'<div class="empty">Nenhum cliente crítico. Na ficha do cliente você pode marcar “Priorizar visita”.</div>');
+ renderRouteRuns();const crit=criticalClients();renderRouteCandidates(crit);
  if(!smartRoutePlan){smartRoutesList.innerHTML='<div class="empty"><b>Quer ajuda do sistema?</b> Use “Analisar rotas”.<br><br>O resultado terá duas visões: <b>retorno financeiro</b> e <b>prospecção/relacionamento</b>.</div>';return}renderSmartRoutePlan()
 }
 function fmtHours(minutes){const h=Math.floor(minutes/60),m=Math.round(minutes%60);return `${h}h${String(m).padStart(2,"0")}`}
@@ -2939,8 +3025,8 @@ function renderSettings(){ensureConfig();cfgKm.value=state.config.costKm;cfgWind
 
 function renderSales(){
  ensureState();
- salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");
- salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");
+ if(window.salesMonthFilters)salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");
+ if(window.salesStatusFilters)salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");
 
  const clientQuery=normalizeSaleSearch(window.salesClientSearch?.value||"");
  const duplicateIds=possibleDuplicateSales();
@@ -2959,11 +3045,12 @@ function renderSales(){
 
  list.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||String(b.createdAt||"").localeCompare(String(a.createdAt||"")));
  if(window.salesFilterSummary){
-   const bits=[];
-   if(clientQuery)bits.push(`cliente contendo “${esc(window.salesClientSearch.value.trim())}”`);
-   if(salesMonthFilter!=="all")bits.push(`mês ${recentMonths().find(m=>m.key===salesMonthFilter)?.label||salesMonthFilter}`);
-   if(salesStatusFilter!=="all")bits.push({open:"a receber",late:"vencido",paid:"recebido"}[salesStatusFilter]||salesStatusFilter);
-   salesFilterSummary.innerHTML=`${list.length} venda(s) encontrada(s)${bits.length?` • ${bits.join(" • ")}`:""}`
+   const monthLabelActive=recentMonths().find(m=>m.key===salesMonthFilter)?.label||salesMonthFilter,statusLabelActive={open:"A receber",late:"Vencido",paid:"Recebido"}[salesStatusFilter]||"Tudo",activeCount=Number(salesMonthFilter!=="all")+Number(salesStatusFilter!=="all");
+   salesFilterSummary.innerHTML=`<b>${list.length}</b> venda(s)`;
+   if(window.salesActiveFilterBtn)salesActiveFilterBtn.textContent=activeCount?`⚙️ Filtros · ${activeCount}`:"⚙️ Filtrar";
+   if(window.salesClearFiltersBtn)salesClearFiltersBtn.classList.toggle("hidden",!(activeCount||clientQuery));
+   if(window.salesSearchClearBtn)salesSearchClearBtn.classList.toggle("hidden",!clientQuery);
+   if(window.salesActiveChips)salesActiveChips.innerHTML=`${salesMonthFilter!=="all"?`<button onclick="setSalesMonthFilter('all')">Mês: ${esc(monthLabelActive)} ×</button>`:""}${salesStatusFilter!=="all"?`<button onclick="setSalesStatusFilter('all')">${esc(statusLabelActive)} ×</button>`:""}`;
  }
  if(!list.length){salesList.innerHTML='<div class="empty">Nenhuma venda encontrada com esses filtros.</div>';return}
 
