@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.20">
-<meta name="ax-build" content="2026-09-18-v5.20-home-health-sales-clean">
+<meta name="ax-version" content="5.21">
+<meta name="ax-build" content="2026-09-21-v5.21-results-dashboard-kf-history">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -1055,6 +1055,16 @@ html,body{max-width:100%;overflow-x:hidden}
  .home-kpi-grid .metric{min-height:105px;padding:12px}.home-kpi-grid .metric .value{font-size:20px}.home-quick-actions button{min-height:54px;padding:10px}.health-flow-head strong{font-size:17px}.health-net-zone{margin-left:4px;margin-right:4px}.health-net-bar{width:20px}.sales-visible-filter-group{grid-template-columns:36px minmax(0,1fr)}.sales-filter-visible .filter-btn{padding:6px 8px;font-size:8.4px}
 }
 
+
+/* v5.21 — painel de resultados, período explícito e histórico KF */
+.home-period-picker{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0 10px;padding:9px 10px;border:1px solid var(--line);border-radius:13px;background:#fff}.home-period-picker b{display:block;font-size:9px}.home-period-picker span{display:block;font-size:7.5px;color:var(--muted);margin-top:2px}.home-month-filters{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.home-month-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 8px;font-size:8px;font-weight:850;color:#475467}.home-month-btn.active{background:#101828;color:#fff;border-color:#101828}
+.results-card{overflow:hidden}.results-dashboard{display:grid;gap:12px}.results-section{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}.results-section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px 11px;border-bottom:1px solid #eef0f2;background:#fcfcfd}.results-section-head b{font-size:10.5px}.results-section-head span{font-size:7.5px;color:var(--muted);text-align:right}.results-month-table{width:100%}.results-month-row{display:grid;grid-template-columns:.9fr 1.2fr 1.15fr 1.15fr;gap:5px;align-items:center;padding:9px 10px;border-bottom:1px solid #eef0f2;font-size:8.2px}.results-month-row:last-child{border-bottom:0}.results-month-row.head{background:#f9fafb;color:#667085;text-transform:uppercase;font-weight:900;font-size:7px}.results-month-row b{font-size:8.7px}.results-month-row .positive{color:#067647}.results-month-row .negative{color:#b42318}.results-footnote{font-size:7.5px;line-height:1.4;color:#667085;padding:8px 10px;background:#f9fafb;border-top:1px solid #eef0f2}
+.results-split{display:grid;grid-template-columns:1.15fr .85fr;gap:10px}.model-chart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px}.model-chart-card{border:1px solid var(--line);border-radius:12px;padding:8px;min-width:0;background:#fff}.model-chart-title{display:flex;justify-content:space-between;align-items:center;gap:5px}.model-chart-title b{font-size:11px}.model-chart-title span{font-size:7px;color:#667085}.model-bars{height:88px;display:flex;align-items:flex-end;justify-content:space-around;gap:5px;margin-top:8px;border-bottom:1px solid #d0d5dd;padding:0 2px}.model-bar-col{height:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0}.model-bar-col strong{font-size:7.5px;margin-bottom:3px}.model-bar{width:72%;max-width:28px;min-height:2px;border-radius:5px 5px 0 0;background:#2563eb}.model-bar.green{background:#16a34a}.model-bar.orange{background:#f79009}.model-bar-col small{font-size:6.8px;color:#667085;margin-top:3px;text-transform:capitalize}.model-total{text-align:center;font-size:7.5px;color:#475467;margin-top:7px}.model-total b{font-size:8px;color:#101828}
+.expense-wrap{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;padding:10px}.expense-donut{width:126px;height:126px;border-radius:50%;position:relative;margin:auto}.expense-donut:after{content:'';position:absolute;inset:29px;background:#fff;border-radius:50%;box-shadow:0 0 0 1px #eef0f2}.expense-donut-center{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;pointer-events:none}.expense-donut-center b{font-size:11px}.expense-donut-center span{font-size:6.8px;color:#667085}.expense-legend{display:grid;gap:5px}.expense-legend-row{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:6px;align-items:center;font-size:7.5px}.expense-legend-dot{width:8px;height:8px;border-radius:50%}.expense-legend-row b{font-size:7.8px}.expense-legend-row span{color:#667085}.expense-empty{padding:18px;text-align:center;color:#667085;font-size:8px}
+.kf-results{padding:10px}.kf-results-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.kf-results-top b{font-size:16px;color:#1d4ed8}.kf-results-top span{font-size:7.5px;color:#667085;display:block;margin-top:2px}.kf-results-top .btn{padding:7px 9px;font-size:8px}.kf-trend{height:72px;display:flex;align-items:flex-end;gap:9px;margin-top:8px;border-bottom:1px solid #d0d5dd;padding:0 8px}.kf-trend-col{flex:1;height:100%;display:flex;align-items:center;justify-content:flex-end;flex-direction:column}.kf-trend-col b{font-size:7.2px;margin-bottom:3px}.kf-trend-bar{width:44%;max-width:34px;background:#3b82f6;border-radius:5px 5px 0 0;min-height:2px}.kf-trend-col small{font-size:6.8px;color:#667085;margin-top:3px;text-transform:capitalize}
+.sales-visible-filters{grid-template-columns:1fr 1fr 1fr}.sales-visible-filter-group:last-child{grid-column:auto}
+@media(max-width:520px){.home-period-picker{align-items:flex-start;flex-direction:column}.home-month-filters{justify-content:flex-start}.results-split{grid-template-columns:1fr}.model-chart-grid{gap:5px;padding:8px}.model-chart-card{padding:7px 5px}.model-chart-title{flex-direction:column;align-items:flex-start}.expense-wrap{grid-template-columns:120px 1fr}.expense-donut{width:112px;height:112px}.expense-donut:after{inset:26px}.sales-visible-filters{grid-template-columns:1fr}.sales-visible-filter-group:last-child{grid-column:auto}}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -1080,7 +1090,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.20</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.21</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -1091,11 +1101,15 @@ html,body{max-width:100%;overflow-x:hidden}
     <div><h1>Olá, Alex</h1><div class="muted">O que precisa da sua atenção hoje.</div></div>
     <button id="homeFinanceToggle" class="visibility-btn" onclick="toggleHomeFinance()">👁 Ver valores</button>
   </div>
+  <div class="home-period-picker">
+    <div><b>Período do painel</b><span>Os números abaixo seguem o mês selecionado.</span></div>
+    <div id="homeMonthFilters" class="home-month-filters"></div>
+  </div>
   <div class="hero home-kpi-grid">
-    <div class="metric"><div class="label">Vendas AX no mês</div><div class="value" id="hSales">R$ 0</div><div class="sub">faturamento da AX</div></div>
-    <div class="metric"><div class="label">Vendas via KF</div><div class="value" id="hKfSales">R$ 0</div><div class="sub">fora do financeiro AX</div></div>
-    <div class="metric"><div class="label">A receber</div><div class="value" id="hOpen">R$ 0</div><div class="sub">parcelas abertas da AX</div></div>
-    <div class="metric"><div class="label">Vencido</div><div class="value" id="hOver">R$ 0</div><div class="sub">cobrar</div></div>
+    <div class="metric"><div class="label">Vendas AX</div><div class="value" id="hSales">R$ 0</div><div class="sub" id="hSalesSub">faturamento da AX</div></div>
+    <div class="metric"><div class="label">Vendas via KF</div><div class="value" id="hKfSales">R$ 0</div><div class="sub" id="hKfSalesSub">fora do financeiro AX</div></div>
+    <div class="metric"><div class="label">A receber</div><div class="value" id="hOpen">R$ 0</div><div class="sub" id="hOpenSub">pedidos do mês ainda em aberto</div></div>
+    <div class="metric"><div class="label">Vencido</div><div class="value" id="hOver">R$ 0</div><div class="sub" id="hOverSub">parcelas vencidas dos pedidos do mês</div></div>
   </div>
 
   <div class="home-actions-title">Ações rápidas</div>
@@ -1106,9 +1120,9 @@ html,body{max-width:100%;overflow-x:hidden}
     <button onclick="go('warranties')"><span>🛡️</span><b>Garantias</b></button>
   </div>
 
-  <div class="card health-card">
+  <div class="card health-card results-card">
     <div class="cardhead">
-      <div><h2>Saúde da AX</h2><div class="muted">Entenda para onde foi o faturamento e como o resultado está evoluindo.</div></div>
+      <div><h2>Resumo de resultados</h2><div class="muted">Faturamento, resultado, despesas e vendas em uma visão gráfica.</div></div>
       <span id="homeHealthBadge" class="badge">oculto</span>
     </div>
     <div id="homeHealthContent"></div>
@@ -1148,6 +1162,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="sales-visible-filters">
       <div class="sales-visible-filter-group"><div class="sales-filter-label">Mês</div><div id="salesMonthFilters" class="filter-row"></div></div>
       <div class="sales-visible-filter-group"><div class="sales-filter-label">Status</div><div id="salesStatusFilters" class="filter-row"></div></div>
+      <div class="sales-visible-filter-group"><div class="sales-filter-label">Origem</div><div id="salesSourceFilters" class="filter-row"></div></div>
     </div>
   </div>
   <div id="salesList"></div>
@@ -1200,7 +1215,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.20</div>
+  <div class="version-note">AX Baterias • v5.21</div>
 </section>
 
 <section id="clients" class="screen">
@@ -1339,7 +1354,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.20</span></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.21</span></div>
     <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.17</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">17/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
@@ -1783,8 +1798,8 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.20';
-const AX_RELEASE_DATE='2026-09-18';
+const AX_APP_VERSION='5.21';
+const AX_RELEASE_DATE='2026-09-21';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
 const TEST_MODE=false;
@@ -1800,7 +1815,8 @@ const defaults={
 };
 let state=loadCache();
 let currentPriceTable=0;
-let salesMonthFilter="all",salesStatusFilter="all",collectionStatusFilter="all",warrantyStatusFilter="pending";
+let salesMonthFilter="all",salesStatusFilter="all",salesSourceFilter="all",collectionStatusFilter="all",warrantyStatusFilter="pending";
+let homeMonthFilter=monthKeySP();
 let routeCandidateSort="recommended",routeCandidateFilter="all";
 let expandedRouteHistory=new Set();
 let pendingRenegotiatedDebts=[];
@@ -2448,7 +2464,7 @@ function clearSalesClientFilter(){
 }
 function openSalesFilterSheet(){openSheet("salesFilterSheet")}
 function clearAllSalesFilters(){
- salesMonthFilter="all";salesStatusFilter="all";
+ salesMonthFilter="all";salesStatusFilter="all";salesSourceFilter="all";
  if(window.salesClientSearch)salesClientSearch.value="";
  renderSales()
 }
@@ -2492,6 +2508,9 @@ function findPotentialDuplicateSale(clientId,date,items,total,excludeId=""){
 
 function setSalesMonthFilter(v){salesMonthFilter=v;renderSales()}
 function setSalesStatusFilter(v){salesStatusFilter=v;renderSales()}
+function setSalesSourceFilter(v){salesSourceFilter=v;renderSales()}
+function setHomeMonthFilter(v){homeMonthFilter=v;renderHome()}
+function openKFSales(monthKey=homeMonthFilter){salesMonthFilter=monthKey||'all';salesStatusFilter='all';salesSourceFilter='kf';if(window.salesClientSearch)salesClientSearch.value='';renderSales();go('sales')}
 function setCollectionStatusFilter(v){collectionStatusFilter=v;renderCollections()}
 function setPaymentMode(mode,preferredMethod="",silent=false){
  sPaymentMode.value=mode;payModeAto.classList.toggle("active",mode==="ato");payModePrazo.classList.toggle("active",mode==="prazo");
@@ -2630,32 +2649,22 @@ function healthNetBars(rows){
  return `<div class="health-net-section"><div class="health-net-title"><b>Resultado após estrutura fixa</b><span>Últimos 3 meses</span></div><div class="health-net-chart">${ordered.map(r=>{const v=Number(r.afterFixed||0),h=Math.max(6,Math.round(Math.abs(v)/max*42)),cls=v>=0?"pos":"neg";return `<div class="health-net-col"><div class="health-net-value ${cls}">${v>=0?"+":"-"}${brl(Math.abs(v))}</div><div class="health-net-zone"><span class="health-net-zero"></span><i class="health-net-bar ${cls}" style="height:${h}px"></i></div><div class="health-net-month">${esc(r.label)}${r.isPartial?"*":""}</div></div>`}).join("")}</div>${rows[0]?.isPartial?'<div class="health-net-note">* mês atual em andamento; o valor é uma posição parcial, não o fechamento.</div>':""}</div>`
 }
 function renderHomeHealth(){
- homeHealthBadge.textContent=homeFinanceVisible?"visível":"oculto";homeHealthBadge.className="badge "+(homeFinanceVisible?"good":"");
- if(!homeFinanceVisible){homeHealthContent.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Saúde financeira oculta</b><span>Toque em “Ver valores” para acompanhar o mês.</span></div>';return}
- const h=businessHealthAnalysis(),rows=monthFinancialRows(3),cur=rows[0];
- if(h.fixedCosts<=0){homeHealthBadge.textContent="configurar";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-explanation setup"><b>⚙️ Falta cadastrar a estrutura mensal.</b><br>Cadastre os custos fixos para o sistema mostrar o caminho completo do faturamento.</div><button class="btn secondary health-setup-btn" onclick="go('settings')">Configurar estrutura mensal</button>`;return}
- if(h.revenue<=0){homeHealthBadge.textContent="sem vendas";homeHealthBadge.className="badge warn";homeHealthContent.innerHTML=`<div class="health-explanation ${h.variableCosts>0?"bad":"setup"}"><b>${h.variableCosts>0?"Já existem custos no mês, mas ainda não há vendas AX.":"Ainda não há vendas AX neste mês."}</b><br>Quando as vendas entrarem, a leitura é atualizada automaticamente.</div>${healthNetBars(rows)}`;return}
- homeHealthBadge.textContent=cur.isPartial?"mês em andamento":"mês fechado";homeHealthBadge.className="badge "+(cur.isPartial?"warn":(h.netAfterFixed>=0?"good":"bad"));
- const productCost=Math.max(0,h.revenue-h.margin),costPct=h.revenue>0?productCost/h.revenue*100:0,marginPct=h.revenue>0?h.margin/h.revenue*100:0,varShare=h.margin>0?Math.min(100,h.variableCosts/h.margin*100):0,remainShare=Math.max(0,100-varShare),balanceGap=Math.max(0,h.fixedCosts-h.operatingAfterVariable),structureCovered=h.netAfterFixed>=0;
- const balanceText=structureCovered?`A estrutura fixa do mês já está coberta. Resultado após estrutura: <b>${brl(h.netAfterFixed)}</b>.`:`Faltam <b>${brl(balanceGap)}</b> para cobrir toda a estrutura fixa do mês.`;
- homeHealthContent.innerHTML=`<div class="health-flow-head"><div><b>Para onde foi o faturamento?</b><span>${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</span></div><strong>${brl(h.revenue)}</strong></div>
- <div class="health-sales-bar"><i class="cost" style="width:${costPct.toFixed(1)}%"></i><i class="margin" style="width:${marginPct.toFixed(1)}%"></i></div>
- <div class="health-bar-legend"><span><i class="dot cost"></i>Custo das baterias <b>${costPct.toFixed(1)}%</b></span><span><i class="dot margin"></i>Margem <b>${marginPct.toFixed(1)}%</b></span></div>
- <div class="health-money-flow">
-   <div><span>Custo das baterias</span><b class="negative">- ${brl(productCost)}</b></div>
-   <div class="emphasis"><span>Margem comercial que sobrou</span><b>${brl(h.margin)} · ${h.avgMargin.toFixed(1)}%</b></div>
- </div>
- <div class="health-margin-bar"><i class="variable" style="width:${varShare.toFixed(1)}%"></i><i class="remain" style="width:${remainShare.toFixed(1)}%"></i></div>
- <div class="health-bar-legend compact"><span><i class="dot variable"></i>Custos variáveis ${brl(h.variableCosts)}</span><span><i class="dot remain"></i>Sobra operacional ${brl(h.operatingAfterVariable)}</span></div>
- <div class="health-money-flow compact">
-   <div><span>Custos variáveis</span><b class="negative">- ${brl(h.variableCosts)}</b></div>
-   ${Number(h.scrapProfit||0)!==0?`<div><span>Resultado da sucata</span><b class="${h.scrapProfit>=0?"positive":"negative"}">${h.scrapProfit>=0?"+ ":"- "}${brl(Math.abs(h.scrapProfit))}</b></div>`:""}
-   <div><span>Sobra para pagar a estrutura</span><b class="positive">${brl(h.operatingAfterVariable)}</b></div>
-   <div><span>Estrutura fixa do mês</span><b>${brl(h.fixedCosts)}</b></div>
- </div>
- <div class="health-balance-note ${structureCovered?"good":"warn"}">${structureCovered?"✅":"🟡"} ${balanceText}</div>
- ${h.target>0?`<div class="health-target-note">Depois do equilíbrio, a meta líquida configurada é <b>${brl(h.target)}</b>.</div>`:""}
- ${healthNetBars(rows)}`
+ homeHealthBadge.textContent=homeFinanceVisible?monthDisplayLabel(homeMonthFilter):"oculto";homeHealthBadge.className="badge "+(homeFinanceVisible?"good":"");
+ if(!homeFinanceVisible){homeHealthContent.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Resumo financeiro oculto</b><span>Toque em “Ver valores” para acompanhar resultados, despesas e vendas.</span></div>';return}
+ const rows=monthFinancialRows(3),ordered=[...rows].reverse(),selected=financialMonthRowByKey(homeMonthFilter),selectedLabel=monthDisplayLabel(homeMonthFilter,true);
+ const summaryRows=ordered.map(r=>{const productCost=Math.max(0,r.revenue-r.margin),costs=productCost+r.variableCosts+r.fixedCosts,result=r.afterFixed,pct=r.revenue>0?result/r.revenue*100:0;return `<div class="results-month-row"><b>${esc(monthDisplayLabel(r.month))}${r.isPartial?"*":""}</b><span>${brl(r.revenue)}</span><b class="${result<0?"negative":"positive"}">${result>=0?"+ ":"- "}${brl(Math.abs(result))} <small>(${pct.toFixed(1)}%)</small></b><span>${brl(costs)}</span></div>`}).join("");
+ const months=ordered.map(r=>r.month),models=[{key:"5Ah",cls:""},{key:"6Ah",cls:"green"},{key:"7Ah",cls:"orange"}];
+ const modelCards=models.map(md=>{const vals=months.map(month=>batteryModelQtyForMonth(md.key,month)),max=Math.max(1,...vals),total=vals.reduce((a,v)=>a+v,0);return `<div class="model-chart-card"><div class="model-chart-title"><b>${md.key}</b><span>${total} un. no período</span></div><div class="model-bars">${vals.map((v,i)=>`<div class="model-bar-col"><strong>${v}</strong><i class="model-bar ${md.cls}" style="height:${v?Math.max(8,Math.round(v/max*68)):2}px"></i><small>${esc(monthLabel(months[i]))}</small></div>`).join("")}</div><div class="model-total">Total: <b>${total} unidade(s)</b></div></div>`}).join("");
+ const expense=expenseBreakdownForMonth(homeMonthFilter,selected),expenseTotal=expense.reduce((a,x)=>a+x.value,0),colors=["#2563eb","#16a34a","#f79009","#7c3aed","#dc2626","#0891b2","#d97706","#667085","#ec4899"];
+ let acc=0,segments=expense.map((x,i)=>{const start=expenseTotal?acc/expenseTotal*100:0;acc+=x.value;const end=expenseTotal?acc/expenseTotal*100:0;return `${colors[i%colors.length]} ${start.toFixed(2)}% ${end.toFixed(2)}%`}),gradient=segments.length?`conic-gradient(${segments.join(",")})`:"#f2f4f7";
+ const expenseHtml=expense.length?`<div class="expense-wrap"><div class="expense-donut" style="background:${gradient}"><div class="expense-donut-center"><b>${brl(expenseTotal)}</b><span>operacionais</span></div></div><div class="expense-legend">${expense.map((x,i)=>{const pct=expenseTotal?x.value/expenseTotal*100:0;return `<div class="expense-legend-row"><i class="expense-legend-dot" style="background:${colors[i%colors.length]}"></i><span>${esc(x.label)}</span><b>${brl(x.value)} · ${pct.toFixed(0)}%</b></div>`}).join("")}</div></div>`:`<div class="expense-empty">Nenhuma despesa operacional registrada em ${esc(selectedLabel)}.</div>`;
+ const kfRows=ordered.map(r=>({month:r.month,total:(state.sales||[]).filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===r.month).reduce((a,s)=>a+Number(s.total||0),0),count:(state.sales||[]).filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===r.month).length})),kfMax=Math.max(1,...kfRows.map(x=>x.total)),kfSelected=kfRows.find(x=>x.month===homeMonthFilter)||{total:(state.sales||[]).filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===homeMonthFilter).reduce((a,s)=>a+Number(s.total||0),0),count:(state.sales||[]).filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===homeMonthFilter).length};
+ const fixedWarning=selected.fixedCosts<=0?'<div class="results-footnote"><b>⚙️ Estrutura fixa ainda não configurada.</b> O resultado mensal fica incompleto até cadastrar os custos fixos.</div>':"";
+ homeHealthContent.innerHTML=`<div class="results-dashboard">
+ <div class="results-section"><div class="results-section-head"><div><b>Resumo dos últimos 3 meses</b><div class="muted">Financeiro AX • vendas KF ficam segregadas</div></div><span>${rows[0]?.isPartial?"* mês atual parcial":"meses fechados"}</span></div><div class="results-month-table"><div class="results-month-row head"><span>Mês</span><span>Faturamento</span><span>Resultado</span><span>Custos + despesas</span></div>${summaryRows}</div><div class="results-footnote">Resultado = margem das vendas + resultado da sucata − custos variáveis − estrutura fixa. O custo das baterias está dentro de “custos + despesas”.</div>${fixedWarning}</div>
+ <div class="results-split"><div class="results-section"><div class="results-section-head"><div><b>Vendas dos modelos de baterias</b><div class="muted">Quantidade vendida • AX + KF</div></div><span>últimos 3 meses</span></div><div class="model-chart-grid">${modelCards}</div></div><div class="results-section"><div class="results-section-head"><div><b>Rateio das despesas operacionais</b><div class="muted">Sem custo de compra das baterias</div></div><span>${esc(selectedLabel)}</span></div>${expenseHtml}</div></div>
+ <div class="results-section"><div class="results-section-head"><div><b>Vendas via máquina da KF</b><div class="muted">Histórico comercial segregado do financeiro AX</div></div><span>${esc(selectedLabel)}</span></div><div class="kf-results"><div class="kf-results-top"><div><b>${brl(kfSelected.total)}</b><span>${kfSelected.count} pedido(s) KF no mês selecionado</span></div><button class="btn secondary" onclick="openKFSales('${homeMonthFilter}')">Ver vendas KF</button></div><div class="kf-trend">${kfRows.map(x=>`<div class="kf-trend-col"><b>${brl(x.total)}</b><i class="kf-trend-bar" style="height:${x.total?Math.max(7,Math.round(x.total/kfMax*48)):2}px"></i><small>${esc(monthLabel(x.month))}</small></div>`).join("")}</div></div></div>
+ </div>`
 }
 function fortnightPeriods(count=6){
  let anchor=today(),out=[];
@@ -2716,16 +2725,38 @@ function monthLabel(key,long=false){
  const d=new Date(`${key}-01T12:00:00-03:00`);
  return d.toLocaleDateString("pt-BR",{timeZone:AX_TIME_ZONE,month:long?"long":"short"}).replace(".","")
 }
-function monthFinancialRows(count=3){
- const t=today(),currentMonth=t.slice(0,7),currentDay=Number(t.slice(8,10));
- return monthKeys(count).map((month,idx)=>{
-   const endDay=daysInMonthKey(month),q1Start=`${month}-01`,q1End=`${month}-15`,q2Start=`${month}-16`,q2End=`${month}-${String(endDay).padStart(2,"0")}`,isCurrent=month===currentMonth;
-   const q1Started=!isCurrent||currentDay>=1,q2Started=!isCurrent||currentDay>=16;
-   const q1=financialRange(q1Start,q1End,month,q1Started),q2=financialRange(q2Start,q2End,month,q2Started),periods=[q1,q2].filter(q=>q.started);
-   const revenue=periods.reduce((a,q)=>a+q.revenue,0),margin=periods.reduce((a,q)=>a+q.margin,0),variableCosts=periods.reduce((a,q)=>a+q.variableCosts,0),scrapProfit=periods.reduce((a,q)=>a+Number(q.scrapProfit||0),0),scrapCash=periods.reduce((a,q)=>a+Number(q.scrapCash||0),0),net=margin+scrapProfit-variableCosts,marginPct=revenue>0?margin/revenue*100:0,requiredMarginPct=revenue>0?variableCosts/revenue*100:0,afterVariablePct=revenue>0?net/revenue*100:0,fixedCosts=fixedCostsMonthlyTotal(),afterFixed=net-fixedCosts,target=Number(state.config?.monthlyProfitTarget||0),gapToTarget=Math.max(0,target-afterFixed);
-   let status="setup";if(revenue<=0&&variableCosts>0)status="bad";else if(revenue<=0)status="setup";else if(net<0)status="bad";else if(afterFixed<0)status="warn";else if(target>0&&afterFixed<target)status="warn";else status="good";
-   return {month,label:monthLabel(month),longLabel:monthLabel(month,true),isCurrent,isPartial:isCurrent&&currentDay<endDay,q1,q2,revenue,margin,variableCosts,scrapProfit,scrapCash,net,fixedCosts,afterFixed,target,gapToTarget,marginPct,requiredMarginPct,afterVariablePct,status,ops:periods.flatMap(q=>q.ops||[])}
- })
+function financialMonthRowByKey(month){
+ const t=today(),currentMonth=t.slice(0,7),currentDay=Number(t.slice(8,10)),endDay=daysInMonthKey(month),q1Start=`${month}-01`,q1End=`${month}-15`,q2Start=`${month}-16`,q2End=`${month}-${String(endDay).padStart(2,"0")}`,isCurrent=month===currentMonth;
+ const q1Started=!isCurrent||currentDay>=1,q2Started=!isCurrent||currentDay>=16;
+ const q1=financialRange(q1Start,q1End,month,q1Started),q2=financialRange(q2Start,q2End,month,q2Started),periods=[q1,q2].filter(q=>q.started);
+ const revenue=periods.reduce((a,q)=>a+q.revenue,0),margin=periods.reduce((a,q)=>a+q.margin,0),variableCosts=periods.reduce((a,q)=>a+q.variableCosts,0),scrapProfit=periods.reduce((a,q)=>a+Number(q.scrapProfit||0),0),scrapCash=periods.reduce((a,q)=>a+Number(q.scrapCash||0),0),net=margin+scrapProfit-variableCosts,marginPct=revenue>0?margin/revenue*100:0,requiredMarginPct=revenue>0?variableCosts/revenue*100:0,afterVariablePct=revenue>0?net/revenue*100:0,fixedCosts=fixedCostsMonthlyTotal(),afterFixed=net-fixedCosts,target=Number(state.config?.monthlyProfitTarget||0),gapToTarget=Math.max(0,target-afterFixed);
+ let status="setup";if(revenue<=0&&variableCosts>0)status="bad";else if(revenue<=0)status="setup";else if(net<0)status="bad";else if(afterFixed<0)status="warn";else if(target>0&&afterFixed<target)status="warn";else status="good";
+ return {month,label:monthLabel(month),longLabel:monthLabel(month,true),isCurrent,isPartial:isCurrent&&currentDay<endDay,q1,q2,revenue,margin,variableCosts,scrapProfit,scrapCash,net,fixedCosts,afterFixed,target,gapToTarget,marginPct,requiredMarginPct,afterVariablePct,status,ops:periods.flatMap(q=>q.ops||[])}
+}
+function monthFinancialRows(count=3){return monthKeys(count).map(financialMonthRowByKey)}
+function monthDisplayLabel(key,long=false){
+ const base=monthLabel(key,long),year=String(key||"").slice(0,4);
+ return `${base.charAt(0).toUpperCase()+base.slice(1)}${long?`/${year}`:`/${year.slice(2)}`}`
+}
+function batteryModelKeyForProduct(p){
+ const text=`${p?.name||""} ${p?.model||""}`.toLowerCase().replace(/\s+/g,"");
+ if(/(^|\D)5ah/.test(text)||text.includes("5ah"))return "5Ah";
+ if(/(^|\D)6ah/.test(text)||text.includes("6ah"))return "6Ah";
+ if(/(^|\D)7ah/.test(text)||text.includes("7ah"))return "7Ah";
+ return ""
+}
+function batteryModelQtyForMonth(model,month){
+ const ids=new Set((state.products||[]).filter(p=>batteryModelKeyForProduct(p)===model).map(p=>String(p.id)));
+ return (state.sales||[]).filter(s=>String(s.date||"").slice(0,7)===month).reduce((sum,s)=>sum+(s.items||[]).reduce((a,i)=>a+(ids.has(String(i.productId))?Number(i.qty||0):0),0),0)
+}
+function expenseBreakdownForMonth(month,row=null){
+ const r=row||financialMonthRowByKey(month),items=[...(r.q1?.routeItems||[]),...(r.q2?.routeItems||[])],manual=[...(r.q1?.manualItems||[]),...(r.q2?.manualItems||[])];
+ const map={fuel:0,toll:0,lodging:0,food:0,bank:0,tax:0,warranty:0,fixed:0,other:0};
+ items.forEach(e=>{const c=e.category||e.type||"other";if(c==="fuel")map.fuel+=Number(e.amount||0);else if(c==="toll")map.toll+=Number(e.amount||0);else if(c==="lodging")map.lodging+=Number(e.amount||0);else if(["breakfast","lunch","dinner"].includes(c))map.food+=Number(e.amount||0);else map.other+=Number(e.amount||0)});
+ manual.forEach(e=>{const c=e.type||"other";if(["pixbank","cardbank"].includes(c))map.bank+=Number(e.amount||0);else map.other+=Number(e.amount||0)});
+ map.tax=Number(r.q1?.tax?.amount||0)+Number(r.q2?.tax?.amount||0);map.warranty=Number(r.q1?.warranty||0)+Number(r.q2?.warranty||0);map.fixed=Number(r.fixedCosts||0);
+ const labels={fuel:"Combustível",toll:"Pedágio",lodging:"Hospedagem",food:"Alimentação",bank:"Taxas bancárias",tax:"Impostos",warranty:"Garantias",fixed:"Estrutura fixa",other:"Outros"};
+ return Object.entries(map).filter(([,value])=>value>.009).map(([key,value])=>({key,label:labels[key],value})).sort((a,b)=>b.value-a.value)
 }
 function monthStatusLabel(status){return status==="good"?"SAUDÁVEL":status==="warn"?"EM ANDAMENTO":status==="bad"?"PRECISA DE ATENÇÃO":"SEM MOVIMENTO"}
 function monthStatusEmoji(status){return status==="good"?"🟢":status==="warn"?"🟡":status==="bad"?"🔴":"⚪"}
@@ -2751,38 +2782,32 @@ function renderMonthEvolution(rows){
 function monthlyFinancialSummary(){return monthFinancialRows(3)}
 function renderFortnightHistory(rows){return renderMonthEvolution(monthFinancialRows(3))}
 function renderHomeFinanceChart(){
- homeChartPrivacyBadge.textContent=homeFinanceVisible?"visível":"oculto";homeChartPrivacyBadge.className="badge "+(homeFinanceVisible?"good":"");
+ homeChartPrivacyBadge.textContent=homeFinanceVisible?monthDisplayLabel(homeMonthFilter):"oculto";homeChartPrivacyBadge.className="badge "+(homeFinanceVisible?"good":"");
  if(!homeFinanceVisible){homeFinanceChart.innerHTML='<div class="finance-lock"><span style="font-size:22px">👁</span><b>Dados financeiros ocultos</b><span>Toque em “Ver valores” para acompanhar as quinzenas.</span></div>';return}
- const cur=monthFinancialRows(1)[0],kfMonthTotal=state.sales.filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===cur.month).reduce((a,s)=>a+Number(s.total||0),0);
- homeFinanceChart.innerHTML=`<div class="month-dashboard month-dashboard-v520"><div class="month-main-head"><div><div class="month-main-title">${cur.longLabel.charAt(0).toUpperCase()+cur.longLabel.slice(1)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas AX: ${brl(cur.revenue)}${kfMonthTotal>0?` • KF ${brl(kfMonthTotal)} segregado`:""}</div></div><span class="month-view-chip">visão por quinzena</span></div>
- <div class="month-fortnight-title">Como o mês está se formando</div>
+ const cur=financialMonthRowByKey(homeMonthFilter),kfMonthTotal=state.sales.filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===cur.month).reduce((a,s)=>a+Number(s.total||0),0);
+ homeFinanceChart.innerHTML=`<div class="month-dashboard month-dashboard-v520"><div class="month-main-head"><div><div class="month-main-title">${monthDisplayLabel(cur.month,true)}${cur.isPartial?" • em andamento":""}</div><div class="muted">Vendas AX: ${brl(cur.revenue)}${kfMonthTotal>0?` • KF ${brl(kfMonthTotal)} segregado`:""}</div></div><span class="month-view-chip">visão por quinzena</span></div>
+ <div class="month-fortnight-title">Como o mês se formou</div>
  <div class="month-fortnights">${fortnightMiniCard(cur.q1,"1ª quinzena")}${fortnightMiniCard(cur.q2,"2ª quinzena")}</div>
  <div class="month-reading month-reading-v520"><div><span>Margem média das vendas</span><b>${cur.marginPct.toFixed(1)}%</b></div><div><span>Custos variáveis no mês</span><b>${brl(cur.variableCosts)}</b></div></div>
- <div class="month-v520-note">A Saúde da AX mostra estrutura fixa, equilíbrio e evolução dos últimos 3 meses. Aqui o foco é comparar as quinzenas.</div></div>`
+ <div class="month-v520-note">Aqui o foco é comparar as quinzenas. O Resumo de resultados acima consolida faturamento, resultado, despesas, modelos vendidos e KF.</div></div>`
 }
 function renderHome(){
- const month=state.sales.filter(s=>new Date(s.date+"T12:00:00")>=monthStart()),monthAX=month.filter(isAXFinancialSale),monthKF=month.filter(isKFSale),
+ const validMonths=monthKeys(3);if(!validMonths.includes(homeMonthFilter))homeMonthFilter=validMonths[0];
+ if(window.homeMonthFilters)homeMonthFilters.innerHTML=validMonths.map(k=>`<button class="home-month-btn ${homeMonthFilter===k?"active":""}" onclick="setHomeMonthFilter('${k}')">${esc(monthDisplayLabel(k))}</button>`).join("");
+ const selectedKey=homeMonthFilter,selectedName=monthDisplayLabel(selectedKey,true),month=state.sales.filter(s=>String(s.date||"").slice(0,7)===selectedKey),monthAX=month.filter(isAXFinancialSale),monthKF=month.filter(isKFSale),
  monthSales=monthAX.reduce((a,s)=>a+Number(s.total),0),kfMonthSales=monthKF.reduce((a,s)=>a+Number(s.total),0),
- openValue=state.sales.filter(isAXFinancialSale).reduce((a,s)=>a+saleOpen(s),0),
- overValue=state.sales.filter(isAXFinancialSale).reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0);
+ openValue=monthAX.reduce((a,s)=>a+saleOpen(s),0),
+ overValue=monthAX.reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0),
+ globalOverValue=state.sales.filter(isAXFinancialSale).reduce((a,s)=>a+effectiveInstallments(s).filter(p=>!p.paid&&Number(p.effectiveAmount||0)>.009&&p.due<today()).reduce((x,p)=>x+Number(p.effectiveAmount||0),0),0);
  hSales.textContent=moneyPrivate(monthSales);hKfSales.textContent=moneyPrivate(kfMonthSales);hOpen.textContent=moneyPrivate(openValue);hOver.textContent=moneyPrivate(overValue);
+ if(window.hSalesSub)hSalesSub.textContent=`${selectedName} • faturamento da AX`;if(window.hKfSalesSub)hKfSalesSub.textContent=`${selectedName} • fora do financeiro AX`;if(window.hOpenSub)hOpenSub.textContent=`pedidos de ${selectedName} ainda em aberto`;if(window.hOverSub)hOverSub.textContent=`parcelas vencidas desses pedidos`;
  hSales.classList.toggle("money-mask",!homeFinanceVisible);hKfSales.classList.toggle("money-mask",!homeFinanceVisible);hOpen.classList.toggle("money-mask",!homeFinanceVisible);hOver.classList.toggle("money-mask",!homeFinanceVisible);homeFinanceToggle.textContent=homeFinanceVisible?"🙈 Ocultar valores":"👁 Ver valores";
 
- const warranty90Start=addDays(today(),-90),
- warranty90=state.warranties.filter(w=>w.type!=="Sucata"&&(w.collect||"")>=warranty90Start),
- recurringWarrantyClients=state.clients.map(c=>({c,ws:warrantyStats(c.id,365)})).filter(x=>x.ws.warrantyQty>=2&&x.ws.incidence>=10);
- const warranty90Qty=warranty90.reduce((a,w)=>a+Number(w.qty||1),0);
-
+ const warranty90Start=addDays(today(),-90),warranty90=state.warranties.filter(w=>w.type!=="Sucata"&&(w.collect||"")>=warranty90Start),recurringWarrantyClients=state.clients.map(c=>({c,ws:warrantyStats(c.id,365)})).filter(x=>x.ws.warrantyQty>=2&&x.ws.incidence>=10),warranty90Qty=warranty90.reduce((a,w)=>a+Number(w.qty||1),0);
  const critical=criticalClients();
- if(smartRoutePlan?.routes?.length){
-   const best=smartRoutePlan.routes[0];
-   homeRoute.innerHTML=`<div class="routebox"><div class="routehead"><div><b>Rota sugerida</b><div class="muted">${best.order.length} cliente(s) • ${best.km.toFixed(0)} km</div></div><span class="badge ${best.result>0?"good":"warn"}">${best.result>0?"Recomendada":"Avaliar"}</span></div><div class="routekpis"><div>Faturamento potencial<b>${moneyPrivate(best.revenue)}</b></div><div>Retorno comercial potencial<b>${moneyPrivate(best.grossProfit)}</b></div><div>Resultado da rota<b>${moneyPrivate(best.result)}</b></div></div></div>`
- }else{
-   homeRoute.innerHTML=critical.length?`<div class="listitem"><div><div class="title">${critical.length} cliente(s) precisam de análise de rota</div><div class="meta">Abra Rotas e toque em “Analisar rotas”.</div></div><button class="btn secondary" onclick="go('routes')">Analisar</button></div>`:'<div class="empty">Nenhum cliente está crítico para visita agora.</div>'
- }
-
+ if(smartRoutePlan?.routes?.length){const best=smartRoutePlan.routes[0];homeRoute.innerHTML=`<div class="routebox"><div class="routehead"><div><b>Rota sugerida</b><div class="muted">${best.order.length} cliente(s) • ${best.km.toFixed(0)} km</div></div><span class="badge ${best.result>0?"good":"warn"}">${best.result>0?"Recomendada":"Avaliar"}</span></div><div class="routekpis"><div>Faturamento potencial<b>${moneyPrivate(best.revenue)}</b></div><div>Retorno comercial potencial<b>${moneyPrivate(best.grossProfit)}</b></div><div>Resultado da rota<b>${moneyPrivate(best.result)}</b></div></div></div>`}else{homeRoute.innerHTML=critical.length?`<div class="listitem"><div><div class="title">${critical.length} cliente(s) precisam de análise de rota</div><div class="meta">Abra Rotas e toque em “Analisar rotas”.</div></div><button class="btn secondary" onclick="go('routes')">Analisar</button></div>`:'<div class="empty">Nenhum cliente está crítico para visita agora.</div>'}
  const low=state.products.filter(p=>Number(p.qty)<=Number(p.min)).length,list=[];
- if(overValue)list.push(`<div class="listitem"><div><div class="title">${homeFinanceVisible?brl(overValue)+" vencidos":"Há valores vencidos"}</div><div class="meta">Prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);
+ if(globalOverValue)list.push(`<div class="listitem"><div><div class="title">${homeFinanceVisible?brl(globalOverValue)+" vencidos":"Há valores vencidos"}</div><div class="meta">Carteira geral • prioridade de cobrança</div></div><span class="badge bad">Cobrar</span></div>`);
  if(low)list.push(`<div class="listitem"><div><div class="title">${low} produto(s) com estoque baixo</div><div class="meta">Revisar reposição</div></div><span class="badge warn">Estoque</span></div>`);
  if(warranty90Qty)list.push(`<div class="listitem"><div><div class="title">${warranty90Qty} ocorrência(s) de garantia nos últimos 90 dias</div><div class="meta">Acompanhar trocas, créditos e recorrência</div></div><span class="badge ${warranty90Qty>=3?"warn":""}">Garantia</span></div>`);
  if(recurringWarrantyClients.length)list.push(`<div class="listitem"><div><div class="title">${recurringWarrantyClients.length} cliente(s) com recorrência alta de garantia</div><div class="meta">Revisar incidência, idade do produto e giro do cliente</div></div><span class="badge warn">Recorrência</span></div>`);
@@ -3054,6 +3079,7 @@ function renderSales(){
  ensureState();
  if(window.salesMonthFilters)salesMonthFilters.innerHTML=[["all","Todos"],...recentMonths().map(m=>[m.key,m.label.charAt(0).toUpperCase()+m.label.slice(1)])].map(([k,l])=>`<button class="filter-btn ${salesMonthFilter===k?"active":""}" onclick="setSalesMonthFilter('${k}')">${l}</button>`).join("");
  if(window.salesStatusFilters)salesStatusFilters.innerHTML=[["all","Tudo"],["open","A receber"],["late","Vencido"],["paid","Recebido"]].map(([k,l])=>`<button class="filter-btn ${salesStatusFilter===k?"active":""}" onclick="setSalesStatusFilter('${k}')">${l}</button>`).join("");
+ if(window.salesSourceFilters)salesSourceFilters.innerHTML=[["all","Todas"],["ax","AX"],["kf","KF"]].map(([k,l])=>`<button class="filter-btn ${salesSourceFilter===k?"active":""}" onclick="setSalesSourceFilter('${k}')">${l}</button>`).join("");
 
  const clientQuery=normalizeSaleSearch(window.salesClientSearch?.value||"");
  const duplicateIds=possibleDuplicateSales();
@@ -3066,13 +3092,15 @@ function renderSales(){
    })
  }
  if(salesMonthFilter!=="all")list=list.filter(s=>String(s.date||"").slice(0,7)===salesMonthFilter);
+ if(salesSourceFilter==="ax")list=list.filter(isAXFinancialSale);
+ if(salesSourceFilter==="kf")list=list.filter(isKFSale);
  if(salesStatusFilter==="open")list=list.filter(s=>saleOpen(s)>.009);
  if(salesStatusFilter==="late")list=list.filter(s=>saleOverdue(s));
  if(salesStatusFilter==="paid")list=list.filter(s=>salePaid(s));
 
  list.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||String(b.createdAt||"").localeCompare(String(a.createdAt||"")));
  if(window.salesFilterSummary){
-   const activeCount=Number(salesMonthFilter!=="all")+Number(salesStatusFilter!=="all");
+   const activeCount=Number(salesMonthFilter!=="all")+Number(salesStatusFilter!=="all")+Number(salesSourceFilter!=="all");
    salesFilterSummary.innerHTML=`<b>${list.length}</b> venda(s) encontrada(s)`;
    if(window.salesClearFiltersBtn)salesClearFiltersBtn.classList.toggle("hidden",!(activeCount||clientQuery));
    if(window.salesSearchClearBtn)salesSearchClearBtn.classList.toggle("hidden",!clientQuery);
