@@ -1817,7 +1817,15 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="./config.js"></script>
+<script>
+// Fallback público da configuração Supabase da AX Baterias.
+// A Publishable Key é própria para frontend; nunca use service_role/secret aqui.
+window.AX_CONFIG = window.AX_CONFIG || {
+  supabaseUrl: "https://utztyhtjfnpjysactqsj.supabase.co",
+  supabasePublishableKey: "sb_publishable_ZLlYxy200zP5G4bGU7PYmw_sDcBbced"
+};
+</script>
+<script src="./config.js?v=5221"></script>
 <script>
 const AX_APP_VERSION='5.22';
 const AX_RELEASE_DATE='2026-09-21';
