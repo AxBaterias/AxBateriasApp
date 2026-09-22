@@ -1820,14 +1820,16 @@ html,body{max-width:100%;overflow-x:hidden}
 <script>
 // Fallback público da configuração Supabase da AX Baterias.
 // A Publishable Key é própria para frontend; nunca use service_role/secret aqui.
-window.AX_CONFIG = window.AX_CONFIG || {
+window.AX_SUPABASE_FALLBACK = {
   supabaseUrl: "https://utztyhtjfnpjysactqsj.supabase.co",
   supabasePublishableKey: "sb_publishable_ZLlYxy200zP5G4bGU7PYmw_sDcBbced"
 };
+// Preserva o config.js existente quando válido; se ele não carregar, usa o fallback acima.
+window.AX_CONFIG = window.AX_CONFIG || window.AX_SUPABASE_FALLBACK;
 </script>
 <script src="./config.js?v=5221"></script>
 <script>
-const AX_APP_VERSION='5.22';
+const AX_APP_VERSION='5.22.1';
 const AX_RELEASE_DATE='2026-09-21';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
@@ -1918,9 +1920,27 @@ function scheduleRemoteSave(){
     else setSync("sincronizado","ok");
   },300);
 }
-function backendConfigured(){
-  const c=window.AX_CONFIG||{};
-  return c.supabaseUrl && c.supabasePublishableKey && !c.supabaseUrl.includes("COLE_") && !c.supabasePublishableKey.includes("COLE_");
+function validSupabaseConfig(c){
+  return !!(c&&c.supabaseUrl&&c.supabasePublishableKey&&!String(c.supabaseUrl).includes("COLE_")&&!String(c.supabasePublishableKey).includes("COLE_"));
+}
+function resolvedSupabaseConfig(){
+  const configured=window.AX_CONFIG||{},fallback=window.AX_SUPABASE_FALLBACK||{};
+  return validSupabaseConfig(configured)?configured:fallback;
+}
+function backendConfigured(){return validSupabaseConfig(resolvedSupabaseConfig())}
+async function ensureSupabaseLibrary(){
+  if(window.supabase?.createClient)return true;
+  const sources=[
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
+    "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"
+  ];
+  for(const src of sources){
+    try{
+      await new Promise((resolve,reject)=>{const el=document.createElement("script");el.src=src;el.async=true;el.onload=resolve;el.onerror=reject;document.head.appendChild(el)});
+      if(window.supabase?.createClient)return true;
+    }catch(e){console.warn("Falha ao carregar biblioteca Supabase:",src,e)}
+  }
+  return false
 }
 async function loadRemote(user){
   currentUser=user;
@@ -1948,31 +1968,35 @@ async function loadRemote(user){
   setSync(TEST_MODE?"modo teste":"sincronizado",TEST_MODE?"syncing":"ok");
 }
 async function initBackend(){
-  if(!backendConfigured()){
-    authMsg.textContent="Falta preencher o arquivo config.js com a URL e a Publishable Key do Supabase.";
-    authMsg.className="authmsg error";
-    return;
+  const cfg=resolvedSupabaseConfig();
+  if(!validSupabaseConfig(cfg)){
+    authMsg.textContent="Configuração do Supabase não encontrada.";authMsg.className="authmsg error";return false
   }
   try{
-    sb=window.supabase.createClient(window.AX_CONFIG.supabaseUrl,window.AX_CONFIG.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    const libOk=await ensureSupabaseLibrary();
+    if(!libOk)throw new Error("Biblioteca Supabase não carregou.");
+    if(!sb)sb=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
     const {data:{session}}=await sb.auth.getSession();
     if(session)await loadRemote(session.user);
     sb.auth.onAuthStateChange(async(event,session)=>{
       if(event==="SIGNED_OUT"){currentUser=null;document.body.classList.add("auth-locked");setSync("offline","")}
     });
+    return true
   }catch(e){
-    console.error(e);authMsg.textContent="Não foi possível conectar ao Supabase. Confira config.js e o banco.";authMsg.className="authmsg error";
+    console.error(e);authMsg.textContent="Não foi possível conectar ao Supabase. Atualize a página e tente novamente.";authMsg.className="authmsg error";return false
   }
 }
 async function login(){
-  if(!sb){authMsg.textContent="Configure o Supabase primeiro.";authMsg.className="authmsg error";return}
+  if(!sb){authMsg.textContent="Conectando…";authMsg.className="authmsg";await initBackend()}
+  if(!sb){authMsg.textContent="Não foi possível iniciar a conexão. Atualize a página e tente novamente.";authMsg.className="authmsg error";return}
   authMsg.textContent="Entrando…";authMsg.className="authmsg";
   const {data,error}=await sb.auth.signInWithPassword({email:authEmail.value.trim(),password:authPassword.value});
   if(error){authMsg.textContent="Não foi possível entrar: "+error.message;authMsg.className="authmsg error";return}
   await loadRemote(data.user);authMsg.textContent="";
 }
 async function signup(){
-  if(!sb){authMsg.textContent="Configure o Supabase primeiro.";authMsg.className="authmsg error";return}
+  if(!sb){authMsg.textContent="Conectando…";authMsg.className="authmsg";await initBackend()}
+  if(!sb){authMsg.textContent="Não foi possível iniciar a conexão. Atualize a página e tente novamente.";authMsg.className="authmsg error";return}
   if(authPassword.value.length<8){authMsg.textContent="Use uma senha com pelo menos 8 caracteres.";authMsg.className="authmsg error";return}
   authMsg.textContent="Criando acesso…";authMsg.className="authmsg";
   const {data,error}=await sb.auth.signUp({email:authEmail.value.trim(),password:authPassword.value});
@@ -3633,8 +3657,11 @@ function collectionMsg(s,p,c){
  const kind=collectionStatus(p),tpl=kind==="late"?state.collectionTemplates.late:state.collectionTemplates.upcoming;
  return tpl.replaceAll("{contato_cliente}",contactClientLabel(c)).replaceAll("{cliente}",c?.name||"").replaceAll("{contato}",c?.contact||c?.name||"").replaceAll("{valor}",brl(p.amount)).replaceAll("{pedido}",s.orderNumber||"—").replaceAll("{data}",fmt(s.date)).replaceAll("{vencimento}",fmt(p.due))
 }
-ensureState();renderAll();
-initBackend();
+(async function bootAX(){
+  ensureState();
+  try{await initBackend()}catch(e){console.error("Falha na inicialização do backend",e)}
+  try{renderAll()}catch(e){console.error("Falha ao renderizar o app",e);if(window.authMsg&&!authMsg.textContent){authMsg.textContent="O app carregou parcialmente. Atualize a página e tente novamente.";authMsg.className="authmsg error"}}
+})();
 </script>
 </body>
 </html>
