@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.22.3">
-<meta name="ax-build" content="2026-09-21-v5.22-regional-routes-fuel-history">
+<meta name="ax-version" content="5.22.4">
+<meta name="ax-build" content="2026-09-22-v5.22.4-routes-nonblocking">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -1099,7 +1099,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.22.3</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.22.4</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -1364,7 +1364,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.22.3</span></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.22.4</span></div>
     <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.17</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">17/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
@@ -1819,8 +1819,8 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.22.3';
-const AX_RELEASE_DATE='2026-09-21';
+const AX_APP_VERSION='5.22.4';
+const AX_RELEASE_DATE='2026-09-22';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
 const TEST_MODE=false;
@@ -3067,17 +3067,50 @@ function insertionImpact(route,idx,matrix){const path=[0,...route.order,0],visit
 function relationshipOpportunities(p){
  const used=new Set((p.routes||[]).flatMap(r=>r.order)),rows=[];p.candidates.forEach((x,i)=>{const idx=i+1;if(used.has(idx))return;let reason=x.relationshipReason||"";if(!reason){if(!x.st.orders)reason="Prospecção • cliente sem histórico";else if(x.manual)reason="Prioridade do Alex • relacionamento";else if(x.automatic)reason="Relacionamento • visita está na janela e pode aproveitar uma região";else return}let near=null;(p.routes||[]).forEach((r,ri)=>{const imp=insertionImpact(r,idx,p.matrix);if(!near||imp.cost<near.cost)near={...imp,routeIndex:ri}});rows.push({x,idx,reason,near})});(p.deferredRelationship||[]).forEach(x=>rows.push({x,idx:0,reason:x.relationshipReason||"Prospecção / relacionamento",near:null,deferred:true}));return rows.sort((a,b)=>{const ar=a.near?.cost??Infinity,br=b.near?.cost??Infinity;return ar-br||String(a.x.c.city).localeCompare(String(b.x.c.city))})
 }
+async function enrichSmartRoutesInBackground(planRef){
+ try{
+   const enriched=await routePromiseTimeout(enrichSelectedRoutes(planRef.routes,planRef.candidates,planRef.matrix),18000,"detalhamento final das rotas");
+   if(smartRoutePlan!==planRef)return;
+   if(enriched?.length)planRef.routes=enriched.map(r=>({...r,tollPending:false}));
+   else planRef.routes=(planRef.routes||[]).map(r=>({...r,tollPending:false,detailFallback:true,tollError:true}));
+   let overnight=overnightAlternative(planRef.routes,planRef.candidates,planRef.matrix);
+   if(overnight){
+     try{overnight=await routePromiseTimeout(enrichOvernight(overnight,planRef.candidates,planRef.routes),12000,"detalhamento da hospedagem")}
+     catch(e){console.warn("Hospedagem exibida com estimativa da matriz.",e);overnight.detailFallback=true}
+   }
+   if(smartRoutePlan!==planRef)return;
+   planRef.overnight=overnight
+ }catch(e){
+   console.warn("Detalhamento final das rotas não concluiu; mantendo estimativa da matriz.",e);
+   if(smartRoutePlan!==planRef)return;
+   planRef.routes=(planRef.routes||[]).map(r=>({...r,tollPending:false,detailFallback:true,tollError:true}));
+   if(planRef.overnight)planRef.overnight.detailFallback=true
+ }finally{
+   if(smartRoutePlan===planRef){renderRoutes();renderHome()}
+ }
+}
 async function analyzeSmartRoutes(){
  const analysis=smartAnalysisCandidates(),critical=analysis.critical,candidates=analysis.candidates;smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Agrupando clientes por região, distâncias e tempo de viagem...</div>';
  if(!critical.length&&!candidates.length){smartRoutePlan={error:"Nenhum cliente está na janela e não há oportunidades de prospecção/reativação com endereço cadastrado."};renderRoutes();return}
  if(!mapsConfigured()){smartRoutePlan={error:"A integração de rotas não está configurada. Vá em Mais → Configurações → Integração de rotas e confirme a Google Maps API Key."};renderRoutes();return}
- try{const {matrix,fromCache}=await buildRouteMatrix(candidates);let daily=makeRegionalRoutes(candidates,matrix);smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Finalizando rotas e consultando pedágios...</div>';daily=await enrichSelectedRoutes(daily,candidates,matrix);let overnight=overnightAlternative(daily,candidates,matrix);if(overnight){try{overnight=await routePromiseTimeout(enrichOvernight(overnight,candidates,daily),11000,"detalhamento da hospedagem")}catch(e){console.warn("Hospedagem exibida com estimativa da matriz.",e);overnight.detailFallback=true}}smartRoutePlan={candidates,matrix,routes:daily,fromCache,overnight,omittedRelationship:analysis.omittedRelationship,deferredRelationship:analysis.deferredRelationship||[],deferredCritical:analysis.deferredCritical||[],preselected:!!analysis.preselected,totalCritical:critical.length};smartRouteView="finance"}catch(e){console.error("Erro ao analisar rotas:",e);smartRoutePlan={error:e?.message||"Não foi possível calcular as rotas. Verifique a conexão e a configuração do Google Maps."}}renderRoutes();renderHome()
+ try{
+   const {matrix,fromCache}=await buildRouteMatrix(candidates);
+   const daily=makeRegionalRoutes(candidates,matrix).map(r=>({...r,tollPending:true,toll:0,tollAvailable:false,tollError:false,travelCost:Number(r.km||0)*Number(state.config.costKm||0),result:Number(r.grossProfit||0)-Number(r.km||0)*Number(state.config.costKm||0)}));
+   const overnight=overnightAlternative(daily,candidates,matrix);
+   const plan={candidates,matrix,routes:daily,fromCache,overnight,omittedRelationship:analysis.omittedRelationship,deferredRelationship:analysis.deferredRelationship||[],deferredCritical:analysis.deferredCritical||[],preselected:!!analysis.preselected,totalCritical:critical.length};
+   smartRoutePlan=plan;smartRouteView="finance";
+   // Mostra as opções imediatamente usando a matriz. Pedágios e rota final são enriquecidos em segundo plano.
+   renderRoutes();renderHome();
+   enrichSmartRoutesInBackground(plan)
+ }catch(e){
+   console.error("Erro ao analisar rotas:",e);smartRoutePlan={error:e?.message||"Não foi possível calcular as rotas. Verifique a conexão e a configuração do Google Maps."};renderRoutes();renderHome()
+ }
 }
 function renderFinanceView(p){
  const used=new Set((p.routes||[]).flatMap(r=>r.order)),waiting=p.candidates.map((x,i)=>({x,idx:i+1})).filter(({idx})=>!used.has(idx)),deferred=(p.deferredCritical||[]).map(x=>({x,idx:0}));let h="";
  if(p.preselected)h+=`<div class="card"><div class="smart-route-wait-note"><b>${p.totalCritical} clientes</b> estão na janela/prioridade. Para manter a matriz rápida, o sistema analisou primeiro os clientes com maior urgência, pedidos de visita e concentração regional. Os demais continuam visíveis e entram nas próximas rodadas.</div></div>`;
  if(!p.routes.length)h+=`<div class="card"><span class="badge warn">Sem combinação viável</span><div class="explain">Não foi possível formar uma rota dentro do limite diário. Tente novamente quando houver mais clientes na mesma região ou ajuste o limite de jornada.</div></div>`;
- p.routes.forEach((r,i)=>{const concentration=r.order.length>=4?["good","Boa concentração"]:r.order.length>=2?["warn","Rota enxuta"]:["bad","Pouca concentração"];h+=`<div class="card"><div class="cardhead"><div><h2>Opção ${i+1} • por região</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${concentration[0]}">${concentration[1]}</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${r.order.length}</b><span>Clientes na região</span></div><div class="mini"><b>${r.km.toFixed(0)} km</b><span>Rodagem</span></div><div class="mini"><b>${fmtHours(r.minutes)}</b><span>Tempo estimado</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado</span></div></div><div class="regional-route-note">O sistema agrupou estes clientes porque estão na mesma região/corredor. Ticket e retorno aparecem apenas como referência comercial; não são usados para excluir clientes da rota.</div>${r.detailFallback?`<div class="muted" style="margin-top:7px">Distância/tempo estimados pela matriz. O detalhamento final do Google não respondeu a tempo; pedágio pode aparecer como não informado.</div>`:""}<div class="smart-route-client-grid">${r.order.map(idx=>{const x=p.candidates[idx-1],req=pendingClientRouteRequest(x.c);return `<div class="smart-route-client-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ${candidateTimingText(x)}</span><div class="route-client-reason">${x.relationshipReason?"Aproveitar passagem / relacionamento":"Visita na janela ou priorizada"}${x.st.orders?` • ticket ${brl(x.st.ticket)}`:""}</div>${routeClientRequestHtml(x.c)}<div class="route-request-actions"><button class="btn secondary" onclick="openClientRouteRequest('${x.c.id}')">💬 Contato / pedido</button></div></div>`}).join("")}</div>${routeLoadPlanHtml(r.order,p.candidates)}<div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseSmartRoute(${i})">Usar esta rota</button></div></div>`});
+ p.routes.forEach((r,i)=>{const concentration=r.order.length>=4?["good","Boa concentração"]:r.order.length>=2?["warn","Rota enxuta"]:["bad","Pouca concentração"];h+=`<div class="card"><div class="cardhead"><div><h2>Opção ${i+1} • por região</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${concentration[0]}">${concentration[1]}</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${r.order.length}</b><span>Clientes na região</span></div><div class="mini"><b>${r.km.toFixed(0)} km</b><span>Rodagem</span></div><div class="mini"><b>${fmtHours(r.minutes)}</b><span>Tempo estimado</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>${r.tollPending?"Custo preliminar":"Custo estimado"}</span></div></div><div class="regional-route-note">O sistema agrupou estes clientes porque estão na mesma região/corredor. Ticket e retorno aparecem apenas como referência comercial; não são usados para excluir clientes da rota.</div>${r.tollPending?`<div class="muted" style="margin-top:7px">⏳ Rota já disponível. Pedágio e custo final estão sendo atualizados em segundo plano.</div>`:r.detailFallback?`<div class="muted" style="margin-top:7px">Distância/tempo estimados pela matriz. O detalhamento final do Google não respondeu a tempo; pedágio pode aparecer como não informado.</div>`:""}<div class="smart-route-client-grid">${r.order.map(idx=>{const x=p.candidates[idx-1],req=pendingClientRouteRequest(x.c);return `<div class="smart-route-client-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ${candidateTimingText(x)}</span><div class="route-client-reason">${x.relationshipReason?"Aproveitar passagem / relacionamento":"Visita na janela ou priorizada"}${x.st.orders?` • ticket ${brl(x.st.ticket)}`:""}</div>${routeClientRequestHtml(x.c)}<div class="route-request-actions"><button class="btn secondary" onclick="openClientRouteRequest('${x.c.id}')">💬 Contato / pedido</button></div></div>`}).join("")}</div>${routeLoadPlanHtml(r.order,p.candidates)}<div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseSmartRoute(${i})">Usar esta rota</button></div></div>`});
  if(waiting.length||deferred.length){const allWaiting=[...waiting,...deferred];h+=`<div class="card"><div class="cardhead"><div><h2>Fora das combinações desta rodada</h2><div class="muted">Continuam na lista e podem entrar quando formarem um grupo regional melhor.</div></div><span class="badge warn">${allWaiting.length}</span></div><div class="smart-route-waiting">${allWaiting.map(({x})=>`<div class="mini-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ${candidateTimingText(x)}</span></div>`).join("")}</div></div>`}
  if(p.overnight){const o=p.overnight,good=o.savings>0,day1City=p.candidates[o.day1.at(-1)-1]?.c?.city||"região do último cliente",day1Names=o.day1.map(idx=>p.candidates[idx-1]),day2Names=o.day2.map(idx=>p.candidates[idx-1]);h+=`<div class="card"><div class="cardhead"><div><h2>💤 Alternativa com 1 hospedagem</h2><div class="muted">Combina duas rotas regionais em uma viagem de 2 dias.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode economizar":"Compare antes de usar"}</span></div><div class="overnight-days"><div class="overnight-day"><b>Dia 1</b><small>${o.d1?.km?.toFixed?.(0)||"—"} km • ${o.d1?.minutes?fmtHours(o.d1.minutes):"—"} • pernoite em/na região de ${esc(day1City)}</small><div class="overnight-client-list">${day1Names.map(x=>`<span>• ${esc(x.c.name)} — ${esc(x.c.city)}</span>`).join("")}</div></div><div class="overnight-day"><b>Dia 2</b><small>${o.d2?.km?.toFixed?.(0)||"—"} km • ${o.d2?.minutes?fmtHours(o.d2.minutes):"—"} • retorno à base</small><div class="overnight-client-list">${day2Names.map(x=>`<span>• ${esc(x.c.name)} — ${esc(x.c.city)}</span>`).join("")}</div></div></div><div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem estimada</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div><div class="overnight-why"><b>Por que considerar:</b> evita voltar à base entre duas regiões próximas. ${good?`Economia estimada de ${brl(o.savings)} em relação a fazer os dois bate-voltas.`:`A economia financeira não é relevante hoje, mas pode reduzir tempo e quilometragem operacional.`}</div>${routeLoadPlanHtml([...o.day1,...o.day2],p.candidates,"Carga sugerida para os 2 dias")}<div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseOvernightRoute()">Usar viagem de 2 dias</button></div></div>`}return h
 }
