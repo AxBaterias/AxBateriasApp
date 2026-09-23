@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.22">
+<meta name="ax-version" content="5.22.1">
 <meta name="ax-build" content="2026-09-21-v5.22-regional-routes-fuel-history">
 <style>
 :root{
@@ -1819,7 +1819,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.22';
+const AX_APP_VERSION='5.22.1';
 const AX_RELEASE_DATE='2026-09-21';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
@@ -3276,7 +3276,29 @@ wCreditDestination.addEventListener("change",updateWarrantyOpenSales);
 warrantyForm.addEventListener("submit",e=>{
  e.preventDefault();ensureState();const c=state.clients.find(c=>c.id===wClient.value),prod=state.products.find(p=>p.id===wProduct.value);if(!c||!prod){alert("Selecione cliente e produto.");return}const code=parseWarrantyCode(wCode.value);if(!code.valid){alert("Confira o código da garantia. "+code.error);wCode.focus();return}const w=state.warranties.find(w=>w.id===wId.value);if(w&&warrantyApplications(w).length){alert("Esta garantia já possui crédito aplicado e não pode ser alterada. Isso preserva o histórico financeiro.");return}const qty=w?Number(w.qty||1):1,oldExchange=!!(w&&(w.solution==="exchange"||w.resolution==="exchange")),oldProduct=oldExchange?state.products.find(p=>p.id===w.productId):null,oldQty=oldExchange?Number(w.qty||1):0,solution=wResolution.value,batteryValue=Number(wCreditValue.value||0),creditValue=solution==="credit"?batteryValue:0,availableForExchange=Number(prod.qty||0)+(oldExchange&&oldProduct?.id===prod.id?oldQty:0);if(solution==="exchange"&&availableForExchange<1){alert(`Estoque insuficiente de ${prod.name} para registrar a troca.`);return}if(batteryValue<=0){alert("Informe o valor desta bateria.");return}let applications=[];if(solution==="credit"){const [saleId,installmentId]=String(wOpenSale.value||"").split("::"),sale=state.sales.find(s=>s.id===saleId),part=sale&&effectiveInstallments(sale,w?.id||"").find(p=>p.id===installmentId&&!p.renegotiatedToSaleId);if(!sale||!part){alert("Selecione a cobrança em aberto.");return}if(creditValue>Number(part.effectiveAmount||0)+.009){alert(`O crédito é maior que o saldo da cobrança (${brl(part.effectiveAmount)}). Ajuste o valor.`);return}applications=[{id:uid(),saleId:sale.id,installmentId:part.id,amount:creditValue,kind:"collection",date:wCollect.value||today()}]}if(oldExchange&&oldProduct)oldProduct.qty=Number(oldProduct.qty)+oldQty;if(solution==="exchange")prod.qty=Number(prod.qty)-1;const data={clientId:c.id,type:"Garantia",productId:prod.id,model:prod.name,qty:w?qty:1,code:code.raw,mfg:code.mfgWeekStart,collect:wCollect.value||today(),solution,resolution:solution,creditValue,batteryValue,creditDestination:solution==="credit"?"collection":"",applications,note:wNote.value.trim(),unitCostSnapshot:Number(prod.cost||0),batteryDisposition:w?.batteryDisposition||"pending",dispositionDate:w?.dispositionDate||""};if(w)Object.assign(w,data);else state.warranties.push({id:uid(),...data});closeSheet("warrantySheet");smartRoutePlan=null;save()
 });
-clientRouteRequestForm.addEventListener("submit",e=>{e.preventDefault();const c=state.clients.find(c=>c.id===crClientId.value);if(!c)return;const req={id:uid(),date:crDate.value||today(),type:crType.value,note:crNote.value.trim(),items:{"5Ah":Number(cr5.value||0),"6Ah":Number(cr6.value||0),"7Ah":Number(cr7.value||0)},status:"pending",createdAt:nowIsoSP()};c.routeRequests=c.routeRequests||[];c.routeRequests.push(req);if(req.type==="requested")c.visitPriority=true;smartRoutePlan=null;closeSheet("clientRouteRequestSheet");save()});
+const clientRouteRequestFormEl=document.getElementById("clientRouteRequestForm");
+if(clientRouteRequestFormEl){
+ clientRouteRequestFormEl.addEventListener("submit",e=>{
+  e.preventDefault();
+  const id=document.getElementById("crClientId")?.value||"";
+  const c=state.clients.find(c=>c.id===id);if(!c)return;
+  const req={
+   id:uid(),
+   date:document.getElementById("crDate")?.value||today(),
+   type:document.getElementById("crType")?.value||"requested",
+   note:(document.getElementById("crNote")?.value||"").trim(),
+   items:{
+    "5Ah":Number(document.getElementById("cr5")?.value||0),
+    "6Ah":Number(document.getElementById("cr6")?.value||0),
+    "7Ah":Number(document.getElementById("cr7")?.value||0)
+   },
+   status:"pending",createdAt:nowIsoSP()
+  };
+  c.routeRequests=c.routeRequests||[];c.routeRequests.push(req);
+  if(req.type==="requested")c.visitPriority=true;
+  smartRoutePlan=null;closeSheet("clientRouteRequestSheet");save();
+ });
+}
 routeExpenseForm.addEventListener("submit",e=>{e.preventDefault();const r=state.routeRuns.find(r=>r.id===reRouteId.value),amount=Number(reAmount.value||0);if(!r||amount<=0){alert("Informe o valor da despesa.");return}const data={id:uid(),category:reCategory.value,amount,date:reDate.value||today(),note:reNote.value.trim(),createdAt:nowIsoSP()};if(data.category==="fuel"){const liters=Number(reLiters.value||0),odometerKm=Number(reOdometer.value||0),last=lastFuelExpense(),previousOdometerKm=Number(last?.odometerKm||0);if(liters<=0||odometerKm<=0){alert("No combustível, informe os litros abastecidos e o km atual da Saveiro.");return}if(previousOdometerKm>0&&odometerKm<previousOdometerKm){alert(`O km atual não pode ser menor que o último lançamento (${previousOdometerKm.toLocaleString("pt-BR")} km).`);return}const distanceKm=previousOdometerKm>0?odometerKm-previousOdometerKm:0;Object.assign(data,{fuelType:reFuelType.value,liters,odometerKm,previousOdometerKm,distanceKm,pricePerLiter:amount/liters,kmPerLiter:distanceKm>0?distanceKm/liters:0})}r.expenses=r.expenses||[];r.expenses.push(data);recalculateFuelHistoryDerived();closeSheet("routeExpenseSheet");save()});
 scrapTypeForm.addEventListener("submit",e=>{e.preventDefault();let t=state.scrapTypes.find(t=>t.id===stId.value);const data={name:stName.value.trim(),weight:Number(stWeight.value||0),value:Number(stValue.value||0)};if(!data.name){return}if(t)Object.assign(t,data);else{if(state.scrapTypes.length>=11){alert("A tabela já possui os 11 tipos de sucata.");return}state.scrapTypes.push({id:uid(),...data})}closeSheet("scrapTypeSheet");save()});
 scrapResaleForm.addEventListener("submit",e=>{e.preventDefault();const groups=selectedScrapGroups(),tot=groups.reduce((a,g)=>({qty:a.qty+g.qty,weight:a.weight+g.weight,cost:a.cost+g.cost}),{qty:0,weight:0,cost:0}),factoryWeight=Number(srWeight.value||0);if(!groups.length||tot.weight<=.0001){alert("Selecione a sucata que será vendida.");return}if(factoryWeight<=0){alert("Informe o peso apurado pela fábrica.");return}let resaleValue=Number(srTotalValue.value||0),pricePerKg=Number(srPriceKg.value||0);if(resaleValue<=0&&pricePerKg>0)resaleValue=factoryWeight*pricePerKg;if(pricePerKg<=0&&resaleValue>0)pricePerKg=resaleValue/factoryWeight;if(resaleValue<=0||pricePerKg<=0){alert("Informe o preço por kg ou o valor total recebido.");return}resaleValue=Math.round(resaleValue*100)/100;pricePerKg=Math.round(pricePerKg*100)/100;const result=Math.round((resaleValue-tot.cost)*100)/100,mode=srMode.value||"all",scopeLabel=mode==="all"?"Todo o estoque":mode==="sideA"?"Lado A":mode==="sideB"?"Lado B":`${groups.length} dia(s)/rota(s)`;if(!confirm(`Confirmar revenda?\n\nSeleção: ${scopeLabel}\nTeórico baixado: ${tot.weight.toFixed(2)} kg / ${Math.round(tot.qty)} un.\nPeso da fábrica: ${factoryWeight.toFixed(2)} kg\nValor recebido: ${brl(resaleValue)}\nResultado: ${brl(result)}\n\nSomente a sucata selecionada será baixada.`))return;const batchId=uid(),date=srDate.value||today(),consumedSaleIds=[...new Set(groups.flatMap(g=>g.saleIds||[]))];groups.forEach(g=>g.types.forEach(d=>{if(d.qty>.0001||d.weight>.0001)state.scrapTransactions.push({id:uid(),direction:"out",source:"resale_group_internal",batchId,scrapGroupKey:g.key,typeId:d.typeId,typeName:d.name,date,qty:d.qty,weight:d.weight,acquisitionValue:d.cost,createdAt:nowIsoSP()})}));state.scrapResales.push({id:batchId,date,buyer:srBuyer.value.trim(),scope:mode,scopeLabel,selectedGroupKeys:groups.map(g=>g.key),consumedSaleIds,factoryWeight,systemWeight:tot.weight,systemQty:tot.qty,pricePerKg,resaleValue,acquisitionValue:tot.cost,result,note:srNote.value.trim(),createdAt:nowIsoSP()});closeSheet("scrapResaleSheet");save()});
