@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.22.1">
+<meta name="ax-version" content="5.22.2">
 <meta name="ax-build" content="2026-09-21-v5.22-regional-routes-fuel-history">
 <style>
 :root{
@@ -1819,7 +1819,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.22.1';
+const AX_APP_VERSION='5.22.2';
 const AX_RELEASE_DATE='2026-09-21';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
@@ -3009,6 +3009,17 @@ function deleteRouteRun(id){
 function toggleRouteRunStatus(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;r.status=r.status==="completed"?"planned":"completed";r.completedAt=r.status==="completed"?nowIsoSP():"";save()}
 function openRouteExpense(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;routeExpenseForm.reset();reRouteId.value=id;reDate.value=today();reFuelType.value="gasoline";selectRouteExpenseCategory("fuel");updateFuelExpenseHints();openSheet("routeExpenseSheet")}
 function selectRouteExpenseCategory(cat){reCategory.value=cat;document.querySelectorAll(".expense-category-btn").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));const fuel=cat==="fuel";reFuelFields.classList.toggle("hidden",!fuel);reOdometer.required=fuel;reLiters.required=fuel;if(fuel)updateFuelExpenseHints();else reAmount.focus()}
+function candidateSortRows(rows){
+ let list=[...rows];
+ if(routeCandidateFilter==="overdue")list=list.filter(x=>Number(x.overdueDays||0)>0);
+ if(routeCandidateFilter==="priority")list=list.filter(x=>x.manual);
+ const cmp={
+  overdue:(a,b)=>Number(b.overdueDays||0)-Number(a.overdueDays||0)||Number(b.st.netAvgMargin||0)-Number(a.st.netAvgMargin||0),
+  return:(a,b)=>Number(b.st.netAvgMargin||0)-Number(a.st.netAvgMargin||0)||Number(b.overdueDays||0)-Number(a.overdueDays||0),
+  ticket:(a,b)=>Number(b.st.ticket||0)-Number(a.st.ticket||0)||Number(b.overdueDays||0)-Number(a.overdueDays||0),
+  recommended:(a,b)=>smartCandidateScore(b,1)-smartCandidateScore(a,1)||Number(b.manual)-Number(a.manual)||Number(b.overdueDays||0)-Number(a.overdueDays||0)
+ }[routeCandidateSort]||(()=>0);return list.sort(cmp)
+}
 function candidateUrgencyChip(x){if(!x.st.orders)return '<span class="candidate-chip neutral">Novo</span>';if(Number(x.overdueDays||0)>0)return `<span class="candidate-chip overdue">${x.overdueDays}d atrasado</span>`;return `<span class="candidate-chip due">${x.delta===0?"Hoje":"Na janela"}</span>`}
 function renderRouteCandidates(crit){
  const rows=candidateSortRows(crit),sorts=[["recommended","Recomendado"],["overdue","Mais atrasados"],["return","Maior retorno"],["ticket","Maior ticket"]],filters=[["all","Todos"],["overdue","Atrasados"],["priority","Priorizados"]];
