@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.21.1">
+<meta name="ax-version" content="5.21.2">
 <meta name="ax-build" content="2026-09-22-v5.21.1-stabilization">
 <style>
 :root{
@@ -1065,6 +1065,21 @@ html,body{max-width:100%;overflow-x:hidden}
 .sales-visible-filters{grid-template-columns:1fr 1fr 1fr}.sales-visible-filter-group:last-child{grid-column:auto}
 @media(max-width:520px){.home-period-picker{align-items:flex-start;flex-direction:column}.home-month-filters{justify-content:flex-start}.results-split{grid-template-columns:1fr}.model-chart-grid{gap:5px;padding:8px}.model-chart-card{padding:7px 5px}.model-chart-title{flex-direction:column;align-items:flex-start}.expense-wrap{grid-template-columns:120px 1fr}.expense-donut{width:112px;height:112px}.expense-donut:after{inset:26px}.sales-visible-filters{grid-template-columns:1fr}.sales-visible-filter-group:last-child{grid-column:auto}}
 
+
+/* v5.21.2 — Central de dados e zona de segurança */
+.data-center-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.data-action{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 13px;color:var(--text);cursor:pointer;font:inherit}
+.data-action:active{transform:scale(.995)}
+.data-action-icon{width:34px;height:34px;flex:0 0 34px;border-radius:11px;background:#f2f4f7;display:grid;place-items:center;font-size:17px}
+.data-action-main{min-width:0;display:flex;flex-direction:column;gap:2px}.data-action-main b{font-size:10.5px}.data-action-main span{font-size:8.5px;line-height:1.35;color:var(--muted);font-weight:600}
+.data-action-arrow{margin-left:auto;color:#98a2b3;font-weight:900;font-size:15px}
+.data-note{margin-top:10px;padding:9px 10px;border-radius:12px;background:#f9fafb;color:var(--muted);font-size:8.5px;line-height:1.45}
+.data-account-row{display:flex;justify-content:flex-start;margin-top:10px;padding-top:10px;border-top:1px solid #eef0f2}
+.data-advanced{margin-top:10px;border-top:1px solid #eef0f2;padding-top:9px}.data-advanced summary{cursor:pointer;list-style:none;font-size:9.5px;font-weight:850;color:#475467;display:flex;align-items:center;justify-content:space-between;padding:6px 1px}.data-advanced summary::-webkit-details-marker{display:none}.data-advanced summary:after{content:'⌄';font-size:13px;color:#98a2b3}.data-advanced[open] summary:after{content:'⌃'}
+.data-advanced:not([open]) .data-danger-zone{display:none}
+.data-danger-zone{margin-top:8px;padding:11px;border:1px solid #fecdca;background:#fffbfa;border-radius:13px}.data-danger-zone b{font-size:9.5px;color:#b42318}.data-danger-zone p{font-size:8.5px;line-height:1.45;color:#667085;margin:5px 0 10px}
+@media(min-width:700px){.data-center-grid{grid-template-columns:repeat(3,1fr)}.data-action{height:100%}}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -1354,16 +1369,26 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.21.1</span></div>
-    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.17</b></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.21.2</span></div>
+    <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.21.2</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">17/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
     <div id="systemUpdateMessage" class="muted" style="margin-top:8px">O botão busca o index.html publicado sem usar o cache.</div>
     <div style="margin-top:10px"><button id="systemUpdateBtn" class="btn" type="button" onclick="forceSystemUpdate()">↻ Atualizar sistema</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><h2>Dados</h2></div>
-    <div class="actions"><button class="btn secondary" onclick="seedDemo()">Dados de demonstração</button><button class="btn secondary" onclick="backup()">Exportar backup</button><label class="btn secondary">Importar backup<input id="restoreFile" type="file" accept=".json" style="display:none"></label><button class="btn secondary" onclick="logout()">Sair da conta</button><button class="btn danger" onclick="resetAll()">Apagar tudo</button></div>
+    <div class="cardhead"><div><h2>Central de dados</h2><div class="muted">Segurança, consulta e portabilidade dos dados da AX.</div></div></div>
+    <div class="data-center-grid">
+      <button class="data-action" type="button" onclick="backup()"><span class="data-action-icon">📦</span><span class="data-action-main"><b>Exportar backup</b><span>Arquivo .json para restaurar o sistema exatamente como está.</span></span><span class="data-action-arrow">›</span></button>
+      <button id="excelExportBtn" class="data-action" type="button" onclick="exportExcelData()"><span class="data-action-icon">📊</span><span class="data-action-main"><b>Exportar dados em Excel</b><span>Arquivo .xlsx com abas organizadas para filtrar, conferir e analisar.</span></span><span class="data-action-arrow">›</span></button>
+      <label class="data-action" for="restoreFile"><span class="data-action-icon">📥</span><span class="data-action-main"><b>Importar backup</b><span>Restaura um backup .json anterior após sua confirmação.</span></span><span class="data-action-arrow">›</span><input id="restoreFile" type="file" accept=".json,application/json" style="display:none"></label>
+    </div>
+    <div class="data-note"><b>Backup ≠ Excel.</b> O JSON é o arquivo de segurança usado para restaurar o sistema. O Excel é uma cópia para consulta e tratamento dos dados e não deve ser usado para restauração.</div>
+    <div class="data-account-row"><button class="btn secondary" type="button" onclick="logout()">Sair da conta</button></div>
+    <details class="data-advanced">
+      <summary>⚙️ Opções avançadas</summary>
+      <div class="data-danger-zone"><b>Zona de segurança</b><p>Use somente se realmente quiser apagar todos os dados do aplicativo e sincronizar a exclusão. Antes da exclusão, o sistema solicita automaticamente um backup.</p><button class="btn danger" type="button" onclick="resetAll()">Apagar todos os dados</button></div>
+    </details>
   </div>
 </section>
 
@@ -1798,8 +1823,8 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.21.1';
-const AX_RELEASE_DATE='2026-09-22';
+const AX_APP_VERSION='5.21.2';
+const AX_RELEASE_DATE='2026-09-23';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
 const TEST_MODE=false;
@@ -3292,7 +3317,7 @@ function csvEscape(v){const s=String(v??"");return /[;"\n]/.test(s)?`"${s.replac
 function downloadCsv(name,headers,rows){
  const content="\ufeff"+[headers,...rows].map(r=>r.map(csvEscape).join(";")).join("\n"),blob=new Blob([content],{type:"text/csv;charset=utf-8"});triggerBlobDownload(blob,name)
 }
-/* v5.21.1 — funções de estabilização e recuperação */
+/* v5.21.2 — estabilização, recuperação e portabilidade de dados */
 function saveCollectionTemplates(){
  ensureState();
  const upcoming=(document.getElementById("collectionUpcomingTemplate")?.value||"").trim();
@@ -3328,6 +3353,102 @@ function exportClients(){
  if(!rows.length){alert("Ainda não existem clientes para exportar.");return}
  downloadCsv(`AX-Baterias-Clientes-${today()}.csv`,["Cliente","Contato","WhatsApp","CPF/CNPJ","Endereço","Cidade","Tabela","Intervalo inicial","Pedidos","Ticket médio","Margem média AX","Em aberto AX","Última compra","Próxima compra","Prioridade","Observação"],rows)
 }
+let xlsxLoaderPromise=null;
+function loadExternalScript(src,timeoutMs=12000){
+ return new Promise((resolve,reject)=>{
+  const prior=[...document.scripts].find(s=>s.src===src);
+  if(prior){if(window.XLSX){resolve();return}prior.addEventListener("load",resolve,{once:true});prior.addEventListener("error",()=>reject(new Error("Falha ao carregar biblioteca.")),{once:true});return}
+  const script=document.createElement("script"),timer=setTimeout(()=>{script.remove();reject(new Error("Tempo esgotado ao carregar biblioteca."))},timeoutMs);
+  script.src=src;script.async=true;script.onload=()=>{clearTimeout(timer);resolve()};script.onerror=()=>{clearTimeout(timer);script.remove();reject(new Error("Falha ao carregar biblioteca."))};document.head.appendChild(script)
+ })
+}
+async function loadXlsxLibrary(){
+ if(window.XLSX)return window.XLSX;
+ if(xlsxLoaderPromise)return xlsxLoaderPromise;
+ xlsxLoaderPromise=(async()=>{
+  const sources=["https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js","https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"];
+  let lastError=null;
+  for(const src of sources){try{await loadExternalScript(src);if(window.XLSX)return window.XLSX}catch(error){lastError=error}}
+  throw lastError||new Error("Biblioteca de Excel indisponível.")
+ })().catch(error=>{xlsxLoaderPromise=null;throw error});
+ return xlsxLoaderPromise
+}
+function exportMonthKeys(){
+ const keys=new Set(),add=v=>{const k=String(v||"").slice(0,7);if(/^\d{4}-\d{2}$/.test(k))keys.add(k)};
+ (state.sales||[]).forEach(x=>add(x.date));(state.visits||[]).forEach(x=>add(x.date));(state.warranties||[]).forEach(x=>add(x.collect));(state.routeRuns||[]).forEach(r=>{add(r.date);(r.expenses||[]).forEach(e=>add(e.date||r.date))});(state.scrapTransactions||[]).forEach(x=>add(x.date));(state.scrapResales||[]).forEach(x=>add(x.date));(state.periodExpenses||[]).forEach(x=>add(x.date));(state.taxRecords||[]).forEach(x=>add(x.month));
+ if(!keys.size)monthKeys(3).forEach(k=>keys.add(k));return [...keys].sort()
+}
+function excelStatusForSale(s){return isKFSale(s)?"Via KF":salePaid(s)?"Recebido":saleOverdue(s)?"Vencido":"A receber"}
+function excelClientName(id){return state.clients.find(c=>c.id===id)?.name||""}
+function excelProductName(id,fallback=""){return state.products.find(p=>p.id===id)?.name||fallback||""}
+function excelPaymentMethods(s){const methods=[...(s.payments||[])].map(p=>p.method).filter(Boolean);return methods.length?[...new Set(methods)].join(" + "):(s.method||"")}
+function excelSafeSheet(XLSX,headers,rows,widths=[],currencyHeaders=[],percentHeaders=[]){
+ const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
+ ws["!cols"]=headers.map((h,i)=>({wch:widths[i]||Math.min(32,Math.max(10,String(h||"").length+2))}));
+ if(rows.length&&headers.length)ws["!autofilter"]={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:rows.length,c:headers.length-1}})};
+ const currency=new Set(currencyHeaders),percent=new Set(percentHeaders);
+ headers.forEach((h,c)=>{const fmt=currency.has(h)?'R$ #,##0.00':percent.has(h)?'0.0%':null;if(!fmt)return;for(let r=1;r<=rows.length;r++){const cell=ws[XLSX.utils.encode_cell({r,c})];if(cell&&typeof cell.v==="number")cell.z=fmt}});
+ return ws
+}
+function excelSummarySheet(XLSX){
+ const months=exportMonthKeys(),rows=months.map(month=>{const r=financialMonthRowByKey(month),kf=(state.sales||[]).filter(s=>isKFSale(s)&&String(s.date||"").slice(0,7)===month).reduce((a,s)=>a+Number(s.total||0),0);return [month,monthDisplayLabel(month,true)+(r.isPartial?" (parcial)":""),r.revenue,kf,r.margin,r.marginPct/100,r.scrapProfit,r.variableCosts,r.fixedCosts,r.afterFixed,r.target,r.gapToTarget,monthStatusLabel(r.status)]});
+ const title=[["AX Baterias — Resumo de resultados"],["Exportado em",new Date().toLocaleString("pt-BR",{timeZone:AX_TIME_ZONE})],["Versão do sistema",AX_APP_VERSION],[],["Mês","Período","Faturamento AX","Vendas via KF","Margem vendas AX","Margem %","Resultado sucata","Custos variáveis","Estrutura fixa","Resultado líquido","Meta líquida","Falta para meta","Status"],...rows];
+ const ws=XLSX.utils.aoa_to_sheet(title);ws["!cols"]=[{wch:10},{wch:20},{wch:17},{wch:15},{wch:17},{wch:11},{wch:16},{wch:17},{wch:15},{wch:17},{wch:15},{wch:16},{wch:20}];if(rows.length)ws["!autofilter"]={ref:`A5:M${rows.length+5}`};
+ const currencyCols=[2,3,4,6,7,8,9,10,11];for(let r=5;r<rows.length+5;r++){currencyCols.forEach(c=>{const cell=ws[XLSX.utils.encode_cell({r,c})];if(cell&&typeof cell.v==="number")cell.z='R$ #,##0.00'});const pct=ws[XLSX.utils.encode_cell({r,c:5})];if(pct)pct.z='0.0%'}return ws
+}
+function excelBusinessConfigRows(){
+ const f=state.config?.fixedCosts||{},fees=state.config?.paymentFees||{};
+ return [["Base operacional",state.config?.base||""],["Custo por km",Number(state.config?.costKm||0)],["Janela de visita (dias)",Number(state.config?.window||0)],["Hospedagem média",Number(state.config?.hotelCost||0)],["Tempo médio de atendimento (min)",Number(state.config?.visitMinutes||0)],["Limite diário de rota (h)",Number(state.config?.maxDailyHours||0)],["Vendedor",state.config?.sellerName||""],["WhatsApp AX",state.config?.companyPhone||""],["Referência de rentabilidade (%)",Number(state.config?.orderRentabilityReference ?? state.config?.minRentability ?? 0)/100],["Meta de resultado mensal",Number(state.config?.monthlyProfitTarget||0)],["Pró-labore",Number(f.proLabore||0)],["Contador",Number(f.accountant||0)],["Telefone / internet",Number(f.phone||0)],["Seguro",Number(f.insurance||0)],["Sistemas / serviços",Number(f.systems||0)],["Aluguel / depósito",Number(f.rent||0)],["Outros custos fixos",Number(f.other||0)],...["PIX","Dinheiro","Cheque","Boleto","Cartão"].map(k=>[`Taxa cadastrada — ${k} (%)`,Number(fees[k]||0)/100])]
+}
+async function exportExcelData(){
+ ensureState();const btn=document.getElementById("excelExportBtn"),original=btn?.innerHTML;if(btn){btn.disabled=true;btn.style.opacity=".65";const main=btn.querySelector(".data-action-main b");if(main)main.textContent="Preparando Excel…"}
+ try{
+  const XLSX=await loadXlsxLibrary(),wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,excelSummarySheet(XLSX),"Resumo");
+
+  const clients=(state.clients||[]).map(c=>{const st=clientStats(c.id);return [c.name||"",c.contact||"",c.phone||"",c.doc||"",c.address||"",c.city||"",c.price??"",Number(c.interval||0),Number(st.orders||0),Number(st.ticket||0),Number(st.avgMargin||0),Number(st.netAvgMargin||0),Number(st.open||0),st.last||"",st.next||"",c.visitPriority?"Sim":"Não",c.note||""]});
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Cliente","Contato","WhatsApp","CPF/CNPJ","Endereço","Cidade","Tabela","Intervalo visita (dias)","Pedidos","Ticket médio AX+KF","Margem média AX","Retorno médio líquido AX","Em aberto AX","Última compra","Próxima compra","Prioridade","Observação"],clients,[24,20,16,16,32,18,9,18,9,18,17,21,15,13,13,11,28],["Ticket médio AX+KF","Margem média AX","Retorno médio líquido AX","Em aberto AX"]),"Clientes");
+
+  const sales=[...(state.sales||[])].sort((a,b)=>String(a.date||"").localeCompare(String(b.date||""))).map(s=>{const c=state.clients.find(c=>c.id===s.clientId),op=saleOperationalBreakdown(s);return [s.orderNumber||"",s.date||"",c?.name||"",c?.city||"",isKFSale(s)?"KF":"AX",excelPaymentMethods(s),Number(s.subtotal??s.total??0),Number(s.scrapPaymentTotal??s.scrapDiscount??0),Number(s.freeAdjustmentValue||0),Number(s.total||0),Number(op.productCost||0),Number(op.commercialMargin||0),Number(op.rentability||0)/100,Number(saleOpen(s)||0),excelStatusForSale(s),s.sellerName||"",s.note||""]});
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Pedido","Data","Cliente","Cidade","Origem","Pagamento","Subtotal","Sucata no pagamento","Desconto/crédito livre","Total comercial","Custo baterias","Margem comercial","Rentabilidade %","Em aberto","Status","Vendedor","Observação"],sales,[10,12,24,18,9,18,15,18,20,16,15,17,15,15,14,12,28],["Subtotal","Sucata no pagamento","Desconto/crédito livre","Total comercial","Custo baterias","Margem comercial","Em aberto"],["Rentabilidade %"]),"Vendas");
+
+  const items=[];(state.sales||[]).forEach(s=>{const c=state.clients.find(c=>c.id===s.clientId);(s.items||[]).forEach(i=>items.push([s.orderNumber||"",s.date||"",c?.name||"",isKFSale(s)?"KF":"AX",i.name||excelProductName(i.productId),Number(i.qty||0),Number(i.unit||0),Number(i.line||0),Number(i.cost||0),Number(i.line||0)-Number(i.cost||0)]))});
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Pedido","Data","Cliente","Origem","Produto","Quantidade","Preço unitário","Venda do item","Custo do item","Margem do item"],items,[10,12,24,9,26,11,15,15,15,15],["Preço unitário","Venda do item","Custo do item","Margem do item"]),"Itens vendidos");
+
+  const receivables=[];(state.sales||[]).filter(isAXFinancialSale).forEach(s=>{const c=state.clients.find(c=>c.id===s.clientId);effectiveInstallments(s).forEach(p=>{const status=p.paid?"Recebido":p.renegotiatedToSaleId?"Renegociado":(p.due&&p.due<today()?"Vencido":"A receber");receivables.push([s.orderNumber||"",s.date||"",c?.name||"",c?.city||"",p.groupNumber||p.number||"",p.groupTotal||s.installments?.length||"",p.due||"",p.paymentMethod||s.method||"",Number(p.originalAmount??p.amount??0),Number(p.warrantyCreditApplied||0),Number(p.effectiveAmount??p.amount??0),status,p.sent?"Sim":"Não"])})});
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Pedido","Data da venda","Cliente","Cidade","Parcela","Total parcelas","Vencimento","Forma","Valor original","Crédito garantia","Valor efetivo","Status","Cobrança enviada"],receivables,[10,13,24,18,9,12,13,14,15,16,15,14,16],["Valor original","Crédito garantia","Valor efetivo"]),"Recebimentos");
+
+  const stock=(state.products||[]).map(p=>[p.name||"",Number(p.qty||0),Number(p.min||0),Number(p.cost||0),Number(p.qty||0)*Number(p.cost||0),...(p.prices||[]).slice(0,6).map(v=>Number(v||0))]);
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Produto","Estoque atual","Estoque mínimo","Custo unitário","Valor em estoque","Tabela 0","Tabela 1","Tabela 2","Tabela 3","Tabela 4","Tabela 5"],stock,[26,13,14,15,16,12,12,12,12,12,12],["Custo unitário","Valor em estoque","Tabela 0","Tabela 1","Tabela 2","Tabela 3","Tabela 4","Tabela 5"]),"Estoque");
+
+  const scraps=(state.scrapTransactions||[]).map(t=>{const s=t.saleId?state.sales.find(s=>s.id===t.saleId):null,group=t.direction==="in"?scrapTransactionGroupKey(t):t.scrapGroupKey||"",side=group?scrapGroupSide(group):"";return [t.date||"",t.direction==="in"?"Entrada":"Saída",t.source||"",t.orderNumber||s?.orderNumber||"",t.typeName||state.scrapTypes.find(x=>x.id===t.typeId)?.name||"",Number(t.qty||0),Number(t.weight||0),Number(t.creditedValue||0),Number(t.acquisitionValue||0),side?`Lado ${side}`:"",group||"",t.batchId||""]});
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Data","Movimento","Origem","Pedido","Tipo de sucata","Quantidade","Peso teórico kg","Valor dado ao cliente","Custo baixado","Armazenamento","Grupo dia/rota","Lote revenda"],scraps,[12,11,20,10,18,11,16,19,15,14,24,18],["Valor dado ao cliente","Custo baixado"]),"Sucata");
+
+  const resales=(state.scrapResales||[]).map(r=>[r.date||"",r.buyer||"",r.scopeLabel||r.scope||"",Number(r.systemQty||0),Number(r.systemWeight||0),Number(r.factoryWeight||0),Number(r.pricePerKg||0),Number(r.resaleValue||0),Number(r.acquisitionValue||0),Number(r.result!=null?r.result:(Number(r.resaleValue||0)-Number(r.acquisitionValue||0))),r.note||""]);
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Data","Comprador/fábrica","Escopo","Unidades teóricas","Peso teórico kg","Peso fábrica kg","Preço por kg","Valor recebido","Custo aquisição","Resultado","Observação"],resales,[12,22,22,16,16,15,14,16,16,15,26],["Preço por kg","Valor recebido","Custo aquisição","Resultado"]),"Revenda sucata");
+
+  const routes=(state.routeRuns||[]).map(r=>{const clientNames=(r.currentClientIds||r.plannedClientIds||[]).map(excelClientName).filter(Boolean).join(" | "),attended=(r.attendedClientIds||[]).map(excelClientName).filter(Boolean).join(" | ");return [r.date||"",r.source||"",r.status||"",clientNames,attended,Number(r.plannedKm||0),Number(r.currentKm||0),Number(r.plannedMinutes||0),Number(r.currentMinutes||0),Number(r.plannedCost||0),Number(routeRunExpenseTotal(r)||0),Number(r.plannedRevenue||0),Number(r.plannedReturn||0),r.createdAt||"",r.completedAt||""]});
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Data","Origem","Status","Clientes da rota","Clientes atendidos","Km planejados","Km realizados","Min planejados","Min realizados","Custo planejado","Despesas reais","Faturamento potencial","Retorno potencial","Criada em","Concluída em"],routes,[12,12,12,42,42,14,14,15,15,15,15,18,16,22,22],["Custo planejado","Despesas reais","Faturamento potencial","Retorno potencial"]),"Rotas");
+
+  const routeExpenses=[];(state.routeRuns||[]).forEach(r=>(r.expenses||[]).forEach(e=>routeExpenses.push([r.date||"",e.date||r.date||"",routeExpenseLabel(e.category),Number(e.amount||0),e.note||"",r.status||"",r.id||""])));
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Data rota","Data despesa","Categoria","Valor","Observação","Status rota","ID rota"],routeExpenses,[12,13,18,14,32,14,18],["Valor"]),"Despesas rotas");
+
+  const warranties=(state.warranties||[]).filter(w=>w.type!=="Sucata").map(w=>[w.collect||"",excelClientName(w.clientId),excelProductName(w.productId,w.model),Number(w.qty||1),w.code||"",(w.solution||w.resolution)||"",Number(w.creditValue||w.batteryValue||0),Number(warrantyImpact(w)||0),w.batteryDisposition||"",w.dispositionDate||"",w.note||""]);
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Data","Cliente","Produto","Quantidade","Código","Solução","Crédito/valor","Impacto financeiro","Destino bateria","Data destino","Observação"],warranties,[12,24,26,11,18,14,15,17,18,13,30],["Crédito/valor","Impacto financeiro"]),"Garantias");
+
+  const costs=[];(state.periodExpenses||[]).forEach(e=>costs.push([e.date||"",String(e.date||"").slice(0,7),"Custo variável",e.type||"",Number(e.amount||0),e.note||""]));(state.taxRecords||[]).forEach(t=>costs.push(["",t.month||"","Imposto","DAS / INSS",Number(t.amount||0),t.note||""]));
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Data","Mês","Grupo","Categoria","Valor","Observação"],costs,[12,10,17,20,14,32],["Valor"]),"Despesas e impostos");
+
+  const visits=(state.visits||[]).map(v=>{const s=v.saleId?state.sales.find(s=>s.id===v.saleId):null;return [v.date||"",excelClientName(v.clientId),v.result||"",s?.orderNumber||"",s?Number(s.total||0):0,v.saleId||""]});
+  XLSX.utils.book_append_sheet(wb,excelSafeSheet(XLSX,["Data","Cliente","Resultado","Pedido","Valor da venda","ID venda"],visits,[12,24,15,10,15,18],["Valor da venda"]),"Visitas");
+
+  const cfg=excelBusinessConfigRows(),cfgWs=XLSX.utils.aoa_to_sheet([["Configuração de negócio — dados técnicos e chaves não são exportados"],[],["Parâmetro","Valor"],...cfg]);cfgWs["!cols"]=[{wch:34},{wch:24}];for(let r=3;r<cfg.length+3;r++){const label=String(cfgWs[`A${r+1}`]?.v||"");const cell=cfgWs[`B${r+1}`];if(cell&&typeof cell.v==="number"){cell.z=label.includes("(%)")?'0.0%':(label.includes("Custo")||label.includes("Hospedagem")||label.includes("Meta")||["Pró-labore","Contador","Telefone / internet","Seguro","Sistemas / serviços","Aluguel / depósito","Outros custos fixos"].includes(label)?'R$ #,##0.00':'0.00')}}XLSX.utils.book_append_sheet(wb,cfgWs,"Configuração");
+
+  const out=XLSX.write(wb,{bookType:"xlsx",type:"array",compression:true});triggerBlobDownload(new Blob([out],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),`AX-Baterias-Dados-${today()}.xlsx`)
+ }catch(error){console.error("Falha ao exportar Excel",error);alert("Não foi possível gerar o Excel. Verifique sua conexão e tente novamente. O backup JSON continua disponível.\n\n"+(error?.message||error))}
+ finally{if(btn){btn.disabled=false;btn.style.opacity="";if(original!=null)btn.innerHTML=original}}
+}
+
 function backupEnvelope(){return {app:"AX Baterias",formatVersion:1,appVersion:AX_APP_VERSION,exportedAt:nowIsoSP(),state:copy(state)}}
 function backup(){
  ensureState();
@@ -3362,9 +3483,6 @@ function resetAll(){
  try{backup()}catch(error){console.error("Falha ao gerar backup antes da exclusão",error)}
  state=copy(defaults);ensureState();save();
  alert("Dados apagados. Um backup foi solicitado antes da exclusão.")
-}
-function seedDemo(){
- alert("Dados de demonstração estão desativados nesta versão de produção para proteger os dados reais da AX.")
 }
 function exportRouteExpenses(){
  const rows=[];(state.routeRuns||[]).forEach(r=>(r.expenses||[]).forEach(e=>rows.push([r.date||"",routeExpenseLabel(e.category),Number(e.amount||0).toFixed(2),e.date||"",e.note||"",r.status||"",Number(r.plannedCost||0).toFixed(2),Number(routeRunExpenseTotal(r)||0).toFixed(2)])));
