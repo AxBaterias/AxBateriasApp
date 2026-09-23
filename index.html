@@ -12,8 +12,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.22.4">
-<meta name="ax-build" content="2026-09-22-v5.22.4-routes-nonblocking">
+<meta name="ax-version" content="5.21">
+<meta name="ax-build" content="2026-09-21-v5.21-results-dashboard-kf-history">
 <style>
 :root{
  --bg:#f6f7fb;--card:#fff;--text:#182230;--muted:#667085;--line:#e4e7ec;
@@ -1065,15 +1065,6 @@ html,body{max-width:100%;overflow-x:hidden}
 .sales-visible-filters{grid-template-columns:1fr 1fr 1fr}.sales-visible-filter-group:last-child{grid-column:auto}
 @media(max-width:520px){.home-period-picker{align-items:flex-start;flex-direction:column}.home-month-filters{justify-content:flex-start}.results-split{grid-template-columns:1fr}.model-chart-grid{gap:5px;padding:8px}.model-chart-card{padding:7px 5px}.model-chart-title{flex-direction:column;align-items:flex-start}.expense-wrap{grid-template-columns:120px 1fr}.expense-donut{width:112px;height:112px}.expense-donut:after{inset:26px}.sales-visible-filters{grid-template-columns:1fr}.sales-visible-filter-group:last-child{grid-column:auto}}
 
-
-
-/* v5.22 — rotas regionais, pedidos de visita, carga sugerida e consumo da Saveiro */
-.route-request-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.route-request-btn{border:1px solid #b2ccff;background:#eff8ff;color:#175cd3;border-radius:999px;padding:5px 8px;font-size:7.7px;font-weight:850}.route-request-btn.has-request{background:#fff7ed;border-color:#fed7aa;color:#c2410c}.candidate-chip.request{background:#fff7ed;color:#c2410c}.candidate-request-note{font-size:7.7px;color:#9a3412;background:#fff7ed;border-radius:8px;padding:5px 7px;margin-top:5px;line-height:1.35}
-.route-load-plan{border:1px solid #b2ddff;background:#eff8ff;border-radius:12px;padding:9px 10px;margin-top:10px}.route-load-plan-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.route-load-plan-head b{font-size:9.5px}.route-load-plan-head span{font-size:7px;color:#475467}.route-load-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}.route-load-model{background:#fff;border:1px solid #d1e9ff;border-radius:10px;padding:7px}.route-load-model b{font-size:11px}.route-load-model span,.route-load-model small{display:block;font-size:7px;color:#667085;margin-top:2px;line-height:1.3}.route-load-model .short{color:#b42318;font-weight:850}.route-load-model .ok{color:#067647;font-weight:850}.route-client-request{margin-top:6px;padding:6px 7px;border-radius:8px;background:#fff7ed;color:#9a3412;font-size:7.5px;line-height:1.35}.route-client-reason{font-size:7.3px;color:#667085;margin-top:4px}.regional-route-note{margin-top:8px;border-radius:10px;padding:7px 8px;background:#f9fafb;color:#475467;font-size:7.6px;line-height:1.4}.overnight-days{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.overnight-day{border:1px solid var(--line);border-radius:12px;padding:8px;background:#fcfcfd}.overnight-day b{font-size:9.5px}.overnight-day small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.overnight-client-list{margin-top:6px;display:grid;gap:4px}.overnight-client-list span{font-size:7.5px;color:#475467}.overnight-why{margin-top:9px;border-radius:10px;background:#ecfdf3;color:#067647;padding:7px 8px;font-size:7.6px;line-height:1.4}
-.client-request-history{display:grid;gap:6px;margin-top:8px}.client-request-history-item{border:1px solid var(--line);border-radius:10px;padding:7px 8px;background:#f9fafb}.client-request-history-item.done{opacity:.65}.client-request-history-item b{font-size:8.5px}.client-request-history-item span{display:block;font-size:7.3px;color:#667085;margin-top:2px}.client-request-history-item button{margin-top:5px;border:0;background:#fff;border-radius:8px;padding:5px 7px;font-size:7.3px;font-weight:850;color:#475467}.request-qty-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.request-qty-grid .field{min-width:0}
-.fuel-extra-fields{grid-column:1/-1;border:1px solid #d1e9ff;background:#eff8ff;border-radius:12px;padding:9px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.fuel-extra-fields.hidden{display:none}.fuel-last-km{grid-column:1/-1;font-size:7.8px;color:#475467;background:#fff;border-radius:8px;padding:6px 7px}.fuel-preview{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.fuel-preview>div{background:#fff;border:1px solid #d1e9ff;border-radius:9px;padding:6px}.fuel-preview b{display:block;font-size:9px}.fuel-preview span{display:block;font-size:6.8px;color:#667085;margin-top:2px}.fuel-history-card{margin-bottom:12px}.fuel-history-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}.fuel-history-kpis>div{border:1px solid var(--line);border-radius:10px;padding:7px;background:#fff}.fuel-history-kpis b{display:block;font-size:10px}.fuel-history-kpis span{display:block;font-size:6.8px;color:#667085;margin-top:2px}.fuel-history-list{display:grid;gap:5px;margin-top:8px}.fuel-history-row{display:grid;grid-template-columns:56px 1fr auto;gap:7px;align-items:center;border-top:1px solid #eef0f2;padding-top:6px;font-size:7.5px}.fuel-history-row small{color:#667085;line-height:1.3}.fuel-history-row b{text-align:right;font-size:7.8px}.fuel-detail{display:block!important;font-size:7px!important;color:#667085!important;margin-top:2px!important;line-height:1.35!important}
-@media(max-width:520px){.overnight-days{grid-template-columns:1fr}.route-load-grid{gap:5px}.fuel-history-kpis{grid-template-columns:1fr 1fr 1fr}.fuel-extra-fields{grid-template-columns:1fr 1fr}}
-
 </style>
 </head>
 <body class="auth-locked">
@@ -1099,7 +1090,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="appbar">
   <div class="brandlockup">
     <img class="brandmark" src="./ax-logo.png?v=51" alt="Logo AX Baterias">
-    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.22.4</span><small>Gestão comercial</small></div></div>
+    <div class="brandtext"><div class="brand">AX Baterias <span class="version-chip">v5.21</span><small>Gestão comercial</small></div></div>
   </div>
   <div id="syncStatus" class="syncpill syncing">sincronizando…</div>
 </div>
@@ -1194,7 +1185,6 @@ html,body{max-width:100%;overflow-x:hidden}
     </button>
   </div>
   <div class="notice route-start-note" style="margin-bottom:12px"><b>Rota manual:</b> não precisa passar por “Analisar rotas”. O Alex pode criar a viagem, adicionar clientes se quiser e lançar combustível, alimentação, hospedagem, pedágio e outros gastos.</div>
-  <div id="vehicleFuelHistory"></div>
   <div id="routeRunsList" class="route-real-history"></div>
   <div id="routeCandidates" class="card"></div>
   <div id="smartRoutesList"></div>
@@ -1225,7 +1215,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button class="morecard" onclick="go('reports')"><span>📊</span>Relatórios<small>Exportações contábeis e fiscais</small></button>
     <button class="morecard" onclick="go('settings')"><span>⚙️</span>Configurações<small>Base, custos, mapas e backup</small></button>
   </div>
-  <div class="version-note">AX Baterias • v5.22.3</div>
+  <div class="version-note">AX Baterias • v5.21</div>
 </section>
 
 <section id="clients" class="screen">
@@ -1364,7 +1354,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div style="margin-top:10px"><button class="btn secondary" onclick="saveMapsKey()">Salvar integração</button></div>
   </div>
   <div class="card">
-    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.22.4</span></div>
+    <div class="cardhead"><div><h2>Atualização do sistema</h2><div class="muted">Use se o celular parecer estar mostrando uma versão antiga.</div></div><span id="systemUpdateBadge" class="badge">v5.21</span></div>
     <div class="system-card-row"><span>Versão instalada</span><b id="systemVersionInstalled">5.17</b></div>
     <div class="system-card-row"><span>Publicação desta versão</span><b id="systemReleaseDate">17/09/2026</b></div>
     <div class="system-card-row"><span>Última verificação neste aparelho</span><b id="systemLastUpdateCheck">Nunca</b></div>
@@ -1772,20 +1762,9 @@ html,body{max-width:100%;overflow-x:hidden}
 <div id="rrPlannedSummary" class="notice"></div><div id="rrStops"></div><div class="formgrid" style="margin-top:10px"><div class="field span2"><label>Adicionar cliente / parada</label><select id="rrAddClient"></select></div></div><div class="actions route-editor-actions" style="margin-top:10px"><button class="btn secondary" type="button" onclick="addRouteRunStop()">＋ Adicionar cliente</button><button class="btn" type="button" onclick="saveRouteRunEdits(false)">Salvar rota</button><button class="btn secondary" type="button" onclick="saveRouteRunEdits(true)">Salvar e lançar despesa</button></div><div class="muted" style="margin-top:8px">Clientes são opcionais em uma viagem manual. Depois, você pode registrar despesas ou recalcular o trajeto quando houver clientes na rota.</div>
 </div></div>
 
-<!-- Client route request / communication -->
-<div class="sheet" id="clientRouteRequestSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2 id="crTitle">Contato / pedido para a rota</h2><div class="muted">Registre quando o cliente pedir a visita e o que ele espera receber.</div></div><button class="btn secondary" onclick="closeSheet('clientRouteRequestSheet')">Fechar</button></div>
-<form id="clientRouteRequestForm" class="formgrid">
-<input type="hidden" id="crClientId">
-<div class="field"><label>Data do contato</label><input id="crDate" type="date" required></div>
-<div class="field"><label>Tipo</label><select id="crType"><option value="requested">Cliente pediu visita</option><option value="alex">Contato feito pelo Alex</option></select></div>
-<div class="field span2"><label>O que foi combinado / necessidade</label><textarea id="crNote" placeholder="Ex.: pediu para passar esta semana; precisa reforçar 5Ah e 7Ah"></textarea></div>
-<div class="field span2"><label>Quantidade confirmada pelo cliente <span class="muted">(se informou)</span></label><div class="request-qty-grid"><div class="field"><label>5Ah</label><input id="cr5" type="number" min="0" step="1" value="0"></div><div class="field"><label>6Ah</label><input id="cr6" type="number" min="0" step="1" value="0"></div><div class="field"><label>7Ah</label><input id="cr7" type="number" min="0" step="1" value="0"></div></div></div>
-<div class="field span2"><button class="btn" type="submit">Salvar contato</button></div>
-</form><div id="crHistory"></div></div></div>
-
 <!-- Route expense -->
 <div class="sheet" id="routeExpenseSheet"><div class="sheetpanel"><div class="sheetbar"></div><div class="cardhead"><div><h2>Registrar despesa da rota</h2><div class="muted">Toque na categoria, informe o valor e salve.</div></div><button class="btn secondary" onclick="closeSheet('routeExpenseSheet')">Fechar</button></div>
-<form id="routeExpenseForm" class="formgrid"><input type="hidden" id="reRouteId"><input type="hidden" id="reCategory" value="fuel"><div class="field span2"><label>Categoria</label><div class="expense-category-grid" id="routeExpenseCategories"><button type="button" class="expense-category-btn active" data-cat="fuel" onclick="selectRouteExpenseCategory('fuel')">⛽ Combustível</button><button type="button" class="expense-category-btn" data-cat="breakfast" onclick="selectRouteExpenseCategory('breakfast')">☕ Café da manhã</button><button type="button" class="expense-category-btn" data-cat="lunch" onclick="selectRouteExpenseCategory('lunch')">🍽️ Almoço</button><button type="button" class="expense-category-btn" data-cat="dinner" onclick="selectRouteExpenseCategory('dinner')">🌙 Jantar</button><button type="button" class="expense-category-btn" data-cat="lodging" onclick="selectRouteExpenseCategory('lodging')">🏨 Hospedagem</button><button type="button" class="expense-category-btn" data-cat="toll" onclick="selectRouteExpenseCategory('toll')">🛣️ Pedágio</button><button type="button" class="expense-category-btn" data-cat="other" onclick="selectRouteExpenseCategory('other')">➕ Outro</button></div></div><div class="field"><label>Valor</label><input id="reAmount" type="number" min="0" step=".01" required placeholder="R$ 0,00" oninput="updateFuelExpensePreview()"></div><div class="field"><label>Data</label><input id="reDate" type="date" required></div><div id="reFuelFields" class="fuel-extra-fields"><div class="field"><label>Combustível</label><select id="reFuelType"><option value="gasoline">Gasolina</option><option value="ethanol">Etanol (álcool)</option></select></div><div class="field"><label>Km atual da Saveiro</label><input id="reOdometer" type="number" min="0" step="1" placeholder="Ex.: 124580" oninput="updateFuelExpensePreview()"></div><div class="field"><label>Litros abastecidos</label><input id="reLiters" type="number" min="0" step=".001" placeholder="Ex.: 32,5" oninput="updateFuelExpensePreview()"></div><div class="field"><label>Valor total</label><div class="muted" style="padding-top:8px">Use o campo Valor acima.</div></div><div id="reLastKmHint" class="fuel-last-km">Nenhum km anterior registrado.</div><div class="fuel-preview"><div><b id="rePriceLiter">—</b><span>R$/litro</span></div><div><b id="reKmDriven">—</b><span>km desde o último lançamento</span></div><div><b id="reKmPerLiter">—</b><span>km/L estimado*</span></div></div><div class="muted" style="grid-column:1/-1;font-size:7px">* O consumo é uma estimativa entre lançamentos. Fica mais fiel quando os abastecimentos são feitos em condições semelhantes.</div></div><div class="field span2"><label>Observação <span class="muted">(opcional)</span></label><input id="reNote" placeholder="Ex.: Posto, restaurante, hotel..."></div><div class="field span2"><button class="btn" type="submit">Salvar despesa</button></div></form>
+<form id="routeExpenseForm" class="formgrid"><input type="hidden" id="reRouteId"><input type="hidden" id="reCategory" value="fuel"><div class="field span2"><label>Categoria</label><div class="expense-category-grid" id="routeExpenseCategories"><button type="button" class="expense-category-btn active" data-cat="fuel" onclick="selectRouteExpenseCategory('fuel')">⛽ Combustível</button><button type="button" class="expense-category-btn" data-cat="breakfast" onclick="selectRouteExpenseCategory('breakfast')">☕ Café da manhã</button><button type="button" class="expense-category-btn" data-cat="lunch" onclick="selectRouteExpenseCategory('lunch')">🍽️ Almoço</button><button type="button" class="expense-category-btn" data-cat="dinner" onclick="selectRouteExpenseCategory('dinner')">🌙 Jantar</button><button type="button" class="expense-category-btn" data-cat="lodging" onclick="selectRouteExpenseCategory('lodging')">🏨 Hospedagem</button><button type="button" class="expense-category-btn" data-cat="toll" onclick="selectRouteExpenseCategory('toll')">🛣️ Pedágio</button><button type="button" class="expense-category-btn" data-cat="other" onclick="selectRouteExpenseCategory('other')">➕ Outro</button></div></div><div class="field"><label>Valor</label><input id="reAmount" type="number" min="0" step=".01" required placeholder="R$ 0,00"></div><div class="field"><label>Data</label><input id="reDate" type="date" required></div><div class="field span2"><label>Observação <span class="muted">(opcional)</span></label><input id="reNote" placeholder="Ex.: Posto, restaurante, hotel..."></div><div class="field span2"><button class="btn" type="submit">Salvar despesa</button></div></form>
 </div></div>
 
 <!-- Scrap type sheet -->
@@ -1819,8 +1798,8 @@ html,body{max-width:100%;overflow-x:hidden}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="./config.js"></script>
 <script>
-const AX_APP_VERSION='5.22.4';
-const AX_RELEASE_DATE='2026-09-22';
+const AX_APP_VERSION='5.21';
+const AX_RELEASE_DATE='2026-09-21';
 const AX_TIME_ZONE='America/Sao_Paulo';
 const SALE_RENTABILITY_THUMB_THRESHOLD=12;
 const TEST_MODE=false;
@@ -1870,7 +1849,7 @@ function ensureState(){
  state.scrapTypes=state.scrapTypes||[];state.scrapTransactions=state.scrapTransactions||[];state.scrapResales=state.scrapResales||[];state.scrapStorageGroups=state.scrapStorageGroups||[];state.periodExpenses=state.periodExpenses||[];state.taxRecords=state.taxRecords||[];
  state.collectionTemplates=Object.assign(copy(defaults.collectionTemplates),state.collectionTemplates||{});
  if(state.collectionTemplate&&!state.collectionTemplates.upcoming)state.collectionTemplates.upcoming=state.collectionTemplate;
- state.clients.forEach(c=>{if(c.contact==null)c.contact="";if(!Array.isArray(c.routeRequests))c.routeRequests=[]});
+ state.clients.forEach(c=>{if(c.contact==null)c.contact=""});
  state.sales.forEach(s=>{
    if(s.freeAdjustmentValue==null)s.freeAdjustmentValue=0;if(!s.renegotiatedDebts)s.renegotiatedDebts=[];if(s.renegotiatedDebtTotal==null)s.renegotiatedDebtTotal=0;if(s.isKFSale==null)s.isKFSale=false;
    if(!s.scrapItems)s.scrapItems=[];
@@ -2321,42 +2300,14 @@ function relationshipExtras(excludeIds=new Set()){
  rows.sort((a,b)=>Number(!b.st.orders)-Number(!a.st.orders)||Number(b.manual)-Number(a.manual)||String(a.c.city).localeCompare(String(b.c.city)));
  return rows
 }
-function clientRouteRequests(c){return Array.isArray(c?.routeRequests)?c.routeRequests:[]}
-function pendingClientRouteRequest(c){return [...clientRouteRequests(c)].filter(r=>r.status!=="done").sort((a,b)=>String(b.date||b.createdAt||"").localeCompare(String(a.date||a.createdAt||"")))[0]||null}
-function routeRequestItems(req){const src=req?.items||{};return {"5Ah":Number(src["5Ah"]||0),"6Ah":Number(src["6Ah"]||0),"7Ah":Number(src["7Ah"]||0)}}
-function routeRequestItemsText(req){const q=routeRequestItems(req),parts=Object.entries(q).filter(([,v])=>v>0).map(([m,v])=>`${m} × ${v}`);return parts.join(" • ")}
-function historicalClientModelEstimate(clientId){
- const sales=(state.sales||[]).filter(s=>s.clientId===clientId).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))).slice(0,3),out={"5Ah":0,"6Ah":0,"7Ah":0};if(!sales.length)return out;
- sales.forEach(s=>(s.items||[]).forEach(i=>{const k=saleItemBatteryModel(i);if(k)out[k]+=Number(i.qty||0)}));Object.keys(out).forEach(k=>out[k]=out[k]/sales.length);return out
-}
-function modelStock(model){return (state.products||[]).filter(p=>batteryModelKeyForProduct(p)===model).reduce((a,p)=>a+Number(p.qty||0),0)}
-function routeLoadPlan(order,candidates){
- const confirmed={"5Ah":0,"6Ah":0,"7Ah":0},estimated={"5Ah":0,"6Ah":0,"7Ah":0};
- order.forEach(idx=>{const x=candidates[idx-1];if(!x)return;const req=pendingClientRouteRequest(x.c),ri=routeRequestItems(req),hasConfirmed=Object.values(ri).some(v=>v>0);if(hasConfirmed)Object.keys(confirmed).forEach(k=>confirmed[k]+=ri[k]);else{const h=historicalClientModelEstimate(x.c.id);Object.keys(estimated).forEach(k=>estimated[k]+=h[k])}});
- const rows=["5Ah","6Ah","7Ah"].map(model=>{const conf=Math.ceil(confirmed[model]),est=Math.ceil(estimated[model]),suggested=conf+est,stock=modelStock(model);return {model,confirmed:conf,estimated:est,suggested,stock,shortage:Math.max(0,suggested-stock)}});return {rows}
-}
-function routeLoadPlanHtml(order,candidates,title="Carga sugerida para a rota"){
- const plan=routeLoadPlan(order,candidates);return `<div class="route-load-plan"><div class="route-load-plan-head"><div><b>🔋 ${esc(title)}</b><span>Confirmado pelo cliente + estimativa pelas últimas compras</span></div></div><div class="route-load-grid">${plan.rows.map(r=>`<div class="route-load-model"><b>${r.model}: ${r.suggested}</b><span>${r.confirmed} confirmada(s) + ${r.estimated} estimada(s)</span><small>Estoque: ${r.stock}</small>${r.shortage?`<small class="short">Faltam ${r.shortage}</small>`:`<small class="ok">Estoque suficiente</small>`}</div>`).join("")}</div></div>`
-}
-function openClientRouteRequest(clientId){const c=state.clients.find(c=>c.id===clientId);if(!c)return;clientRouteRequestForm.reset();crClientId.value=clientId;crDate.value=today();crType.value="requested";cr5.value=0;cr6.value=0;cr7.value=0;crTitle.textContent=`Contato / pedido • ${c.name}`;renderClientRouteRequestHistory(c);openSheet("clientRouteRequestSheet")}
-function renderClientRouteRequestHistory(c){const rows=[...clientRouteRequests(c)].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))).slice(0,8);crHistory.innerHTML=rows.length?`<div class="client-request-history"><div class="muted" style="font-size:8px;font-weight:850">Histórico recente</div>${rows.map(r=>`<div class="client-request-history-item ${r.status==="done"?"done":""}"><b>${fmt(r.date)} • ${r.type==="requested"?"Cliente pediu visita":"Contato do Alex"}${r.status==="done"?" • atendido":""}</b><span>${esc(r.note||"Sem observação")}${routeRequestItemsText(r)?`<br><b>${esc(routeRequestItemsText(r))}</b>`:""}</span>${r.status!=="done"?`<button type="button" onclick="completeClientRouteRequest('${c.id}','${r.id}')">Marcar como atendido</button>`:""}</div>`).join("")}</div>`:'<div class="muted" style="margin-top:10px">Nenhum contato registrado ainda.</div>'}
-function completeClientRouteRequest(clientId,requestId){const c=state.clients.find(c=>c.id===clientId),r=clientRouteRequests(c).find(r=>r.id===requestId);if(!r)return;r.status="done";r.completedAt=nowIsoSP();smartRoutePlan=null;save();setTimeout(()=>openClientRouteRequest(clientId),40)}
-function routeClientRequestHtml(c){const r=pendingClientRouteRequest(c);if(!r)return "";const items=routeRequestItemsText(r);return `<div class="route-client-request"><b>💬 ${r.type==="requested"?"Cliente pediu visita":"Contato registrado"} • ${fmt(r.date)}</b>${r.note?`<br>${esc(r.note)}`:""}${items?`<br><b>${esc(items)}</b>`:""}</div>`}
-function lastFuelExpense(){const rows=[];(state.routeRuns||[]).forEach(r=>(r.expenses||[]).forEach(e=>{if(e.category==="fuel"&&Number(e.odometerKm||0)>0)rows.push({...e,routeId:r.id,routeDate:r.date})}));return rows.sort((a,b)=>String(b.createdAt||b.date||"").localeCompare(String(a.createdAt||a.date||"")))[0]||null}
-function fuelTypeLabel(v){return v==="ethanol"?"Etanol":"Gasolina"}
-function updateFuelExpenseHints(){const last=lastFuelExpense();reLastKmHint.innerHTML=last?`Último lançamento: <b>${Number(last.odometerKm).toLocaleString("pt-BR")} km</b> • ${fmt(last.date)} • ${fuelTypeLabel(last.fuelType)}`:'Nenhum km anterior registrado.';updateFuelExpensePreview()}
-function updateFuelExpensePreview(){if(!window.reFuelFields||reFuelFields.classList.contains("hidden"))return;const amount=Number(reAmount.value||0),liters=Number(reLiters.value||0),odo=Number(reOdometer.value||0),last=lastFuelExpense(),prev=Number(last?.odometerKm||0),dist=odo>0&&prev>0?odo-prev:0,price=liters>0?amount/liters:0,kmpl=dist>0&&liters>0?dist/liters:0;rePriceLiter.textContent=price>0?brl(price):"—";reKmDriven.textContent=dist>=0&&odo&&prev?`${dist.toLocaleString("pt-BR")} km`:"—";reKmPerLiter.textContent=kmpl>0?`${kmpl.toFixed(1)} km/L`:"—"}
-function fuelHistoryRows(){const rows=[];(state.routeRuns||[]).forEach(r=>(r.expenses||[]).forEach(e=>{if(e.category==="fuel"&&Number(e.liters||0)>0)rows.push({...e,routeId:r.id,routeDate:r.date})}));return rows.sort((a,b)=>String(b.createdAt||b.date||"").localeCompare(String(a.createdAt||a.date||"")))}
-function recalculateFuelHistoryDerived(){const refs=[];(state.routeRuns||[]).forEach(r=>(r.expenses||[]).forEach(e=>{if(e.category==="fuel"&&Number(e.odometerKm||0)>0)refs.push(e)}));refs.sort((a,b)=>String(a.createdAt||a.date||"").localeCompare(String(b.createdAt||b.date||"")));let prev=0;refs.forEach(e=>{const odo=Number(e.odometerKm||0),liters=Number(e.liters||0);e.previousOdometerKm=prev;e.distanceKm=prev>0&&odo>=prev?odo-prev:0;e.pricePerLiter=liters>0?Number(e.amount||0)/liters:0;e.kmPerLiter=e.distanceKm>0&&liters>0?e.distanceKm/liters:0;prev=odo})}
-function renderVehicleFuelHistory(){if(!window.vehicleFuelHistory)return;const rows=fuelHistoryRows();if(!rows.length){vehicleFuelHistory.innerHTML="";return}const totalLiters=rows.reduce((a,e)=>a+Number(e.liters||0),0),totalValue=rows.reduce((a,e)=>a+Number(e.amount||0),0),consRows=rows.filter(e=>Number(e.distanceKm||0)>0&&Number(e.liters||0)>0),totalDist=consRows.reduce((a,e)=>a+Number(e.distanceKm||0),0),consLiters=consRows.reduce((a,e)=>a+Number(e.liters||0),0),avg=consLiters>0?totalDist/consLiters:0,last=rows.find(e=>Number(e.odometerKm||0)>0);vehicleFuelHistory.innerHTML=`<div class="card fuel-history-card"><div class="cardhead"><div><h2>⛽ Consumo da Saveiro</h2><div class="muted">Histórico real dos abastecimentos lançados nas rotas.</div></div><span class="badge">${rows.length} abastecimento(s)</span></div><div class="fuel-history-kpis"><div><b>${avg?avg.toFixed(1)+" km/L":"—"}</b><span>Consumo estimado</span></div><div><b>${totalLiters.toFixed(1)} L</b><span>Litros registrados</span></div><div><b>${totalLiters?brl(totalValue/totalLiters):"—"}</b><span>Preço médio/L</span></div></div>${last?`<div class="muted" style="margin-top:7px">Último km registrado: <b>${Number(last.odometerKm).toLocaleString("pt-BR")} km</b></div>`:""}<div class="fuel-history-list">${rows.slice(0,5).map(e=>`<div class="fuel-history-row"><span>${fmt(e.date)}</span><small>${fuelTypeLabel(e.fuelType)} • ${Number(e.liters||0).toFixed(1)} L${e.odometerKm?` • ${Number(e.odometerKm).toLocaleString("pt-BR")} km`:""}${e.kmPerLiter?` • ${Number(e.kmPerLiter).toFixed(1)} km/L est.`:""}</small><b>${brl(e.amount)}</b></div>`).join("")}</div></div>`}
-
 function smartCandidateScore(x,cityCount=1){
- const request=pendingClientRouteRequest(x.c)?260:0,urgency=(x.manual?180:0)+Math.min(140,Number(x.overdueDays||0)*2.8),density=Math.min(220,Math.max(0,cityCount-1)*45);return request+urgency+density
+ const urgency=(x.manual?180:0)+Math.min(120,Number(x.overdueDays||0)*2.5),commercial=Math.min(220,Math.max(0,Number(x.grossProfit||0))*.35)+Math.min(80,Math.max(0,Number(x.st?.ticket||0))*.015),density=Math.min(90,Math.max(0,cityCount-1)*18);
+ return urgency+commercial+density
 }
 function smartAnalysisCandidates(){
  const critical=criticalClients(),seen=new Set(critical.map(x=>x.c.id)),extras=relationshipExtras(seen),limit=24,cityCounts={};
- [...critical,...extras].forEach(x=>{const k=String(x.c.city||"").trim().toLowerCase()||"sem cidade";cityCounts[k]=(cityCounts[k]||0)+1});
- const ranked=[...critical].sort((a,b)=>{const ak=String(a.c.city||"").trim().toLowerCase()||"sem cidade",bk=String(b.c.city||"").trim().toLowerCase()||"sem cidade";return smartCandidateScore(b,cityCounts[bk])-smartCandidateScore(a,cityCounts[ak])||Number(b.manual)-Number(a.manual)||Number(b.overdueDays)-Number(a.overdueDays)}),selectedCritical=ranked.slice(0,limit),deferredCritical=ranked.slice(limit),room=Math.max(0,limit-selectedCritical.length),selectedExtras=extras.slice(0,room);
+ critical.forEach(x=>{const k=String(x.c.city||'').trim().toLowerCase()||'sem cidade';cityCounts[k]=(cityCounts[k]||0)+1});
+ const ranked=[...critical].sort((a,b)=>{const ak=String(a.c.city||'').trim().toLowerCase()||'sem cidade',bk=String(b.c.city||'').trim().toLowerCase()||'sem cidade';return smartCandidateScore(b,cityCounts[bk])-smartCandidateScore(a,cityCounts[ak])||Number(b.manual)-Number(a.manual)||Number(b.overdueDays)-Number(a.overdueDays)}),selectedCritical=ranked.slice(0,limit),deferredCritical=ranked.slice(limit),room=Math.max(0,limit-selectedCritical.length),selectedExtras=extras.slice(0,room);
  return {critical,candidates:[...selectedCritical,...selectedExtras],deferredCritical,deferredRelationship:extras.slice(room),omittedRelationship:Math.max(0,extras.length-room),preselected:critical.length>limit}
 }
 function mapsKey(){return String(state.config.googleMapsApiKey||"").trim()}
@@ -2405,9 +2356,6 @@ async function buildRouteMatrix(candidates){
  return {matrix,points,fromCache:false}
 }
 function routeDetailSignature(origin,destination,intermediates){return JSON.stringify({origin,destination,intermediates,tollPass:state.config.tollPass||"BR_SEM_PARAR"})}
-function routePromiseTimeout(promise,ms=9000,label="cálculo da rota"){
- return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(`Tempo excedido no ${label}.`)),ms))])
-}
 async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
  const signature=routeDetailSignature(origin,destination,intermediates),cacheKey=ROUTE_DETAIL_CACHE_KEY+":"+btoa(unescape(encodeURIComponent(signature))).slice(0,50),cached=readTimedCache(cacheKey,signature,24*60*60*1000);
  if(cached)return {...cached,fromCache:true};
@@ -2420,7 +2368,7 @@ async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
    const modifiers={vehicleInfo:{emissionType:"GASOLINE"}};
    if(state.config.tollPass)modifiers.tollPasses=[state.config.tollPass];
    const request={...common,extraComputations:["TOLLS"],routeModifiers:modifiers,fields:["distanceMeters","durationMillis","travelAdvisory"]};
-   const {routes}=await routePromiseTimeout(Route.computeRoutes(request),9000,"cálculo de pedágio"),r=routes?.[0];
+   const {routes}=await Route.computeRoutes(request),r=routes?.[0];
    if(!r)throw new Error("Rota final não encontrada.");
    const prices=r.travelAdvisory?.tollInfo?.estimatedPrices||[],br=prices.find(p=>p.currencyCode==="BRL")||prices[0];
    const data={km:Number(r.distanceMeters||0)/1000,driveMinutes:Number(r.durationMillis||0)/60000,toll:moneyValue(br),tollAvailable:!!br,tollError:false};
@@ -2429,7 +2377,7 @@ async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
    console.warn("Pedágio indisponível; tentando rota básica.",tollErr);
    try{
      // Mesmo se o cálculo de pedágio falhar, não perde distância e tempo.
-     const {routes}=await routePromiseTimeout(Route.computeRoutes({...common,fields:["distanceMeters","durationMillis"]}),7000,"cálculo básico da rota"),r=routes?.[0];
+     const {routes}=await Route.computeRoutes({...common,fields:["distanceMeters","durationMillis"]}),r=routes?.[0];
      if(!r)throw new Error("Rota final não encontrada.");
      const data={km:Number(r.distanceMeters||0)/1000,driveMinutes:Number(r.durationMillis||0)/60000,toll:0,tollAvailable:false,tollError:true};
      writeTimedCache(cacheKey,signature,data);return data
@@ -2442,41 +2390,27 @@ async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
 function orderCluster(indices,matrix){if(!indices.length)return [];const remaining=[...indices];remaining.sort((a,b)=>matrixCell(matrix,0,b).km-matrixCell(matrix,0,a).km);const order=[remaining.shift()];while(remaining.length){const cur=order.at(-1);let best=0,bestScore=Infinity;remaining.forEach((idx,k)=>{const score=matrixCell(matrix,cur,idx).km+.18*matrixCell(matrix,idx,0).km;if(score<bestScore){bestScore=score;best=k}});order.push(remaining.splice(best,1)[0])}return order}
 function pathTotals(path,matrix,visitCount=0){let km=0,minutes=0,toll=0;for(let i=1;i<path.length;i++){const x=matrixCell(matrix,path[i-1],path[i]);km+=x.km;minutes+=x.minutes;toll+=x.toll}minutes+=visitCount*Number(state.config.visitMinutes||35);return {km,minutes,toll}}
 function routeEconomics(order,candidates,matrix){const t=pathTotals([0,...order,0],matrix,order.length);let revenue=0,grossProfit=0;order.forEach(idx=>{const x=candidates[idx-1];revenue+=x?.revenue||0;grossProfit+=x?.grossProfit||0});const travelCost=t.km*Number(state.config.costKm||0)+t.toll;return {order,...t,revenue,grossProfit,travelCost,result:grossProfit-travelCost}}
-function regionalCandidateIndexes(candidates){return candidates.map((x,i)=>({x,idx:i+1})).filter(({x})=>x.manual||x.automatic||x.relationshipReason).map(z=>z.idx)}
-function regionalSeedScore(idx,pool,candidates,matrix){const x=candidates[idx-1],near=pool.filter(j=>j!==idx&&matrixCell(matrix,idx,j).km<=45).length,req=pendingClientRouteRequest(x?.c)?4:0,manual=x?.manual?2:0,late=Math.min(3,Number(x?.overdueDays||0)/20);return near*5+req+manual+late}
-function greedyRegionalRoute(seed,pool,candidates,matrix){
+function financialCandidateIndexes(candidates){return candidates.map((x,i)=>({x,idx:i+1})).filter(({x})=>(x.manual||x.automatic)&&x.st.orders>0&&Number(x.grossProfit||0)>0).map(z=>z.idx)}
+function greedyFinancialRoute(seed,pool,candidates,matrix){
  const maxMinutes=Number(state.config.maxDailyHours||9)*60,maxStops=7;let members=[seed],current=routeEconomics(orderCluster(members,matrix),candidates,matrix);
- while(members.length<maxStops){let best=null;for(const idx of pool){if(members.includes(idx))continue;const x=candidates[idx-1],trialMembers=[...members,idx],trial=routeEconomics(orderCluster(trialMembers,matrix),candidates,matrix);if(!Number.isFinite(trial.minutes)||trial.minutes>maxMinutes)continue;const addedKm=trial.km-current.km,nearKm=Math.min(...members.map(m=>matrixCell(matrix,m,idx).km)),sameCity=members.some(m=>String(candidates[m-1]?.c?.city||"").toLowerCase()===String(x?.c?.city||"").toLowerCase()),requested=!!pendingClientRouteRequest(x?.c);if(!(sameCity||nearKm<=45||addedKm<=50||requested))continue;const score=addedKm+nearKm*.25-(requested?25:0)-(x?.manual?12:0)-Math.min(8,Number(x?.overdueDays||0)*.12);if(!best||score<best.score)best={trial,idx,score}}if(!best)break;members.push(best.idx);current=best.trial}
+ while(members.length<maxStops){let best=null;for(const idx of pool){if(members.includes(idx))continue;const trialMembers=[...members,idx],trial=routeEconomics(orderCluster(trialMembers,matrix),candidates,matrix);if(!Number.isFinite(trial.minutes)||trial.minutes>maxMinutes)continue;const improvement=trial.result-current.result;if(improvement<=.01)continue;const urgency=Number(candidates[idx-1]?.manual?2:0)+Math.min(2,Number(candidates[idx-1]?.overdueDays||0)/30);const score=trial.result+urgency;if(!best||score>best.score)best={trial,idx,score}}if(!best)break;members.push(best.idx);current=best.trial}
  return current
 }
-function makeRegionalRoutes(candidates,matrix){let available=regionalCandidateIndexes(candidates),routes=[];while(available.length&&routes.length<4){let seed=available[0],bestScore=-Infinity;available.forEach(i=>{const s=regionalSeedScore(i,available,candidates,matrix);if(s>bestScore){bestScore=s;seed=i}});const route=greedyRegionalRoute(seed,available,candidates,matrix);routes.push(route);const used=new Set(route.order);available=available.filter(i=>!used.has(i))}return routes.sort((a,b)=>b.order.length-a.order.length||a.km-b.km)}
-function makeDailyClusters(candidates,matrix){return makeRegionalRoutes(candidates,matrix)}
-function bestRegionalRemoval(order,candidates,matrix){if(order.length<=1)return null;const alts=order.map((removed,k)=>{const trial=routeEconomics(orderCluster(order.filter((__,i)=>i!==k),matrix),candidates,matrix),x=candidates[removed-1],penalty=(pendingClientRouteRequest(x?.c)?10000:0)+(x?.manual?5000:0)+Math.min(1000,Number(x?.overdueDays||0)*20);return {trial,score:trial.minutes+penalty}});return alts.sort((a,b)=>a.score-b.score)[0]?.trial||null}
+function makeFinancialRoutes(candidates,matrix){
+ let available=financialCandidateIndexes(candidates),routes=[];
+ while(available.length&&routes.length<4){let best=null;for(const seed of available){const trial=greedyFinancialRoute(seed,available,candidates,matrix);if(!best||trial.result>best.result)best=trial}if(!best||best.result<=.01)break;routes.push(best);const used=new Set(best.order);available=available.filter(i=>!used.has(i))}
+ return routes.sort((a,b)=>b.result-a.result)
+}
+function makeDailyClusters(candidates,matrix){return makeFinancialRoutes(candidates,matrix)}
+function bestRemoval(order,candidates,matrix){
+ if(order.length<=1)return null;const maxMinutes=Number(state.config.maxDailyHours||9)*60,alts=order.map((_,k)=>routeEconomics(orderCluster(order.filter((__,i)=>i!==k),matrix),candidates,matrix)),fitting=alts.filter(x=>x.minutes<=maxMinutes);return (fitting.length?fitting:alts).sort((a,b)=>b.result-a.result||a.minutes-b.minutes)[0]||null
+}
 async function enrichSelectedRoutes(routes,candidates,matrix){
- const base=state.config.base||"Osasco, SP, Brasil",maxMinutes=Number(state.config.maxDailyHours||9)*60,visitMinutes=Number(state.config.visitMinutes||35);
- const prepare=(source)=>{
-   let r={...source,order:[...source.order]},guard=0;
-   // A própria matriz já traz distância e tempo entre todos os pontos. Ajusta o limite diário aqui,
-   // antes de chamar a rota final, evitando várias consultas sequenciais ao Google.
-   while(r.order.length&&Number(r.minutes||Infinity)>maxMinutes&&r.order.length>1&&guard<7){
-     const trimmed=bestRegionalRemoval(r.order,candidates,matrix);if(!trimmed)break;r=trimmed;guard++
-   }
-   return r
- };
- const prepared=routes.map(prepare).filter(r=>r.order.length&&Number(r.minutes||Infinity)<=maxMinutes);
- const enriched=await Promise.all(prepared.map(async source=>{
-   const r={...source,order:[...source.order]},stops=r.order.map(i=>candidates[i-1]?.address).filter(Boolean);
-   try{
-     const d=await computeSelectedRouteDetail(base,base,stops);
-     if(d.km!=null&&Number.isFinite(d.km)){
-       r.km=d.km;r.minutes=Number(d.driveMinutes||0)+r.order.length*visitMinutes
-     }else r.detailFallback=true;
-     r.toll=Number(d.toll||0);r.tollAvailable=!!d.tollAvailable;r.tollError=!!d.tollError
-   }catch(e){console.warn("Rota final demorou demais; usando estimativa da matriz.",e);r.detailFallback=true;r.toll=0;r.tollAvailable=false;r.tollError=true}
-   r.travelCost=Number(r.km||0)*Number(state.config.costKm||0)+Number(r.toll||0);r.result=Number(r.grossProfit||0)-r.travelCost;
-   return r
- }));
- return enriched.filter(r=>r.order.length&&Number(r.minutes||Infinity)<=maxMinutes).sort((a,b)=>b.order.length-a.order.length||a.km-b.km)
+ const base=state.config.base||"Osasco, SP, Brasil",maxMinutes=Number(state.config.maxDailyHours||9)*60,validated=[];
+ for(const source of routes){let r={...source,order:[...source.order]},attempt=0;while(r.order.length&&attempt<7){attempt++;const stops=r.order.map(i=>candidates[i-1]?.address).filter(Boolean),d=await computeSelectedRouteDetail(base,base,stops);if(d.km!=null){r.km=d.km;r.minutes=d.driveMinutes+r.order.length*Number(state.config.visitMinutes||35)}r.toll=Number(d.toll||0);r.tollAvailable=!!d.tollAvailable;r.travelCost=r.km*Number(state.config.costKm||0)+r.toll;r.result=r.grossProfit-r.travelCost;if(r.minutes<=maxMinutes&&r.result>0)break;if(r.order.length<=1)break;const trimmed=bestRemoval(r.order,candidates,matrix);if(!trimmed)break;r=trimmed}
+   if(r.order.length&&r.minutes<=maxMinutes&&r.result>0)validated.push(r)
+ }
+ return validated.sort((a,b)=>b.result-a.result)
 }
 function overnightAlternative(routes,candidates,matrix){
  if(routes.length<2)return null;const maxMinutes=Number(state.config.maxDailyHours||9)*60;let best=null;
@@ -2490,15 +2424,9 @@ function overnightAlternative(routes,candidates,matrix){
  return best
 }
 async function enrichOvernight(alt,candidates,routes){
- if(!alt)return null;const base=state.config.base||"Osasco, SP, Brasil",day1Stops=alt.day1.map(i=>candidates[i-1]?.address).filter(Boolean),overnightAddress=day1Stops.at(-1),day2Stops=alt.day2.map(i=>candidates[i-1]?.address).filter(Boolean);
- try{
-   const [d1,d2]=await Promise.all([
-     computeSelectedRouteDetail(base,overnightAddress,day1Stops.slice(0,-1)),
-     computeSelectedRouteDetail(overnightAddress,base,day2Stops)
-   ]);
-   if(d1.km!=null&&d2.km!=null){alt.km=d1.km+d2.km;alt.d1={km:d1.km,minutes:d1.driveMinutes+alt.day1.length*Number(state.config.visitMinutes||35),toll:d1.toll};alt.d2={km:d2.km,minutes:d2.driveMinutes+alt.day2.length*Number(state.config.visitMinutes||35),toll:d2.toll};alt.toll=Number(d1.toll||0)+Number(d2.toll||0);alt.tollAvailable=!!(d1.tollAvailable||d2.tollAvailable)}else alt.detailFallback=true
- }catch(e){console.warn("Detalhe da hospedagem demorou demais; mantendo estimativa da matriz.",e);alt.detailFallback=true;alt.toll=0;alt.tollAvailable=false}
- alt.travelCost=Number(alt.km||0)*Number(state.config.costKm||0)+Number(alt.toll||0)+Number(state.config.hotelCost||0);const related=(alt.relatedRouteIndexes||[]).map(i=>routes[i]).filter(Boolean),separate=related.reduce((a,r)=>a+Number(r.travelCost||0),0);alt.separateCost=separate;alt.savings=separate-alt.travelCost;alt.result=alt.grossProfit-alt.travelCost;return alt
+ if(!alt)return null;const base=state.config.base||"Osasco, SP, Brasil",day1Stops=alt.day1.map(i=>candidates[i-1]?.address).filter(Boolean),overnightAddress=day1Stops.at(-1),d1=await computeSelectedRouteDetail(base,overnightAddress,day1Stops.slice(0,-1)),day2Stops=alt.day2.map(i=>candidates[i-1]?.address).filter(Boolean),d2=await computeSelectedRouteDetail(overnightAddress,base,day2Stops);
+ if(d1.km!=null&&d2.km!=null){alt.km=d1.km+d2.km;alt.d1={km:d1.km,minutes:d1.driveMinutes+alt.day1.length*Number(state.config.visitMinutes||35),toll:d1.toll};alt.d2={km:d2.km,minutes:d2.driveMinutes+alt.day2.length*Number(state.config.visitMinutes||35),toll:d2.toll}}
+ alt.toll=Number(d1.toll||0)+Number(d2.toll||0);alt.tollAvailable=!!(d1.tollAvailable||d2.tollAvailable);alt.travelCost=alt.km*Number(state.config.costKm||0)+alt.toll+Number(state.config.hotelCost||0);const related=(alt.relatedRouteIndexes||[]).map(i=>routes[i]).filter(Boolean),separate=related.reduce((a,r)=>a+Number(r.travelCost||0),0);alt.separateCost=separate;alt.savings=separate-alt.travelCost;alt.result=alt.grossProfit-alt.travelCost;return alt
 }
 
 
@@ -2810,14 +2738,16 @@ function monthDisplayLabel(key,long=false){
  const base=monthLabel(key,long),year=String(key||"").slice(0,4);
  return `${base.charAt(0).toUpperCase()+base.slice(1)}${long?`/${year}`:`/${year.slice(2)}`}`
 }
-function batteryModelKeyFromText(value){
- const text=String(value||"").toLowerCase().replace(/á/g,"a").replace(/\s+/g," ");
- const m=text.match(/(?:^|[^0-9])([567])\s*a\s*h?(?:$|[^a-z0-9])/i);return m?`${m[1]}Ah`:""
+function batteryModelKeyForProduct(p){
+ const text=`${p?.name||""} ${p?.model||""}`.toLowerCase().replace(/\s+/g,"");
+ if(/(^|\D)5ah/.test(text)||text.includes("5ah"))return "5Ah";
+ if(/(^|\D)6ah/.test(text)||text.includes("6ah"))return "6Ah";
+ if(/(^|\D)7ah/.test(text)||text.includes("7ah"))return "7Ah";
+ return ""
 }
-function batteryModelKeyForProduct(p){return batteryModelKeyFromText(`${p?.name||""} ${p?.model||""}`)}
-function saleItemBatteryModel(i){const p=state.products.find(p=>String(p.id)===String(i?.productId));return batteryModelKeyFromText(`${i?.name||""} ${p?.name||""} ${p?.model||""}`)}
 function batteryModelQtyForMonth(model,month){
- return (state.sales||[]).filter(s=>String(s.date||"").slice(0,7)===month).reduce((sum,s)=>sum+(s.items||[]).reduce((a,i)=>a+(saleItemBatteryModel(i)===model?Number(i.qty||0):0),0),0)
+ const ids=new Set((state.products||[]).filter(p=>batteryModelKeyForProduct(p)===model).map(p=>String(p.id)));
+ return (state.sales||[]).filter(s=>String(s.date||"").slice(0,7)===month).reduce((sum,s)=>sum+(s.items||[]).reduce((a,i)=>a+(ids.has(String(i.productId))?Number(i.qty||0):0),0),0)
 }
 function expenseBreakdownForMonth(month,row=null){
  const r=row||financialMonthRowByKey(month),items=[...(r.q1?.routeItems||[]),...(r.q2?.routeItems||[])],manual=[...(r.q1?.manualItems||[]),...(r.q2?.manualItems||[])];
@@ -2915,7 +2845,6 @@ function findRouteRunForSale(clientId,date,existingId=""){
  return [...(state.routeRuns||[])].filter(r=>String(r.date||"")===String(date||"")&&(r.currentClientIds||[]).includes(clientId)).sort((a,b)=>String(b.createdAt||"").localeCompare(String(a.createdAt||"")))[0]||null
 }
 function chooseSmartRoute(index){const p=smartRoutePlan,r=p?.routes?.[index];if(!r)return;const ids=r.order.map(i=>p.candidates[i-1]?.c?.id).filter(Boolean),run={id:uid(),date:today(),createdAt:nowIsoSP(),status:"planned",plannedClientIds:[...ids],currentClientIds:[...ids],plannedKm:Number(r.km||0),plannedMinutes:Number(r.minutes||0),plannedToll:Number(r.toll||0),plannedCost:Number(r.travelCost||0),plannedRevenue:Number(r.revenue||0),plannedReturn:Number(r.grossProfit||0),plannedResult:Number(r.result||0),currentKm:Number(r.km||0),currentMinutes:Number(r.minutes||0),currentToll:Number(r.toll||0),currentEstimatedCost:Number(r.travelCost||0),expenses:[],attendedClientIds:[],source:"smart",edited:false};state.routeRuns.unshift(run);save();setTimeout(()=>openRouteRunEditor(run.id),40)}
-function chooseOvernightRoute(){const p=smartRoutePlan,o=p?.overnight;if(!p||!o)return;const day1=o.day1.map(i=>p.candidates[i-1]?.c?.id).filter(Boolean),day2=o.day2.map(i=>p.candidates[i-1]?.c?.id).filter(Boolean),ids=[...day1,...day2],run={id:uid(),date:today(),createdAt:nowIsoSP(),status:"planned",plannedClientIds:[...ids],currentClientIds:[...ids],plannedKm:Number(o.km||0),plannedMinutes:Number((o.d1?.minutes||0)+(o.d2?.minutes||0)),plannedToll:Number(o.toll||0),plannedCost:Number(o.travelCost||0),plannedRevenue:Number(o.revenue||0),plannedReturn:Number(o.grossProfit||0),plannedResult:Number(o.result||0),currentKm:Number(o.km||0),currentMinutes:Number((o.d1?.minutes||0)+(o.d2?.minutes||0)),currentToll:Number(o.toll||0),currentEstimatedCost:Number(o.travelCost||0),expenses:[],attendedClientIds:[],source:"smart-overnight",edited:false,overnightPlan:{day1ClientIds:day1,day2ClientIds:day2,hotelCost:Number(state.config.hotelCost||0)}};state.routeRuns.unshift(run);save();setTimeout(()=>openRouteRunEditor(run.id),40)}
 function routeRunSalesStats(r){
  const sales=state.sales.filter(s=>isAXFinancialSale(s)&&s.routeRunId===r.id),revenue=sales.reduce((a,s)=>a+Number(s.total||0),0),margin=sales.reduce((a,s)=>a+Number(saleOperationalBreakdown(s).commercialMargin||0),0);
  return {count:sales.length,revenue,margin}
@@ -2924,11 +2853,11 @@ function toggleRouteHistoryRun(id){expandedRouteHistory.has(id)?expandedRouteHis
 function deleteRouteExpense(routeId,expenseId){
  const r=state.routeRuns.find(x=>x.id===routeId);if(!r)return;const e=(r.expenses||[]).find(x=>x.id===expenseId);if(!e)return;
  if(!confirm(`Excluir ${routeExpenseLabel(e.category)} de ${brl(e.amount)}?`))return;
- r.expenses=(r.expenses||[]).filter(x=>x.id!==expenseId);r.updatedAt=nowIsoSP();recalculateFuelHistoryDerived();save()
+ r.expenses=(r.expenses||[]).filter(x=>x.id!==expenseId);r.updatedAt=nowIsoSP();save()
 }
 function routeExpenseListHtml(r){
  const expenses=r.expenses||[];if(!expenses.length)return '<div class="muted" style="margin-top:8px">Nenhuma despesa real lançada.</div>';
- return `<div class="route-expense-list">${expenses.map(e=>{const fuel=e.category==="fuel";const detail=fuel?`<small class="fuel-detail">${fuelTypeLabel(e.fuelType)}${e.liters?` • ${Number(e.liters).toFixed(1)} L`:""}${e.odometerKm?` • ${Number(e.odometerKm).toLocaleString("pt-BR")} km`:""}${e.pricePerLiter?` • ${brl(e.pricePerLiter)}/L`:""}${e.kmPerLiter?` • ${Number(e.kmPerLiter).toFixed(1)} km/L est.`:""}</small>`:"";return `<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small>${detail}</span><div class="route-expense-value"><b>${brl(e.amount)}</b><button class="route-expense-delete" type="button" onclick="deleteRouteExpense('${r.id}','${e.id}')" aria-label="Excluir despesa">🗑️</button></div></div>`}).join("")}</div>`
+ return `<div class="route-expense-list">${expenses.map(e=>`<div class="route-expense-item"><span>${routeExpenseLabel(e.category)}<small class="muted"> • ${fmt(e.date)}${e.note?` • ${esc(e.note)}`:""}</small></span><div class="route-expense-value"><b>${brl(e.amount)}</b><button class="route-expense-delete" type="button" onclick="deleteRouteExpense('${r.id}','${e.id}')" aria-label="Excluir despesa">🗑️</button></div></div>`).join("")}</div>`
 }
 function routeRunFullCard(r,idx=0){
  const manual=r.source==="manual",expenses=r.expenses||[],actual=routeRunExpenseTotal(r),planned=Number(r.plannedCost||0),hasExpenses=expenses.length>0,status=r.status==="completed"?"Concluída":"Em andamento",ids=r.currentClientIds||[],attended=r.attendedClientIds||[],changed=manual||r.edited||JSON.stringify(r.plannedClientIds||[])!==JSON.stringify(ids),ca=r.continuationAnalysis;
@@ -3038,8 +2967,11 @@ function deleteRouteRun(id){
  save()
 }
 function toggleRouteRunStatus(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;r.status=r.status==="completed"?"planned":"completed";r.completedAt=r.status==="completed"?nowIsoSP():"";save()}
-function openRouteExpense(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;routeExpenseForm.reset();reRouteId.value=id;reDate.value=today();reFuelType.value="gasoline";selectRouteExpenseCategory("fuel");updateFuelExpenseHints();openSheet("routeExpenseSheet")}
-function selectRouteExpenseCategory(cat){reCategory.value=cat;document.querySelectorAll(".expense-category-btn").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));const fuel=cat==="fuel";reFuelFields.classList.toggle("hidden",!fuel);reOdometer.required=fuel;reLiters.required=fuel;if(fuel)updateFuelExpenseHints();else reAmount.focus()}
+function openRouteExpense(id){const r=state.routeRuns.find(r=>r.id===id);if(!r)return;routeExpenseForm.reset();reRouteId.value=id;reDate.value=today();selectRouteExpenseCategory("fuel");openSheet("routeExpenseSheet")}
+function selectRouteExpenseCategory(cat){reCategory.value=cat;document.querySelectorAll(".expense-category-btn").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));reAmount.focus()}
+function candidateTimingText(x){if(!x.st.orders)return "sem histórico";const when=x.st.next?fmt(x.st.next):"—",late=x.delta!=null&&x.delta<0?` • ${Math.abs(x.delta)}d atrasado`:"";return `próx. ${when}${late}`}
+function setRouteCandidateSort(v){routeCandidateSort=v;renderRoutes()}
+function setRouteCandidateFilter(v){routeCandidateFilter=v;renderRoutes()}
 function candidateSortRows(rows){
  let list=[...rows];
  if(routeCandidateFilter==="overdue")list=list.filter(x=>Number(x.overdueDays||0)>0);
@@ -3054,74 +2986,43 @@ function candidateSortRows(rows){
 function candidateUrgencyChip(x){if(!x.st.orders)return '<span class="candidate-chip neutral">Novo</span>';if(Number(x.overdueDays||0)>0)return `<span class="candidate-chip overdue">${x.overdueDays}d atrasado</span>`;return `<span class="candidate-chip due">${x.delta===0?"Hoje":"Na janela"}</span>`}
 function renderRouteCandidates(crit){
  const rows=candidateSortRows(crit),sorts=[["recommended","Recomendado"],["overdue","Mais atrasados"],["return","Maior retorno"],["ticket","Maior ticket"]],filters=[["all","Todos"],["overdue","Atrasados"],["priority","Priorizados"]];
- routeCandidates.innerHTML=`<div class="route-candidate-head"><div><h2>Clientes que precisam de visita</h2><div class="muted">${crit.length} cliente(s) dentro da janela ou marcados como prioridade.</div></div></div><div class="candidate-controls"><div class="candidate-control-label">Ordenar por</div><div class="candidate-sort-row">${sorts.map(([k,l])=>`<button class="candidate-sort ${routeCandidateSort===k?"active":""}" onclick="setRouteCandidateSort('${k}')">${l}</button>`).join("")}</div><div class="candidate-legend"><b>Rota:</b> a região é o critério principal. Ticket e retorno ajudam a entender o cliente, mas não excluem a visita.</div><div class="candidate-filter-row">${filters.map(([k,l])=>`<button class="candidate-filter ${routeCandidateFilter===k?"active":""}" onclick="setRouteCandidateFilter('${k}')">${l}</button>`).join("")}</div></div>${rows.length?`<div class="route-candidate-list">${rows.map(x=>{const req=pendingClientRouteRequest(x.c);return `<div class="route-candidate-row"><button class="candidate-star ${x.manual?"active":""}" onclick="toggleVisitPriority('${x.c.id}')" aria-label="${x.manual?"Retirar prioridade":"Priorizar cliente"}">${x.manual?"★":"☆"}</button><div class="route-candidate-main"><div class="route-candidate-name">${esc(x.c.name)}</div><div class="route-candidate-sub">${esc(x.c.city)} • ${x.st.next?`próx. ${fmt(x.st.next)}`:"sem histórico"}</div><div class="route-candidate-chips">${candidateUrgencyChip(x)}${req?'<span class="candidate-chip request">💬 Pediu visita</span>':""}${x.st.orders?`<span class="candidate-chip">Ticket ${brl(x.st.ticket)}</span><span class="candidate-chip return">Retorno ${brl(x.st.netAvgMargin||0)}</span>`:'<span class="candidate-chip neutral">Sem histórico</span>'}</div>${req?`<div class="candidate-request-note">${esc(req.note||"Contato registrado")}${routeRequestItemsText(req)?` • <b>${esc(routeRequestItemsText(req))}</b>`:""}</div>`:""}<div class="route-request-actions"><button class="route-request-btn ${req?"has-request":""}" onclick="openClientRouteRequest('${x.c.id}')">💬 ${req?"Ver pedido/contato":"Registrar contato"}</button></div></div></div>`}).join("")}</div>`:'<div class="empty">Nenhum cliente encontrado com este filtro.</div>'}`
+ routeCandidates.innerHTML=`<div class="route-candidate-head"><div><h2>Clientes que precisam de visita</h2><div class="muted">${crit.length} cliente(s) dentro da janela ou marcados como prioridade.</div></div></div>
+ <div class="candidate-controls"><div class="candidate-control-label">Ordenar por</div><div class="candidate-sort-row">${sorts.map(([k,l])=>`<button class="candidate-sort ${routeCandidateSort===k?"active":""}" onclick="setRouteCandidateSort('${k}')">${l}</button>`).join("")}</div><div class="candidate-legend"><b>Ticket:</b> clientes que compram mais. <b>Retorno:</b> clientes que geram mais margem.</div><div class="candidate-filter-row">${filters.map(([k,l])=>`<button class="candidate-filter ${routeCandidateFilter===k?"active":""}" onclick="setRouteCandidateFilter('${k}')">${l}</button>`).join("")}</div></div>
+ ${rows.length?`<div class="route-candidate-list">${rows.map(x=>`<div class="route-candidate-row"><button class="candidate-star ${x.manual?"active":""}" onclick="toggleVisitPriority('${x.c.id}')" aria-label="${x.manual?"Retirar prioridade":"Priorizar cliente"}">${x.manual?"★":"☆"}</button><div class="route-candidate-main"><div class="route-candidate-name">${esc(x.c.name)}</div><div class="route-candidate-sub">${esc(x.c.city)} • ${x.st.next?`próx. ${fmt(x.st.next)}`:"sem histórico"}</div><div class="route-candidate-chips">${candidateUrgencyChip(x)}${x.st.orders?`<span class="candidate-chip">Ticket ${brl(x.st.ticket)}</span><span class="candidate-chip return">Retorno ${brl(x.st.netAvgMargin||0)}</span>`:'<span class="candidate-chip neutral">Sem histórico</span>'}</div></div></div>`).join("")}</div>`:'<div class="empty">Nenhum cliente encontrado com este filtro.</div>'}`
 }
 function renderRoutes(){
- renderVehicleFuelHistory();renderRouteRuns();const crit=criticalClients();renderRouteCandidates(crit);
- if(!smartRoutePlan){smartRoutesList.innerHTML='<div class="empty"><b>Quer ajuda do sistema?</b> Use “Analisar rotas”.<br><br>O sistema prioriza <b>região e eficiência do deslocamento</b>, e também mostra oportunidades de prospecção/relacionamento.</div>';return}renderSmartRoutePlan()
+ renderRouteRuns();const crit=criticalClients();renderRouteCandidates(crit);
+ if(!smartRoutePlan){smartRoutesList.innerHTML='<div class="empty"><b>Quer ajuda do sistema?</b> Use “Analisar rotas”.<br><br>O resultado terá duas visões: <b>retorno financeiro</b> e <b>prospecção/relacionamento</b>.</div>';return}renderSmartRoutePlan()
 }
 function fmtHours(minutes){const h=Math.floor(minutes/60),m=Math.round(minutes%60);return `${h}h${String(m).padStart(2,"0")}`}
 function routeSequenceHtml(order,candidates){const base=(state.config.base||"Osasco").split(",")[0],names=[base,...order.map(i=>candidates[i-1]?.c?.city||candidates[i-1]?.c?.name||"Cliente"),base];return `<div class="route-seq">${names.map((n,i)=>`${i?'<span class="route-arrow">→</span>':""}<span class="route-stop">${esc(n)}</span>`).join("")}</div>`}
 function setSmartRouteView(view){smartRouteView=view;renderSmartRoutePlan()}
 function insertionImpact(route,idx,matrix){const path=[0,...route.order,0],visit=Number(state.config.visitMinutes||35);let best=null;for(let i=1;i<path.length;i++){const a=path[i-1],b=path[i],ac=matrixCell(matrix,a,idx),cb=matrixCell(matrix,idx,b),ab=matrixCell(matrix,a,b);const km=Math.max(0,ac.km+cb.km-ab.km),minutes=Math.max(0,ac.minutes+cb.minutes-ab.minutes)+visit,cost=km*Number(state.config.costKm||0);if(!best||cost<best.cost)best={km,minutes,cost}}return best||{km:Infinity,minutes:Infinity,cost:Infinity}}
 function relationshipOpportunities(p){
- const used=new Set((p.routes||[]).flatMap(r=>r.order)),rows=[];p.candidates.forEach((x,i)=>{const idx=i+1;if(used.has(idx))return;let reason=x.relationshipReason||"";if(!reason){if(!x.st.orders)reason="Prospecção • cliente sem histórico";else if(x.manual)reason="Prioridade do Alex • relacionamento";else if(x.automatic)reason="Relacionamento • visita está na janela e pode aproveitar uma região";else return}let near=null;(p.routes||[]).forEach((r,ri)=>{const imp=insertionImpact(r,idx,p.matrix);if(!near||imp.cost<near.cost)near={...imp,routeIndex:ri}});rows.push({x,idx,reason,near})});(p.deferredRelationship||[]).forEach(x=>rows.push({x,idx:0,reason:x.relationshipReason||"Prospecção / relacionamento",near:null,deferred:true}));return rows.sort((a,b)=>{const ar=a.near?.cost??Infinity,br=b.near?.cost??Infinity;return ar-br||String(a.x.c.city).localeCompare(String(b.x.c.city))})
-}
-async function enrichSmartRoutesInBackground(planRef){
- try{
-   const enriched=await routePromiseTimeout(enrichSelectedRoutes(planRef.routes,planRef.candidates,planRef.matrix),18000,"detalhamento final das rotas");
-   if(smartRoutePlan!==planRef)return;
-   if(enriched?.length)planRef.routes=enriched.map(r=>({...r,tollPending:false}));
-   else planRef.routes=(planRef.routes||[]).map(r=>({...r,tollPending:false,detailFallback:true,tollError:true}));
-   let overnight=overnightAlternative(planRef.routes,planRef.candidates,planRef.matrix);
-   if(overnight){
-     try{overnight=await routePromiseTimeout(enrichOvernight(overnight,planRef.candidates,planRef.routes),12000,"detalhamento da hospedagem")}
-     catch(e){console.warn("Hospedagem exibida com estimativa da matriz.",e);overnight.detailFallback=true}
-   }
-   if(smartRoutePlan!==planRef)return;
-   planRef.overnight=overnight
- }catch(e){
-   console.warn("Detalhamento final das rotas não concluiu; mantendo estimativa da matriz.",e);
-   if(smartRoutePlan!==planRef)return;
-   planRef.routes=(planRef.routes||[]).map(r=>({...r,tollPending:false,detailFallback:true,tollError:true}));
-   if(planRef.overnight)planRef.overnight.detailFallback=true
- }finally{
-   if(smartRoutePlan===planRef){renderRoutes();renderHome()}
- }
+ const used=new Set((p.routes||[]).flatMap(r=>r.order)),rows=[];p.candidates.forEach((x,i)=>{const idx=i+1;if(used.has(idx))return;let reason=x.relationshipReason||"";if(!reason){if(!x.st.orders)reason="Prospecção • cliente sem histórico";else if(x.manual)reason="Prioridade do Alex • relacionamento";else if(x.automatic)reason="Relacionamento • visita está na janela, mas ainda não justificou uma rota financeira";else return}let near=null;(p.routes||[]).forEach((r,ri)=>{const imp=insertionImpact(r,idx,p.matrix);if(!near||imp.cost<near.cost)near={...imp,routeIndex:ri}});rows.push({x,idx,reason,near})});(p.deferredRelationship||[]).forEach(x=>rows.push({x,idx:0,reason:x.relationshipReason||"Prospecção / relacionamento",near:null,deferred:true}));return rows.sort((a,b)=>{const ar=a.near?.cost??Infinity,br=b.near?.cost??Infinity;return ar-br||String(a.x.c.city).localeCompare(String(b.x.c.city))})
 }
 async function analyzeSmartRoutes(){
- const analysis=smartAnalysisCandidates(),critical=analysis.critical,candidates=analysis.candidates;smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Agrupando clientes por região, distâncias e tempo de viagem...</div>';
+ const analysis=smartAnalysisCandidates(),critical=analysis.critical,candidates=analysis.candidates;smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Analisando clientes, retorno, distâncias e tempo de viagem...</div>';
  if(!critical.length&&!candidates.length){smartRoutePlan={error:"Nenhum cliente está na janela e não há oportunidades de prospecção/reativação com endereço cadastrado."};renderRoutes();return}
  if(!mapsConfigured()){smartRoutePlan={error:"A integração de rotas não está configurada. Vá em Mais → Configurações → Integração de rotas e confirme a Google Maps API Key."};renderRoutes();return}
- try{
-   const {matrix,fromCache}=await buildRouteMatrix(candidates);
-   const daily=makeRegionalRoutes(candidates,matrix).map(r=>({...r,tollPending:true,toll:0,tollAvailable:false,tollError:false,travelCost:Number(r.km||0)*Number(state.config.costKm||0),result:Number(r.grossProfit||0)-Number(r.km||0)*Number(state.config.costKm||0)}));
-   const overnight=overnightAlternative(daily,candidates,matrix);
-   const plan={candidates,matrix,routes:daily,fromCache,overnight,omittedRelationship:analysis.omittedRelationship,deferredRelationship:analysis.deferredRelationship||[],deferredCritical:analysis.deferredCritical||[],preselected:!!analysis.preselected,totalCritical:critical.length};
-   smartRoutePlan=plan;smartRouteView="finance";
-   // Mostra as opções imediatamente usando a matriz. Pedágios e rota final são enriquecidos em segundo plano.
-   renderRoutes();renderHome();
-   enrichSmartRoutesInBackground(plan)
- }catch(e){
-   console.error("Erro ao analisar rotas:",e);smartRoutePlan={error:e?.message||"Não foi possível calcular as rotas. Verifique a conexão e a configuração do Google Maps."};renderRoutes();renderHome()
- }
+ try{const {matrix,fromCache}=await buildRouteMatrix(candidates);let daily=makeFinancialRoutes(candidates,matrix);smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Calculando trajeto final, pedágios e validando o limite diário...</div>';daily=await enrichSelectedRoutes(daily,candidates,matrix);let overnight=overnightAlternative(daily,candidates,matrix);if(overnight)overnight=await enrichOvernight(overnight,candidates,daily);smartRoutePlan={candidates,matrix,routes:daily,fromCache,overnight,omittedRelationship:analysis.omittedRelationship,deferredRelationship:analysis.deferredRelationship||[],deferredCritical:analysis.deferredCritical||[],preselected:!!analysis.preselected,totalCritical:critical.length};smartRouteView=critical.length?"finance":"relationship"}catch(e){console.error("Erro ao analisar rotas:",e);smartRoutePlan={error:e?.message||"Não foi possível calcular as rotas. Verifique a conexão e a configuração do Google Maps."}}renderRoutes();renderHome()
 }
 function renderFinanceView(p){
- const used=new Set((p.routes||[]).flatMap(r=>r.order)),waiting=p.candidates.map((x,i)=>({x,idx:i+1})).filter(({idx})=>!used.has(idx)),deferred=(p.deferredCritical||[]).map(x=>({x,idx:0}));let h="";
- if(p.preselected)h+=`<div class="card"><div class="smart-route-wait-note"><b>${p.totalCritical} clientes</b> estão na janela/prioridade. Para manter a matriz rápida, o sistema analisou primeiro os clientes com maior urgência, pedidos de visita e concentração regional. Os demais continuam visíveis e entram nas próximas rodadas.</div></div>`;
- if(!p.routes.length)h+=`<div class="card"><span class="badge warn">Sem combinação viável</span><div class="explain">Não foi possível formar uma rota dentro do limite diário. Tente novamente quando houver mais clientes na mesma região ou ajuste o limite de jornada.</div></div>`;
- p.routes.forEach((r,i)=>{const concentration=r.order.length>=4?["good","Boa concentração"]:r.order.length>=2?["warn","Rota enxuta"]:["bad","Pouca concentração"];h+=`<div class="card"><div class="cardhead"><div><h2>Opção ${i+1} • por região</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${concentration[0]}">${concentration[1]}</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${r.order.length}</b><span>Clientes na região</span></div><div class="mini"><b>${r.km.toFixed(0)} km</b><span>Rodagem</span></div><div class="mini"><b>${fmtHours(r.minutes)}</b><span>Tempo estimado</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>${r.tollPending?"Custo preliminar":"Custo estimado"}</span></div></div><div class="regional-route-note">O sistema agrupou estes clientes porque estão na mesma região/corredor. Ticket e retorno aparecem apenas como referência comercial; não são usados para excluir clientes da rota.</div>${r.tollPending?`<div class="muted" style="margin-top:7px">⏳ Rota já disponível. Pedágio e custo final estão sendo atualizados em segundo plano.</div>`:r.detailFallback?`<div class="muted" style="margin-top:7px">Distância/tempo estimados pela matriz. O detalhamento final do Google não respondeu a tempo; pedágio pode aparecer como não informado.</div>`:""}<div class="smart-route-client-grid">${r.order.map(idx=>{const x=p.candidates[idx-1],req=pendingClientRouteRequest(x.c);return `<div class="smart-route-client-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ${candidateTimingText(x)}</span><div class="route-client-reason">${x.relationshipReason?"Aproveitar passagem / relacionamento":"Visita na janela ou priorizada"}${x.st.orders?` • ticket ${brl(x.st.ticket)}`:""}</div>${routeClientRequestHtml(x.c)}<div class="route-request-actions"><button class="btn secondary" onclick="openClientRouteRequest('${x.c.id}')">💬 Contato / pedido</button></div></div>`}).join("")}</div>${routeLoadPlanHtml(r.order,p.candidates)}<div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseSmartRoute(${i})">Usar esta rota</button></div></div>`});
- if(waiting.length||deferred.length){const allWaiting=[...waiting,...deferred];h+=`<div class="card"><div class="cardhead"><div><h2>Fora das combinações desta rodada</h2><div class="muted">Continuam na lista e podem entrar quando formarem um grupo regional melhor.</div></div><span class="badge warn">${allWaiting.length}</span></div><div class="smart-route-waiting">${allWaiting.map(({x})=>`<div class="mini-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ${candidateTimingText(x)}</span></div>`).join("")}</div></div>`}
- if(p.overnight){const o=p.overnight,good=o.savings>0,day1City=p.candidates[o.day1.at(-1)-1]?.c?.city||"região do último cliente",day1Names=o.day1.map(idx=>p.candidates[idx-1]),day2Names=o.day2.map(idx=>p.candidates[idx-1]);h+=`<div class="card"><div class="cardhead"><div><h2>💤 Alternativa com 1 hospedagem</h2><div class="muted">Combina duas rotas regionais em uma viagem de 2 dias.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode economizar":"Compare antes de usar"}</span></div><div class="overnight-days"><div class="overnight-day"><b>Dia 1</b><small>${o.d1?.km?.toFixed?.(0)||"—"} km • ${o.d1?.minutes?fmtHours(o.d1.minutes):"—"} • pernoite em/na região de ${esc(day1City)}</small><div class="overnight-client-list">${day1Names.map(x=>`<span>• ${esc(x.c.name)} — ${esc(x.c.city)}</span>`).join("")}</div></div><div class="overnight-day"><b>Dia 2</b><small>${o.d2?.km?.toFixed?.(0)||"—"} km • ${o.d2?.minutes?fmtHours(o.d2.minutes):"—"} • retorno à base</small><div class="overnight-client-list">${day2Names.map(x=>`<span>• ${esc(x.c.name)} — ${esc(x.c.city)}</span>`).join("")}</div></div></div><div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem estimada</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div><div class="overnight-why"><b>Por que considerar:</b> evita voltar à base entre duas regiões próximas. ${good?`Economia estimada de ${brl(o.savings)} em relação a fazer os dois bate-voltas.`:`A economia financeira não é relevante hoje, mas pode reduzir tempo e quilometragem operacional.`}</div>${routeLoadPlanHtml([...o.day1,...o.day2],p.candidates,"Carga sugerida para os 2 dias")}<div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseOvernightRoute()">Usar viagem de 2 dias</button></div></div>`}return h
+ const used=new Set((p.routes||[]).flatMap(r=>r.order)),waiting=p.candidates.map((x,i)=>({x,idx:i+1})).filter(({x,idx})=>(x.manual||x.automatic)&&x.st.orders>0&&!used.has(idx)),deferred=(p.deferredCritical||[]).map(x=>({x,idx:0}));let h="";
+ if(p.preselected)h+=`<div class="card"><div class="smart-route-wait-note"><b>${p.totalCritical} clientes</b> estão na janela/prioridade. Para manter a matriz rápida e precisa, o sistema analisou automaticamente os 24 com melhor combinação de urgência, retorno e concentração regional. Os demais continuam visíveis abaixo e entram nas próximas rodadas.</div></div>`;
+ if(!p.routes.length)h+=`<div class="card"><span class="badge warn">Aguardar melhor composição</span><div class="explain">Nenhuma combinação analisada ficou positiva dentro do limite diário. O sistema não cria uma rota deficitária só para encaixar todos os clientes.</div></div>`;
+ p.routes.forEach((r,i)=>{h+=`<div class="card"><div class="cardhead"><div><h2>Opção ${i+1}</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge good">Resultado positivo</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${brl(r.revenue)}</b><span>Faturamento potencial</span></div><div class="mini"><b>${brl(r.grossProfit)}</b><span>Retorno comercial potencial</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado</span></div><div class="mini"><b class="rent-good">${brl(r.result)}</b><span>Resultado estimado</span></div></div><div class="muted">Rodagem: ${brl(r.km*Number(state.config.costKm||0))} • Pedágios (${state.config.tollPass==="BR_SEM_PARAR"?"Sem Parar":"Google"}): ${r.tollAvailable?brl(r.toll):"não informado pelo Google"}</div><div class="smart-route-positive-note">A rota só aparece aqui porque ficou positiva depois do trajeto final e está dentro do limite de ${Number(state.config.maxDailyHours||9)}h/dia.</div><div class="smart-route-client-grid">${r.order.map(idx=>{const x=p.candidates[idx-1];return `<div class="smart-route-client-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ticket médio ${brl(x.st.ticket)}<br>retorno médio líquido ${brl(x.st.netAvgMargin)}</span><button class="btn secondary" onclick="openPreVisit('${x.c.id}')">Confirmar visita</button></div>`}).join("")}</div><div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseSmartRoute(${i})">Usar esta rota</button></div></div>`});
+ if(waiting.length||deferred.length){const allWaiting=[...waiting,...deferred];h+=`<div class="card"><div class="cardhead"><div><h2>Aguardar melhor oportunidade</h2><div class="muted">Estão na hora de visitar, mas hoje não entraram em uma rota financeira positiva.</div></div><span class="badge warn">${allWaiting.length}</span></div><div class="smart-route-wait-note">Eles continuam visíveis para o Alex. Clientes fora da primeira matriz serão reconsiderados automaticamente em novas análises, sem precisar reduzir a janela de visita.</div><div class="smart-route-waiting">${allWaiting.map(({x})=>`<div class="mini-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ticket médio ${brl(x.st.ticket)}<br>${candidateTimingText(x)}</span></div>`).join("")}</div></div>`;}
+ if(p.overnight){const o=p.overnight,good=o.savings>0;h+=`<div class="card"><div class="cardhead"><div><h2>Alternativa com 1 hospedagem</h2><div class="muted">Compara exatamente as duas rotas que formaram esta alternativa.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode economizar":"Não economiza"}</span></div><div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem estimada</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div></div>`}return h
 }
 function renderRelationshipView(p){
- const rows=relationshipOpportunities(p);let h=`<div class="card"><div class="cardhead"><div><h2>Prospecção e relacionamento</h2><div class="muted">Mostra clientes novos, reativação e contatos que podem ser encaixados quando o Alex já estiver naquela região.</div></div><span class="badge">${rows.length} oportunidade(s)</span></div><div class="explain">A proximidade da região é o principal critério. O desvio estimado ajuda a decidir se vale aproveitar a passagem.</div></div>`;
+ const rows=relationshipOpportunities(p);let h=`<div class="card"><div class="cardhead"><div><h2>Prospecção e relacionamento</h2><div class="muted">Aqui o objetivo não é provar lucro imediato. O sistema mostra clientes novos, reativação e visitas estratégicas que podem aproveitar uma região.</div></div><span class="badge">${rows.length} oportunidade(s)</span></div><div class="explain">Quando houver uma rota financeira positiva, a tela estima o desvio para encaixar cada oportunidade. Isso evita misturar prospecção com a rentabilidade da rota principal.</div></div>`;
  if(!rows.length)return h+'<div class="empty">Nenhuma oportunidade adicional de prospecção ou relacionamento foi encontrada nesta análise.</div>';
- h+=`<div class="card"><div class="smart-route-client-grid">${rows.map(({x,reason,near})=>`<div class="smart-route-client-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)}${x.st.orders?` • ticket médio ${brl(x.st.ticket)}`:" • sem histórico"}</span><div class="smart-route-reason">${esc(reason)}</div>${near&&Number.isFinite(near.km)?`<div class="smart-route-relation">Perto da Opção ${near.routeIndex+1}: desvio estimado +${near.km.toFixed(0)} km • +${fmtHours(near.minutes)}</div>`:'<div class="smart-route-relation">Sem combinação regional próxima nesta análise.</div>'}<div class="route-request-actions"><button class="btn secondary" onclick="openClientRouteRequest('${x.c.id}')">💬 Contato / pedido</button><button class="btn secondary" onclick="toggleVisitPriority('${x.c.id}')">${x.manual?"Retirar prioridade":"Priorizar visita"}</button></div></div>`).join("")}</div>${p.omittedRelationship?`<div class="muted" style="margin-top:9px">${p.omittedRelationship} oportunidade(s) adicionais aparecem sem cálculo de desvio nesta rodada para manter a matriz de rotas leve.</div>`:""}</div>`;return h
+ h+=`<div class="card"><div class="smart-route-client-grid">${rows.map(({x,reason,near})=>`<div class="smart-route-client-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)}${x.st.orders?` • ticket médio ${brl(x.st.ticket)}`:" • sem histórico"}</span><div class="smart-route-reason">${esc(reason)}</div>${near&&Number.isFinite(near.km)?`<div class="smart-route-relation">Perto da Opção ${near.routeIndex+1}: desvio estimado +${near.km.toFixed(0)} km • +${fmtHours(near.minutes)}</div>`:'<div class="smart-route-relation">Sem rota financeira positiva próxima nesta análise.</div>'}<button class="btn secondary" onclick="toggleVisitPriority('${x.c.id}')">${x.manual?"Retirar prioridade":"Priorizar visita"}</button></div>`).join("")}</div>${p.omittedRelationship?`<div class="muted" style="margin-top:9px">${p.omittedRelationship} oportunidade(s) adicionais aparecem sem cálculo de desvio nesta rodada para manter a matriz de rotas leve.</div>`:""}</div>`;return h
 }
 function renderSmartRoutePlan(){
  const p=smartRoutePlan;if(p.error){smartRoutesList.innerHTML=`<div class="card"><span class="badge bad">Não foi possível calcular</span><div class="explain">${esc(p.error)}</div></div>`;return}
- let h=`<div class="card"><div class="cardhead"><div><h2>Rotas Inteligentes</h2><div class="muted">Base: ${esc(state.config.base)} • matriz ${p.fromCache?"reaproveitada":"atualizada"}</div></div><span class="badge good">análise concluída</span></div><div class="smart-view-tabs"><button class="smart-view-tab ${smartRouteView==="finance"?"active":""}" onclick="setSmartRouteView('finance')">🗺️ Rotas por região</button><button class="smart-view-tab ${smartRouteView==="relationship"?"active":""}" onclick="setSmartRouteView('relationship')">🤝 Prospecção / relacionamento</button></div><div class="explain">Rotas por região agrupam clientes para reduzir deslocamento. Relacionamento mostra quem pode ser aproveitado na passagem, mesmo fora da janela principal.</div></div>`;h+=smartRouteView==="relationship"?renderRelationshipView(p):renderFinanceView(p);smartRoutesList.innerHTML=h
+ let h=`<div class="card"><div class="cardhead"><div><h2>Rotas Inteligentes</h2><div class="muted">Base: ${esc(state.config.base)} • matriz ${p.fromCache?"reaproveitada":"atualizada"}</div></div><span class="badge good">análise concluída</span></div><div class="smart-view-tabs"><button class="smart-view-tab ${smartRouteView==="finance"?"active":""}" onclick="setSmartRouteView('finance')">💰 Retorno financeiro</button><button class="smart-view-tab ${smartRouteView==="relationship"?"active":""}" onclick="setSmartRouteView('relationship')">🤝 Prospecção / relacionamento</button></div><div class="explain">Financeiro responde “vale a pena sair para vender?”. Relacionamento responde “quem vale aproveitar na região mesmo sem retorno imediato comprovado?”.</div></div>`;h+=smartRouteView==="relationship"?renderRelationshipView(p):renderFinanceView(p);smartRoutesList.innerHTML=h
 }
 function toggleSaleCardResult(id,btn){const el=document.getElementById("saleResult_"+id);if(!el)return;const show=el.classList.contains("hidden");el.classList.toggle("hidden",!show);if(btn)btn.textContent=show?"🙈 Ocultar":"👁 Resultado"}
 function renderCollections(){
@@ -3351,30 +3252,7 @@ wCreditDestination.addEventListener("change",updateWarrantyOpenSales);
 warrantyForm.addEventListener("submit",e=>{
  e.preventDefault();ensureState();const c=state.clients.find(c=>c.id===wClient.value),prod=state.products.find(p=>p.id===wProduct.value);if(!c||!prod){alert("Selecione cliente e produto.");return}const code=parseWarrantyCode(wCode.value);if(!code.valid){alert("Confira o código da garantia. "+code.error);wCode.focus();return}const w=state.warranties.find(w=>w.id===wId.value);if(w&&warrantyApplications(w).length){alert("Esta garantia já possui crédito aplicado e não pode ser alterada. Isso preserva o histórico financeiro.");return}const qty=w?Number(w.qty||1):1,oldExchange=!!(w&&(w.solution==="exchange"||w.resolution==="exchange")),oldProduct=oldExchange?state.products.find(p=>p.id===w.productId):null,oldQty=oldExchange?Number(w.qty||1):0,solution=wResolution.value,batteryValue=Number(wCreditValue.value||0),creditValue=solution==="credit"?batteryValue:0,availableForExchange=Number(prod.qty||0)+(oldExchange&&oldProduct?.id===prod.id?oldQty:0);if(solution==="exchange"&&availableForExchange<1){alert(`Estoque insuficiente de ${prod.name} para registrar a troca.`);return}if(batteryValue<=0){alert("Informe o valor desta bateria.");return}let applications=[];if(solution==="credit"){const [saleId,installmentId]=String(wOpenSale.value||"").split("::"),sale=state.sales.find(s=>s.id===saleId),part=sale&&effectiveInstallments(sale,w?.id||"").find(p=>p.id===installmentId&&!p.renegotiatedToSaleId);if(!sale||!part){alert("Selecione a cobrança em aberto.");return}if(creditValue>Number(part.effectiveAmount||0)+.009){alert(`O crédito é maior que o saldo da cobrança (${brl(part.effectiveAmount)}). Ajuste o valor.`);return}applications=[{id:uid(),saleId:sale.id,installmentId:part.id,amount:creditValue,kind:"collection",date:wCollect.value||today()}]}if(oldExchange&&oldProduct)oldProduct.qty=Number(oldProduct.qty)+oldQty;if(solution==="exchange")prod.qty=Number(prod.qty)-1;const data={clientId:c.id,type:"Garantia",productId:prod.id,model:prod.name,qty:w?qty:1,code:code.raw,mfg:code.mfgWeekStart,collect:wCollect.value||today(),solution,resolution:solution,creditValue,batteryValue,creditDestination:solution==="credit"?"collection":"",applications,note:wNote.value.trim(),unitCostSnapshot:Number(prod.cost||0),batteryDisposition:w?.batteryDisposition||"pending",dispositionDate:w?.dispositionDate||""};if(w)Object.assign(w,data);else state.warranties.push({id:uid(),...data});closeSheet("warrantySheet");smartRoutePlan=null;save()
 });
-const clientRouteRequestFormEl=document.getElementById("clientRouteRequestForm");
-if(clientRouteRequestFormEl){
- clientRouteRequestFormEl.addEventListener("submit",e=>{
-  e.preventDefault();
-  const id=document.getElementById("crClientId")?.value||"";
-  const c=state.clients.find(c=>c.id===id);if(!c)return;
-  const req={
-   id:uid(),
-   date:document.getElementById("crDate")?.value||today(),
-   type:document.getElementById("crType")?.value||"requested",
-   note:(document.getElementById("crNote")?.value||"").trim(),
-   items:{
-    "5Ah":Number(document.getElementById("cr5")?.value||0),
-    "6Ah":Number(document.getElementById("cr6")?.value||0),
-    "7Ah":Number(document.getElementById("cr7")?.value||0)
-   },
-   status:"pending",createdAt:nowIsoSP()
-  };
-  c.routeRequests=c.routeRequests||[];c.routeRequests.push(req);
-  if(req.type==="requested")c.visitPriority=true;
-  smartRoutePlan=null;closeSheet("clientRouteRequestSheet");save();
- });
-}
-routeExpenseForm.addEventListener("submit",e=>{e.preventDefault();const r=state.routeRuns.find(r=>r.id===reRouteId.value),amount=Number(reAmount.value||0);if(!r||amount<=0){alert("Informe o valor da despesa.");return}const data={id:uid(),category:reCategory.value,amount,date:reDate.value||today(),note:reNote.value.trim(),createdAt:nowIsoSP()};if(data.category==="fuel"){const liters=Number(reLiters.value||0),odometerKm=Number(reOdometer.value||0),last=lastFuelExpense(),previousOdometerKm=Number(last?.odometerKm||0);if(liters<=0||odometerKm<=0){alert("No combustível, informe os litros abastecidos e o km atual da Saveiro.");return}if(previousOdometerKm>0&&odometerKm<previousOdometerKm){alert(`O km atual não pode ser menor que o último lançamento (${previousOdometerKm.toLocaleString("pt-BR")} km).`);return}const distanceKm=previousOdometerKm>0?odometerKm-previousOdometerKm:0;Object.assign(data,{fuelType:reFuelType.value,liters,odometerKm,previousOdometerKm,distanceKm,pricePerLiter:amount/liters,kmPerLiter:distanceKm>0?distanceKm/liters:0})}r.expenses=r.expenses||[];r.expenses.push(data);recalculateFuelHistoryDerived();closeSheet("routeExpenseSheet");save()});
+routeExpenseForm.addEventListener("submit",e=>{e.preventDefault();const r=state.routeRuns.find(r=>r.id===reRouteId.value),amount=Number(reAmount.value||0);if(!r||amount<=0){alert("Informe o valor da despesa.");return}r.expenses=r.expenses||[];r.expenses.push({id:uid(),category:reCategory.value,amount,date:reDate.value||today(),note:reNote.value.trim(),createdAt:nowIsoSP()});closeSheet("routeExpenseSheet");save()});
 scrapTypeForm.addEventListener("submit",e=>{e.preventDefault();let t=state.scrapTypes.find(t=>t.id===stId.value);const data={name:stName.value.trim(),weight:Number(stWeight.value||0),value:Number(stValue.value||0)};if(!data.name){return}if(t)Object.assign(t,data);else{if(state.scrapTypes.length>=11){alert("A tabela já possui os 11 tipos de sucata.");return}state.scrapTypes.push({id:uid(),...data})}closeSheet("scrapTypeSheet");save()});
 scrapResaleForm.addEventListener("submit",e=>{e.preventDefault();const groups=selectedScrapGroups(),tot=groups.reduce((a,g)=>({qty:a.qty+g.qty,weight:a.weight+g.weight,cost:a.cost+g.cost}),{qty:0,weight:0,cost:0}),factoryWeight=Number(srWeight.value||0);if(!groups.length||tot.weight<=.0001){alert("Selecione a sucata que será vendida.");return}if(factoryWeight<=0){alert("Informe o peso apurado pela fábrica.");return}let resaleValue=Number(srTotalValue.value||0),pricePerKg=Number(srPriceKg.value||0);if(resaleValue<=0&&pricePerKg>0)resaleValue=factoryWeight*pricePerKg;if(pricePerKg<=0&&resaleValue>0)pricePerKg=resaleValue/factoryWeight;if(resaleValue<=0||pricePerKg<=0){alert("Informe o preço por kg ou o valor total recebido.");return}resaleValue=Math.round(resaleValue*100)/100;pricePerKg=Math.round(pricePerKg*100)/100;const result=Math.round((resaleValue-tot.cost)*100)/100,mode=srMode.value||"all",scopeLabel=mode==="all"?"Todo o estoque":mode==="sideA"?"Lado A":mode==="sideB"?"Lado B":`${groups.length} dia(s)/rota(s)`;if(!confirm(`Confirmar revenda?\n\nSeleção: ${scopeLabel}\nTeórico baixado: ${tot.weight.toFixed(2)} kg / ${Math.round(tot.qty)} un.\nPeso da fábrica: ${factoryWeight.toFixed(2)} kg\nValor recebido: ${brl(resaleValue)}\nResultado: ${brl(result)}\n\nSomente a sucata selecionada será baixada.`))return;const batchId=uid(),date=srDate.value||today(),consumedSaleIds=[...new Set(groups.flatMap(g=>g.saleIds||[]))];groups.forEach(g=>g.types.forEach(d=>{if(d.qty>.0001||d.weight>.0001)state.scrapTransactions.push({id:uid(),direction:"out",source:"resale_group_internal",batchId,scrapGroupKey:g.key,typeId:d.typeId,typeName:d.name,date,qty:d.qty,weight:d.weight,acquisitionValue:d.cost,createdAt:nowIsoSP()})}));state.scrapResales.push({id:batchId,date,buyer:srBuyer.value.trim(),scope:mode,scopeLabel,selectedGroupKeys:groups.map(g=>g.key),consumedSaleIds,factoryWeight,systemWeight:tot.weight,systemQty:tot.qty,pricePerKg,resaleValue,acquisitionValue:tot.cost,result,note:srNote.value.trim(),createdAt:nowIsoSP()});closeSheet("scrapResaleSheet");save()});
 function deleteClient(id,fromDetail=false){
