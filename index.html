@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="./favicon-v51.png">
 <title>AX Baterias</title>
 <meta name="application-name" content="AX Baterias">
-<meta name="ax-version" content="5.22.2">
+<meta name="ax-version" content="5.22.3">
 <meta name="ax-build" content="2026-09-21-v5.22-regional-routes-fuel-history">
 <style>
 :root{
@@ -2405,6 +2405,9 @@ async function buildRouteMatrix(candidates){
  return {matrix,points,fromCache:false}
 }
 function routeDetailSignature(origin,destination,intermediates){return JSON.stringify({origin,destination,intermediates,tollPass:state.config.tollPass||"BR_SEM_PARAR"})}
+function routePromiseTimeout(promise,ms=9000,label="cálculo da rota"){
+ return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(`Tempo excedido no ${label}.`)),ms))])
+}
 async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
  const signature=routeDetailSignature(origin,destination,intermediates),cacheKey=ROUTE_DETAIL_CACHE_KEY+":"+btoa(unescape(encodeURIComponent(signature))).slice(0,50),cached=readTimedCache(cacheKey,signature,24*60*60*1000);
  if(cached)return {...cached,fromCache:true};
@@ -2417,7 +2420,7 @@ async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
    const modifiers={vehicleInfo:{emissionType:"GASOLINE"}};
    if(state.config.tollPass)modifiers.tollPasses=[state.config.tollPass];
    const request={...common,extraComputations:["TOLLS"],routeModifiers:modifiers,fields:["distanceMeters","durationMillis","travelAdvisory"]};
-   const {routes}=await Route.computeRoutes(request),r=routes?.[0];
+   const {routes}=await routePromiseTimeout(Route.computeRoutes(request),9000,"cálculo de pedágio"),r=routes?.[0];
    if(!r)throw new Error("Rota final não encontrada.");
    const prices=r.travelAdvisory?.tollInfo?.estimatedPrices||[],br=prices.find(p=>p.currencyCode==="BRL")||prices[0];
    const data={km:Number(r.distanceMeters||0)/1000,driveMinutes:Number(r.durationMillis||0)/60000,toll:moneyValue(br),tollAvailable:!!br,tollError:false};
@@ -2426,7 +2429,7 @@ async function computeSelectedRouteDetail(origin,destination,intermediates=[]){
    console.warn("Pedágio indisponível; tentando rota básica.",tollErr);
    try{
      // Mesmo se o cálculo de pedágio falhar, não perde distância e tempo.
-     const {routes}=await Route.computeRoutes({...common,fields:["distanceMeters","durationMillis"]}),r=routes?.[0];
+     const {routes}=await routePromiseTimeout(Route.computeRoutes({...common,fields:["distanceMeters","durationMillis"]}),7000,"cálculo básico da rota"),r=routes?.[0];
      if(!r)throw new Error("Rota final não encontrada.");
      const data={km:Number(r.distanceMeters||0)/1000,driveMinutes:Number(r.durationMillis||0)/60000,toll:0,tollAvailable:false,tollError:true};
      writeTimedCache(cacheKey,signature,data);return data
@@ -2450,8 +2453,30 @@ function makeRegionalRoutes(candidates,matrix){let available=regionalCandidateIn
 function makeDailyClusters(candidates,matrix){return makeRegionalRoutes(candidates,matrix)}
 function bestRegionalRemoval(order,candidates,matrix){if(order.length<=1)return null;const alts=order.map((removed,k)=>{const trial=routeEconomics(orderCluster(order.filter((__,i)=>i!==k),matrix),candidates,matrix),x=candidates[removed-1],penalty=(pendingClientRouteRequest(x?.c)?10000:0)+(x?.manual?5000:0)+Math.min(1000,Number(x?.overdueDays||0)*20);return {trial,score:trial.minutes+penalty}});return alts.sort((a,b)=>a.score-b.score)[0]?.trial||null}
 async function enrichSelectedRoutes(routes,candidates,matrix){
- const base=state.config.base||"Osasco, SP, Brasil",maxMinutes=Number(state.config.maxDailyHours||9)*60,validated=[];
- for(const source of routes){let r={...source,order:[...source.order]},attempt=0;while(r.order.length&&attempt<7){attempt++;const stops=r.order.map(i=>candidates[i-1]?.address).filter(Boolean),d=await computeSelectedRouteDetail(base,base,stops);if(d.km!=null){r.km=d.km;r.minutes=d.driveMinutes+r.order.length*Number(state.config.visitMinutes||35)}r.toll=Number(d.toll||0);r.tollAvailable=!!d.tollAvailable;r.travelCost=r.km*Number(state.config.costKm||0)+r.toll;r.result=r.grossProfit-r.travelCost;if(r.minutes<=maxMinutes)break;if(r.order.length<=1)break;const trimmed=bestRegionalRemoval(r.order,candidates,matrix);if(!trimmed)break;r=trimmed}if(r.order.length&&r.minutes<=maxMinutes)validated.push(r)}return validated.sort((a,b)=>b.order.length-a.order.length||a.km-b.km)
+ const base=state.config.base||"Osasco, SP, Brasil",maxMinutes=Number(state.config.maxDailyHours||9)*60,visitMinutes=Number(state.config.visitMinutes||35);
+ const prepare=(source)=>{
+   let r={...source,order:[...source.order]},guard=0;
+   // A própria matriz já traz distância e tempo entre todos os pontos. Ajusta o limite diário aqui,
+   // antes de chamar a rota final, evitando várias consultas sequenciais ao Google.
+   while(r.order.length&&Number(r.minutes||Infinity)>maxMinutes&&r.order.length>1&&guard<7){
+     const trimmed=bestRegionalRemoval(r.order,candidates,matrix);if(!trimmed)break;r=trimmed;guard++
+   }
+   return r
+ };
+ const prepared=routes.map(prepare).filter(r=>r.order.length&&Number(r.minutes||Infinity)<=maxMinutes);
+ const enriched=await Promise.all(prepared.map(async source=>{
+   const r={...source,order:[...source.order]},stops=r.order.map(i=>candidates[i-1]?.address).filter(Boolean);
+   try{
+     const d=await computeSelectedRouteDetail(base,base,stops);
+     if(d.km!=null&&Number.isFinite(d.km)){
+       r.km=d.km;r.minutes=Number(d.driveMinutes||0)+r.order.length*visitMinutes
+     }else r.detailFallback=true;
+     r.toll=Number(d.toll||0);r.tollAvailable=!!d.tollAvailable;r.tollError=!!d.tollError
+   }catch(e){console.warn("Rota final demorou demais; usando estimativa da matriz.",e);r.detailFallback=true;r.toll=0;r.tollAvailable=false;r.tollError=true}
+   r.travelCost=Number(r.km||0)*Number(state.config.costKm||0)+Number(r.toll||0);r.result=Number(r.grossProfit||0)-r.travelCost;
+   return r
+ }));
+ return enriched.filter(r=>r.order.length&&Number(r.minutes||Infinity)<=maxMinutes).sort((a,b)=>b.order.length-a.order.length||a.km-b.km)
 }
 function overnightAlternative(routes,candidates,matrix){
  if(routes.length<2)return null;const maxMinutes=Number(state.config.maxDailyHours||9)*60;let best=null;
@@ -2465,9 +2490,15 @@ function overnightAlternative(routes,candidates,matrix){
  return best
 }
 async function enrichOvernight(alt,candidates,routes){
- if(!alt)return null;const base=state.config.base||"Osasco, SP, Brasil",day1Stops=alt.day1.map(i=>candidates[i-1]?.address).filter(Boolean),overnightAddress=day1Stops.at(-1),d1=await computeSelectedRouteDetail(base,overnightAddress,day1Stops.slice(0,-1)),day2Stops=alt.day2.map(i=>candidates[i-1]?.address).filter(Boolean),d2=await computeSelectedRouteDetail(overnightAddress,base,day2Stops);
- if(d1.km!=null&&d2.km!=null){alt.km=d1.km+d2.km;alt.d1={km:d1.km,minutes:d1.driveMinutes+alt.day1.length*Number(state.config.visitMinutes||35),toll:d1.toll};alt.d2={km:d2.km,minutes:d2.driveMinutes+alt.day2.length*Number(state.config.visitMinutes||35),toll:d2.toll}}
- alt.toll=Number(d1.toll||0)+Number(d2.toll||0);alt.tollAvailable=!!(d1.tollAvailable||d2.tollAvailable);alt.travelCost=alt.km*Number(state.config.costKm||0)+alt.toll+Number(state.config.hotelCost||0);const related=(alt.relatedRouteIndexes||[]).map(i=>routes[i]).filter(Boolean),separate=related.reduce((a,r)=>a+Number(r.travelCost||0),0);alt.separateCost=separate;alt.savings=separate-alt.travelCost;alt.result=alt.grossProfit-alt.travelCost;return alt
+ if(!alt)return null;const base=state.config.base||"Osasco, SP, Brasil",day1Stops=alt.day1.map(i=>candidates[i-1]?.address).filter(Boolean),overnightAddress=day1Stops.at(-1),day2Stops=alt.day2.map(i=>candidates[i-1]?.address).filter(Boolean);
+ try{
+   const [d1,d2]=await Promise.all([
+     computeSelectedRouteDetail(base,overnightAddress,day1Stops.slice(0,-1)),
+     computeSelectedRouteDetail(overnightAddress,base,day2Stops)
+   ]);
+   if(d1.km!=null&&d2.km!=null){alt.km=d1.km+d2.km;alt.d1={km:d1.km,minutes:d1.driveMinutes+alt.day1.length*Number(state.config.visitMinutes||35),toll:d1.toll};alt.d2={km:d2.km,minutes:d2.driveMinutes+alt.day2.length*Number(state.config.visitMinutes||35),toll:d2.toll};alt.toll=Number(d1.toll||0)+Number(d2.toll||0);alt.tollAvailable=!!(d1.tollAvailable||d2.tollAvailable)}else alt.detailFallback=true
+ }catch(e){console.warn("Detalhe da hospedagem demorou demais; mantendo estimativa da matriz.",e);alt.detailFallback=true;alt.toll=0;alt.tollAvailable=false}
+ alt.travelCost=Number(alt.km||0)*Number(state.config.costKm||0)+Number(alt.toll||0)+Number(state.config.hotelCost||0);const related=(alt.relatedRouteIndexes||[]).map(i=>routes[i]).filter(Boolean),separate=related.reduce((a,r)=>a+Number(r.travelCost||0),0);alt.separateCost=separate;alt.savings=separate-alt.travelCost;alt.result=alt.grossProfit-alt.travelCost;return alt
 }
 
 
@@ -3040,13 +3071,13 @@ async function analyzeSmartRoutes(){
  const analysis=smartAnalysisCandidates(),critical=analysis.critical,candidates=analysis.candidates;smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Agrupando clientes por região, distâncias e tempo de viagem...</div>';
  if(!critical.length&&!candidates.length){smartRoutePlan={error:"Nenhum cliente está na janela e não há oportunidades de prospecção/reativação com endereço cadastrado."};renderRoutes();return}
  if(!mapsConfigured()){smartRoutePlan={error:"A integração de rotas não está configurada. Vá em Mais → Configurações → Integração de rotas e confirme a Google Maps API Key."};renderRoutes();return}
- try{const {matrix,fromCache}=await buildRouteMatrix(candidates);let daily=makeRegionalRoutes(candidates,matrix);smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Calculando trajeto final, pedágios e validando o limite diário...</div>';daily=await enrichSelectedRoutes(daily,candidates,matrix);let overnight=overnightAlternative(daily,candidates,matrix);if(overnight)overnight=await enrichOvernight(overnight,candidates,daily);smartRoutePlan={candidates,matrix,routes:daily,fromCache,overnight,omittedRelationship:analysis.omittedRelationship,deferredRelationship:analysis.deferredRelationship||[],deferredCritical:analysis.deferredCritical||[],preselected:!!analysis.preselected,totalCritical:critical.length};smartRouteView="finance"}catch(e){console.error("Erro ao analisar rotas:",e);smartRoutePlan={error:e?.message||"Não foi possível calcular as rotas. Verifique a conexão e a configuração do Google Maps."}}renderRoutes();renderHome()
+ try{const {matrix,fromCache}=await buildRouteMatrix(candidates);let daily=makeRegionalRoutes(candidates,matrix);smartRoutesList.innerHTML='<div class="route-progress"><span class="spinner"></span>Finalizando rotas e consultando pedágios...</div>';daily=await enrichSelectedRoutes(daily,candidates,matrix);let overnight=overnightAlternative(daily,candidates,matrix);if(overnight){try{overnight=await routePromiseTimeout(enrichOvernight(overnight,candidates,daily),11000,"detalhamento da hospedagem")}catch(e){console.warn("Hospedagem exibida com estimativa da matriz.",e);overnight.detailFallback=true}}smartRoutePlan={candidates,matrix,routes:daily,fromCache,overnight,omittedRelationship:analysis.omittedRelationship,deferredRelationship:analysis.deferredRelationship||[],deferredCritical:analysis.deferredCritical||[],preselected:!!analysis.preselected,totalCritical:critical.length};smartRouteView="finance"}catch(e){console.error("Erro ao analisar rotas:",e);smartRoutePlan={error:e?.message||"Não foi possível calcular as rotas. Verifique a conexão e a configuração do Google Maps."}}renderRoutes();renderHome()
 }
 function renderFinanceView(p){
  const used=new Set((p.routes||[]).flatMap(r=>r.order)),waiting=p.candidates.map((x,i)=>({x,idx:i+1})).filter(({idx})=>!used.has(idx)),deferred=(p.deferredCritical||[]).map(x=>({x,idx:0}));let h="";
  if(p.preselected)h+=`<div class="card"><div class="smart-route-wait-note"><b>${p.totalCritical} clientes</b> estão na janela/prioridade. Para manter a matriz rápida, o sistema analisou primeiro os clientes com maior urgência, pedidos de visita e concentração regional. Os demais continuam visíveis e entram nas próximas rodadas.</div></div>`;
  if(!p.routes.length)h+=`<div class="card"><span class="badge warn">Sem combinação viável</span><div class="explain">Não foi possível formar uma rota dentro do limite diário. Tente novamente quando houver mais clientes na mesma região ou ajuste o limite de jornada.</div></div>`;
- p.routes.forEach((r,i)=>{const concentration=r.order.length>=4?["good","Boa concentração"]:r.order.length>=2?["warn","Rota enxuta"]:["bad","Pouca concentração"];h+=`<div class="card"><div class="cardhead"><div><h2>Opção ${i+1} • por região</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${concentration[0]}">${concentration[1]}</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${r.order.length}</b><span>Clientes na região</span></div><div class="mini"><b>${r.km.toFixed(0)} km</b><span>Rodagem</span></div><div class="mini"><b>${fmtHours(r.minutes)}</b><span>Tempo estimado</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado</span></div></div><div class="regional-route-note">O sistema agrupou estes clientes porque estão na mesma região/corredor. Ticket e retorno aparecem apenas como referência comercial; não são usados para excluir clientes da rota.</div><div class="smart-route-client-grid">${r.order.map(idx=>{const x=p.candidates[idx-1],req=pendingClientRouteRequest(x.c);return `<div class="smart-route-client-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ${candidateTimingText(x)}</span><div class="route-client-reason">${x.relationshipReason?"Aproveitar passagem / relacionamento":"Visita na janela ou priorizada"}${x.st.orders?` • ticket ${brl(x.st.ticket)}`:""}</div>${routeClientRequestHtml(x.c)}<div class="route-request-actions"><button class="btn secondary" onclick="openClientRouteRequest('${x.c.id}')">💬 Contato / pedido</button></div></div>`}).join("")}</div>${routeLoadPlanHtml(r.order,p.candidates)}<div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseSmartRoute(${i})">Usar esta rota</button></div></div>`});
+ p.routes.forEach((r,i)=>{const concentration=r.order.length>=4?["good","Boa concentração"]:r.order.length>=2?["warn","Rota enxuta"]:["bad","Pouca concentração"];h+=`<div class="card"><div class="cardhead"><div><h2>Opção ${i+1} • por região</h2><div class="muted">${r.order.length} clientes • ${r.km.toFixed(0)} km • ${fmtHours(r.minutes)}</div></div><span class="badge ${concentration[0]}">${concentration[1]}</span></div>${routeSequenceHtml(r.order,p.candidates)}<div class="smart-route-summary"><div class="mini"><b>${r.order.length}</b><span>Clientes na região</span></div><div class="mini"><b>${r.km.toFixed(0)} km</b><span>Rodagem</span></div><div class="mini"><b>${fmtHours(r.minutes)}</b><span>Tempo estimado</span></div><div class="mini"><b>${brl(r.travelCost)}</b><span>Custo estimado</span></div></div><div class="regional-route-note">O sistema agrupou estes clientes porque estão na mesma região/corredor. Ticket e retorno aparecem apenas como referência comercial; não são usados para excluir clientes da rota.</div>${r.detailFallback?`<div class="muted" style="margin-top:7px">Distância/tempo estimados pela matriz. O detalhamento final do Google não respondeu a tempo; pedágio pode aparecer como não informado.</div>`:""}<div class="smart-route-client-grid">${r.order.map(idx=>{const x=p.candidates[idx-1],req=pendingClientRouteRequest(x.c);return `<div class="smart-route-client-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ${candidateTimingText(x)}</span><div class="route-client-reason">${x.relationshipReason?"Aproveitar passagem / relacionamento":"Visita na janela ou priorizada"}${x.st.orders?` • ticket ${brl(x.st.ticket)}`:""}</div>${routeClientRequestHtml(x.c)}<div class="route-request-actions"><button class="btn secondary" onclick="openClientRouteRequest('${x.c.id}')">💬 Contato / pedido</button></div></div>`}).join("")}</div>${routeLoadPlanHtml(r.order,p.candidates)}<div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseSmartRoute(${i})">Usar esta rota</button></div></div>`});
  if(waiting.length||deferred.length){const allWaiting=[...waiting,...deferred];h+=`<div class="card"><div class="cardhead"><div><h2>Fora das combinações desta rodada</h2><div class="muted">Continuam na lista e podem entrar quando formarem um grupo regional melhor.</div></div><span class="badge warn">${allWaiting.length}</span></div><div class="smart-route-waiting">${allWaiting.map(({x})=>`<div class="mini-card"><b>${esc(x.c.name)}</b><span>${esc(x.c.city)} • ${candidateTimingText(x)}</span></div>`).join("")}</div></div>`}
  if(p.overnight){const o=p.overnight,good=o.savings>0,day1City=p.candidates[o.day1.at(-1)-1]?.c?.city||"região do último cliente",day1Names=o.day1.map(idx=>p.candidates[idx-1]),day2Names=o.day2.map(idx=>p.candidates[idx-1]);h+=`<div class="card"><div class="cardhead"><div><h2>💤 Alternativa com 1 hospedagem</h2><div class="muted">Combina duas rotas regionais em uma viagem de 2 dias.</div></div><span class="badge ${good?"good":"warn"}">${good?"Pode economizar":"Compare antes de usar"}</span></div><div class="overnight-days"><div class="overnight-day"><b>Dia 1</b><small>${o.d1?.km?.toFixed?.(0)||"—"} km • ${o.d1?.minutes?fmtHours(o.d1.minutes):"—"} • pernoite em/na região de ${esc(day1City)}</small><div class="overnight-client-list">${day1Names.map(x=>`<span>• ${esc(x.c.name)} — ${esc(x.c.city)}</span>`).join("")}</div></div><div class="overnight-day"><b>Dia 2</b><small>${o.d2?.km?.toFixed?.(0)||"—"} km • ${o.d2?.minutes?fmtHours(o.d2.minutes):"—"} • retorno à base</small><div class="overnight-client-list">${day2Names.map(x=>`<span>• ${esc(x.c.name)} — ${esc(x.c.city)}</span>`).join("")}</div></div></div><div class="smart-route-summary"><div class="mini"><b>${o.km.toFixed(0)} km</b><span>Rodagem total</span></div><div class="mini"><b>${brl(state.config.hotelCost)}</b><span>Hospedagem estimada</span></div><div class="mini"><b>${brl(o.travelCost)}</b><span>Custo viagem 2 dias</span></div><div class="mini"><b>${brl(o.savings)}</b><span>Economia vs. bate-voltas</span></div></div><div class="overnight-why"><b>Por que considerar:</b> evita voltar à base entre duas regiões próximas. ${good?`Economia estimada de ${brl(o.savings)} em relação a fazer os dois bate-voltas.`:`A economia financeira não é relevante hoje, mas pode reduzir tempo e quilometragem operacional.`}</div>${routeLoadPlanHtml([...o.day1,...o.day2],p.candidates,"Carga sugerida para os 2 dias")}<div class="actions" style="margin-top:10px"><button class="btn" onclick="chooseOvernightRoute()">Usar viagem de 2 dias</button></div></div>`}return h
 }
